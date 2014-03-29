@@ -18,7 +18,7 @@ namespace DoodleAnims
         {
             get
             {
-                return Text.Length > 0 ? float.Parse(Text) : 0;
+                return Text.Replace(".", "").Replace("-", "").Length > 0 ? float.Parse(Text) : 0;
             }
             set
             {
@@ -37,7 +37,9 @@ namespace DoodleAnims
         /// <param name="e">The key event to handle</param>
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            if (!char.IsDigit(e.KeyChar) & !((e.KeyChar == '.' & !Text.Contains('.') ) & !Integer)
+            if (!char.IsDigit(e.KeyChar) & 
+                !((e.KeyChar == '.' & !Text.Contains('.') ) & !Integer) &
+                !(e.KeyChar == '-' & Text.Length == 0)
                 & !(char.IsControl(e.KeyChar)))
             {
                 e.Handled = true;

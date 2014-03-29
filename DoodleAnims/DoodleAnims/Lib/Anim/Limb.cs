@@ -24,10 +24,18 @@ namespace DoodleAnims.Lib.Anim
         LimbType _limbType = LimbType.Line;
 
         PointF _orgin;
+        PointF _startPos;
+        PointF _endDrawPos;
         PointF _endPoint;
+        float _offsetX = 0;
+        float _offsetY = 0;
         float _rotation = 0;
         float _radRot = 0;
         float _length = 1;
+
+        bool _xFlip = false;
+        bool _yFlip = false;
+        float _imageAngle = 0;
         
         float _scale = 1;
         Color _color;
@@ -96,6 +104,60 @@ namespace DoodleAnims.Lib.Anim
         {
             get { return _limbType; }
             set { _limbType = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the offset x value
+        /// </summary>
+        public float OffsetX
+        {
+            get { return _offsetX; }
+            set { _offsetX = value; }
+        }
+        /// <summary>
+        /// Gets or sets the offset y value
+        /// </summary>
+        public float OffsetY
+        {
+            get { return _offsetY; }
+            set { _offsetY = value; }
+        }
+        /// <summary>
+        /// Gets or sets the offset value
+        /// </summary>
+        public PointF Offset
+        {
+            get { return new PointF(_offsetX, _offsetY); }
+            set
+            {
+                _offsetX = value.X;
+                _offsetY = value.Y;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets whether this limb flips it's image horizontally
+        /// </summary>
+        public bool XFlip
+        {
+            get { return _xFlip; }
+            set { _xFlip = value; }
+        }
+        /// <summary>
+        /// Gets or sets whether this limb flips it's image vertically
+        /// </summary>
+        public bool YFlip
+        {
+            get { return _yFlip; }
+            set { _yFlip = value; }
+        }
+        /// <summary>
+        /// Gets or sets the angle for this limb's image
+        /// </summary>
+        public float ImageAngle
+        {
+            get { return _imageAngle; }
+            set { _imageAngle = value; }
         }
 
         /// <summary>
@@ -202,16 +264,28 @@ namespace DoodleAnims.Lib.Anim
             if (_parent != null)
                 _orgin = _parent._endPoint;
 
-            _endPoint.X = _orgin.X + (float)Math.Cos(_radRot) * _length;
-            _endPoint.Y = _orgin.Y + (float)Math.Sin(_radRot) * _length;
+            _startPos = _orgin;
+            _endDrawPos = _orgin;
+
+            float _lengthX = (float)(Math.Cos(_radRot) * OffsetX) - (float)(Math.Sin(-_radRot) * OffsetY);
+            float _lengthY = (float)(Math.Sin(_radRot) * OffsetX) - (float)(Math.Cos(-_radRot) * OffsetY);
+
+            _endPoint.X = _orgin.X + (float)(Math.Cos(_radRot) * _length);
+            _endPoint.Y = _orgin.Y + (float)(Math.Sin(_radRot) * _length);
+
+            _endDrawPos.X += (float)(Math.Cos(_radRot) * _length) + _lengthX;
+            _endDrawPos.Y += (float)(Math.Sin(_radRot) * _length) + _lengthY;
+
+            _startPos.X += _lengthX;
+            _startPos.Y += _lengthY;
 
             switch (_limbType)
             {
                 case LimbType.Line:
-                    graphics.DrawLine(_drawPen, _orgin, _endPoint);
+                    graphics.DrawLine(_drawPen, _startPos, _endDrawPos);
                     break;
                 case LimbType.Circle:
-                    _CENTRE = _orgin;
+                    _CENTRE = _startPos;
                     _CENTRE.X += (float)Math.Cos(_radRot) * _length / 2;
                     _CENTRE.Y += (float)Math.Sin(_radRot) * _length / 2;
 
@@ -225,12 +299,14 @@ namespace DoodleAnims.Lib.Anim
                 case LimbType.Textured:
                     if (_tag != null)
                     {
-                        _CENTRE = _orgin;
+                        _CENTRE = _startPos;
                         _CENTRE.X += (float)Math.Cos(_radRot) * _length / 2;
                         _CENTRE.Y += (float)Math.Sin(_radRot) * _length / 2;
 
                         graphics.TranslateTransform(_CENTRE.X, _CENTRE.Y);
                         graphics.RotateTransform(_rotation + 90);
+                        graphics.RotateTransform(_imageAngle);
+                        graphics.ScaleTransform(XFlip ? -1 : 1, YFlip ? -1 : 1);
                         graphics.TranslateTransform(-_length / 2, -_length / 2);
                         graphics.DrawImage((Image)_tag, 0, 0, _length, _length);
                         graphics.ResetTransform();
@@ -251,7 +327,9 @@ namespace DoodleAnims.Lib.Anim
         /// <returns>Closest limb to the mouse, or null</returns>
         public Limb Selected(MouseEventArgs e)
         {
-            if ((e.X - _endPoint.X) * (e.X - _endPoint.X) + (e.Y - _endPoint.Y) * (e.Y - _endPoint.Y) < MAX_MOUSE_RANGE)
+            if (
+                (e.X - _endDrawPos.X) * (e.X - _endDrawPos.X) + (e.Y - _endDrawPos.Y) * (e.Y - _endDrawPos.Y) < MAX_MOUSE_RANGE |
+                (e.X - _endPoint.X) * (e.X - _endPoint.X) + (e.Y - _endPoint.Y) * (e.Y - _endPoint.Y) < MAX_MOUSE_RANGE)
                 return this;
 
             foreach (Limb l in _children)
@@ -279,6 +357,14 @@ namespace DoodleAnims.Lib.Anim
             w.Write(Rotation);
             w.Write(Length);
             w.Write(Scale);
+
+            w.Write(OffsetX);
+            w.Write(OffsetY);
+
+            w.Write(XFlip);
+            w.Write(YFlip);
+            w.Write(ImageAngle);
+
             w.Write(Color.R);
             w.Write(Color.G);
             w.Write(Color.B);
@@ -317,6 +403,13 @@ namespace DoodleAnims.Lib.Anim
             float length = r.ReadSingle();
             float scale = r.ReadSingle();
 
+            float offsetX = r.ReadSingle();
+            float offsetY = r.ReadSingle();
+
+            bool xFlip = r.ReadBoolean();
+            bool yFlip = r.ReadBoolean();
+            float imageAngle = r.ReadSingle();
+
             byte R = r.ReadByte();
             byte G = r.ReadByte();
             byte B = r.ReadByte();
@@ -335,21 +428,21 @@ namespace DoodleAnims.Lib.Anim
             if (hasParent)
             {
                 l = new Limb(parent, Color.FromArgb(A, R, G, B), length);
-                l._tag = tag;
-                l.Name = name;
-                l.Rotation = rot;
-                l.Scale = scale;
-                l.LimbType = limbType;
             }
             else
             {
                 l = new Limb(orgin, Color.FromArgb(A, R, G, B), length);
-                l._tag = tag;
-                l.Name = name;
-                l.Rotation = rot;
-                l.Scale = scale;
-                l.LimbType = limbType;
             }
+            l._tag = tag;
+            l.Name = name;
+            l.Rotation = rot;
+            l.Scale = scale;
+            l.OffsetX = offsetX;
+            l.OffsetY = offsetY;
+            l.XFlip = xFlip;
+            l.YFlip = yFlip;
+            l.ImageAngle = imageAngle;
+            l.LimbType = limbType;
 
             for (int i = 0; i < children; i++)
             {

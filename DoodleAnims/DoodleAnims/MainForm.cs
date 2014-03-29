@@ -40,6 +40,12 @@ namespace DoodleAnims
                     cmb_type.SelectedItem = _selectedLimb.LimbType;
                     cdl_color.Color = _selectedLimb.Color;
                     pnl_colorStrip.BackColor = _selectedLimb.Color;
+                    nib_offsetX.Value = _selectedLimb.OffsetX;
+                    nib_offsetY.Value = _selectedLimb.OffsetY;
+
+                    nib_imageAngle.Value = _selectedLimb.ImageAngle;
+                    chk_xFlip.Checked = _selectedLimb.XFlip;
+                    chk_yFlip.Checked = _selectedLimb.YFlip;
 
                     if (_selectedLimb.LimbType == LimbType.Textured)
                     {
@@ -47,6 +53,22 @@ namespace DoodleAnims
                     }
                     else
                         img_texture.Image = null;
+                }
+                else
+                {
+                    nib_rotation.Value = 0;
+                    nib_scale.Value = 0;
+                    nib_length.Value = 0;
+                    txt_name.Text = "";
+                    cmb_type.SelectedItem = LimbType.Line;
+                    cdl_color.Color = Color.Black;
+                    pnl_colorStrip.BackColor = Color.Black;
+                    nib_offsetX.Value = 0;
+                    nib_offsetY.Value = 0;
+                    nib_imageAngle.Value = 0;
+                    chk_xFlip.Checked = false;
+                    chk_yFlip.Checked = false;
+                    img_texture.Image = null;
                 }
             }
         }
@@ -79,7 +101,11 @@ namespace DoodleAnims
             _orginLimb.Paint(e.Graphics);
 
             if (_selectedLimb != null)
-                e.Graphics.DrawEllipse(Pens.Red, _selectedLimb.EndPoint.X - 4, _selectedLimb.EndPoint.Y - 4, 8, 8);
+            {
+                e.Graphics.FillEllipse(Brushes.Red, _selectedLimb.EndPoint.X - 4, _selectedLimb.EndPoint.Y - 4, 8, 8);
+                if (_selectedLimb.Parent != null)
+                    e.Graphics.FillEllipse(Brushes.Green, _selectedLimb.Parent.EndPoint.X - 2, _selectedLimb.Parent.EndPoint.Y - 2, 4, 4);
+            }
         }
 
         /// <summary>
@@ -259,6 +285,76 @@ namespace DoodleAnims
         }
 
         /// <summary>
+        /// Called when the value for the x offset field has changed
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
+        private void nib_offsetX_TextChanged(object sender, EventArgs e)
+        {
+            if (SelectedLimb != null)
+            {
+                SelectedLimb.OffsetX = nib_offsetX.Value;
+                dbpnl_renderScreen.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Called when the value for the y offset field has changed
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
+        private void nib_offsetY_TextChanged(object sender, EventArgs e)
+        {
+            if (SelectedLimb != null)
+            {
+                SelectedLimb.OffsetY = nib_offsetY.Value;
+                dbpnl_renderScreen.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Called when the value for the x flip field has changed
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
+        private void chk_xFlip_CheckedChanged(object sender, EventArgs e)
+        {
+            if (SelectedLimb != null)
+            {
+                SelectedLimb.XFlip = chk_xFlip.Checked;
+                dbpnl_renderScreen.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Called when the value for the y flip field has changed
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
+        private void chk_yFlip_CheckedChanged(object sender, EventArgs e)
+        {
+            if (SelectedLimb != null)
+            {
+                SelectedLimb.YFlip = chk_yFlip.Checked;
+                dbpnl_renderScreen.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Called when the value int the image anlge field has changed
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
+        private void nib_imageAngle_TextChanged(object sender, EventArgs e)
+        {
+            if (SelectedLimb != null)
+            {
+                SelectedLimb.ImageAngle = nib_imageAngle.Value;
+                dbpnl_renderScreen.Invalidate();
+            }
+        }
+
+        /// <summary>
         /// Called when the remove button is clicked
         /// </summary>
         /// <param name="sender">The object that raised the event</param>
@@ -306,12 +402,22 @@ namespace DoodleAnims
             }
         }
 
+        /// <summary>
+        /// Called when the new tool strip item is clicked
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
         private void tsi_new_Click(object sender, EventArgs e)
         {
             _orginLimb = new Limb(new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2), Color.Black, 0);
             SelectedLimb = new Limb(_orginLimb, Color.Black, 16);
         }
 
+        /// <summary>
+        /// Called when the save skeleton tool strip item is clicked
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
         private void tsi_save_Click(object sender, EventArgs e)
         {
             DialogResult r = fdl_saveSkeleton.ShowDialog();
@@ -329,6 +435,11 @@ namespace DoodleAnims
             }
         }
 
+        /// <summary>
+        /// Called when the load skeleton tool strip item is clicked
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
         private void tsi_loadSkele_Click(object sender, EventArgs e)
         {
             DialogResult r = fdl_loadSkeleton.ShowDialog();

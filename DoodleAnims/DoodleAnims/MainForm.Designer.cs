@@ -30,6 +30,8 @@
         {
             this.mainWindow = new System.Windows.Forms.SplitContainer();
             this.grp_properties = new System.Windows.Forms.GroupBox();
+            this.lbl_offsetY = new System.Windows.Forms.Label();
+            this.lbl_offsetX = new System.Windows.Forms.Label();
             this.btn_remove = new System.Windows.Forms.Button();
             this.btn_add = new System.Windows.Forms.Button();
             this.img_texture = new System.Windows.Forms.PictureBox();
@@ -47,6 +49,9 @@
             this.fdl_imageImport = new System.Windows.Forms.OpenFileDialog();
             this.fdl_saveSkeleton = new System.Windows.Forms.SaveFileDialog();
             this.fdl_loadSkeleton = new System.Windows.Forms.OpenFileDialog();
+            this.lbl_imageAngle = new System.Windows.Forms.Label();
+            this.chk_xFlip = new System.Windows.Forms.CheckBox();
+            this.chk_yFlip = new System.Windows.Forms.CheckBox();
             this.dbpnl_renderScreen = new DoodleAnims.DoubleBufferedPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +63,9 @@
             this.tsi_loadSkele = new System.Windows.Forms.ToolStripMenuItem();
             this.tsi_loadAnim = new System.Windows.Forms.ToolStripMenuItem();
             this.tsi_export = new System.Windows.Forms.ToolStripMenuItem();
+            this.nib_imageAngle = new DoodleAnims.NumericInputBox();
+            this.nib_offsetY = new DoodleAnims.NumericInputBox();
+            this.nib_offsetX = new DoodleAnims.NumericInputBox();
             this.nib_length = new DoodleAnims.NumericInputBox();
             this.nib_scale = new DoodleAnims.NumericInputBox();
             this.nib_rotation = new DoodleAnims.NumericInputBox();
@@ -91,6 +99,14 @@
             // 
             // grp_properties
             // 
+            this.grp_properties.Controls.Add(this.chk_yFlip);
+            this.grp_properties.Controls.Add(this.chk_xFlip);
+            this.grp_properties.Controls.Add(this.nib_imageAngle);
+            this.grp_properties.Controls.Add(this.lbl_imageAngle);
+            this.grp_properties.Controls.Add(this.nib_offsetY);
+            this.grp_properties.Controls.Add(this.nib_offsetX);
+            this.grp_properties.Controls.Add(this.lbl_offsetY);
+            this.grp_properties.Controls.Add(this.lbl_offsetX);
             this.grp_properties.Controls.Add(this.btn_remove);
             this.grp_properties.Controls.Add(this.btn_add);
             this.grp_properties.Controls.Add(this.img_texture);
@@ -113,6 +129,24 @@
             this.grp_properties.TabIndex = 0;
             this.grp_properties.TabStop = false;
             this.grp_properties.Text = "Properties";
+            // 
+            // lbl_offsetY
+            // 
+            this.lbl_offsetY.AutoSize = true;
+            this.lbl_offsetY.Location = new System.Drawing.Point(10, 331);
+            this.lbl_offsetY.Name = "lbl_offsetY";
+            this.lbl_offsetY.Size = new System.Drawing.Size(48, 13);
+            this.lbl_offsetY.TabIndex = 18;
+            this.lbl_offsetY.Text = "Offset Y:";
+            // 
+            // lbl_offsetX
+            // 
+            this.lbl_offsetX.AutoSize = true;
+            this.lbl_offsetX.Location = new System.Drawing.Point(10, 305);
+            this.lbl_offsetX.Name = "lbl_offsetX";
+            this.lbl_offsetX.Size = new System.Drawing.Size(48, 13);
+            this.lbl_offsetX.TabIndex = 17;
+            this.lbl_offsetX.Text = "Offset X:";
             // 
             // btn_remove
             // 
@@ -259,6 +293,37 @@
             this.fdl_loadSkeleton.DefaultExt = "des";
             this.fdl_loadSkeleton.Filter = "Doodle Empires Skeleton|*.des";
             // 
+            // lbl_imageAngle
+            // 
+            this.lbl_imageAngle.AutoSize = true;
+            this.lbl_imageAngle.Location = new System.Drawing.Point(24, 252);
+            this.lbl_imageAngle.Name = "lbl_imageAngle";
+            this.lbl_imageAngle.Size = new System.Drawing.Size(37, 13);
+            this.lbl_imageAngle.TabIndex = 21;
+            this.lbl_imageAngle.Text = "Angle:";
+            // 
+            // chk_xFlip
+            // 
+            this.chk_xFlip.AutoSize = true;
+            this.chk_xFlip.Location = new System.Drawing.Point(58, 275);
+            this.chk_xFlip.Name = "chk_xFlip";
+            this.chk_xFlip.Size = new System.Drawing.Size(52, 17);
+            this.chk_xFlip.TabIndex = 23;
+            this.chk_xFlip.Text = "X Flip";
+            this.chk_xFlip.UseVisualStyleBackColor = true;
+            this.chk_xFlip.CheckedChanged += new System.EventHandler(this.chk_xFlip_CheckedChanged);
+            // 
+            // chk_yFlip
+            // 
+            this.chk_yFlip.AutoSize = true;
+            this.chk_yFlip.Location = new System.Drawing.Point(119, 275);
+            this.chk_yFlip.Name = "chk_yFlip";
+            this.chk_yFlip.Size = new System.Drawing.Size(52, 17);
+            this.chk_yFlip.TabIndex = 24;
+            this.chk_yFlip.Text = "Y Flip";
+            this.chk_yFlip.UseVisualStyleBackColor = true;
+            this.chk_yFlip.CheckedChanged += new System.EventHandler(this.chk_yFlip_CheckedChanged);
+            // 
             // dbpnl_renderScreen
             // 
             this.dbpnl_renderScreen.Controls.Add(this.menuStrip1);
@@ -357,6 +422,39 @@
             this.tsi_export.Size = new System.Drawing.Size(150, 22);
             this.tsi_export.Text = "Export";
             // 
+            // nib_imageAngle
+            // 
+            this.nib_imageAngle.Integer = true;
+            this.nib_imageAngle.Location = new System.Drawing.Point(67, 249);
+            this.nib_imageAngle.Name = "nib_imageAngle";
+            this.nib_imageAngle.Size = new System.Drawing.Size(104, 20);
+            this.nib_imageAngle.TabIndex = 22;
+            this.nib_imageAngle.Text = "0";
+            this.nib_imageAngle.Value = 0F;
+            this.nib_imageAngle.TextChanged += new System.EventHandler(this.nib_imageAngle_TextChanged);
+            // 
+            // nib_offsetY
+            // 
+            this.nib_offsetY.Integer = false;
+            this.nib_offsetY.Location = new System.Drawing.Point(64, 328);
+            this.nib_offsetY.Name = "nib_offsetY";
+            this.nib_offsetY.Size = new System.Drawing.Size(104, 20);
+            this.nib_offsetY.TabIndex = 20;
+            this.nib_offsetY.Text = "0";
+            this.nib_offsetY.Value = 0F;
+            this.nib_offsetY.TextChanged += new System.EventHandler(this.nib_offsetY_TextChanged);
+            // 
+            // nib_offsetX
+            // 
+            this.nib_offsetX.Integer = false;
+            this.nib_offsetX.Location = new System.Drawing.Point(64, 302);
+            this.nib_offsetX.Name = "nib_offsetX";
+            this.nib_offsetX.Size = new System.Drawing.Size(104, 20);
+            this.nib_offsetX.TabIndex = 19;
+            this.nib_offsetX.Text = "0";
+            this.nib_offsetX.Value = 0F;
+            this.nib_offsetX.TextChanged += new System.EventHandler(this.nib_offsetX_TextChanged);
+            // 
             // nib_length
             // 
             this.nib_length.Integer = false;
@@ -449,6 +547,14 @@
         private System.Windows.Forms.ToolStripMenuItem tsi_loadSkele;
         private System.Windows.Forms.ToolStripMenuItem tsi_loadAnim;
         private System.Windows.Forms.OpenFileDialog fdl_loadSkeleton;
+        private NumericInputBox nib_offsetY;
+        private NumericInputBox nib_offsetX;
+        private System.Windows.Forms.Label lbl_offsetY;
+        private System.Windows.Forms.Label lbl_offsetX;
+        private System.Windows.Forms.CheckBox chk_yFlip;
+        private System.Windows.Forms.CheckBox chk_xFlip;
+        private NumericInputBox nib_imageAngle;
+        private System.Windows.Forms.Label lbl_imageAngle;
     }
 }
 
