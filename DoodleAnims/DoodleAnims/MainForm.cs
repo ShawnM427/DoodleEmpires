@@ -13,8 +13,9 @@ namespace DoodleAnims
 {
     public partial class MainForm : Form
     {
-        Limb _orginLimb;
         Limb _selectedLimb;
+
+        Skeleton _skeleton;
 
         Timer _clock = new Timer();
 
@@ -79,8 +80,12 @@ namespace DoodleAnims
 
             DoubleBuffered = true;
 
-            _orginLimb = new Limb(new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2), Color.Black, 0);
-            SelectedLimb = new Limb(_orginLimb, Color.Black, 16);
+            _skeleton = new Skeleton("", new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2));
+
+            SelectedLimb = _skeleton.Root;
+
+            trv_limbBrowser.Nodes.Clear();
+            trv_limbBrowser.Nodes.Add(_skeleton.RootNode);
 
             _clock.Interval = 16;
 
@@ -89,6 +94,21 @@ namespace DoodleAnims
             cmb_type.Items.Add(LimbType.Textured);
 
             cmb_type.SelectedItem = LimbType.Line;
+
+            if (!Properties.Settings.Default.ShowTree)
+            {
+                int pnlWidth = mainWindow.Panel1.Width;
+                Width = mainWindow.Panel1.Width + grp_properties.Right + 24;
+                mainWindow.SplitterDistance = pnlWidth;
+                trv_limbBrowser.Visible = false;
+            }
+            else
+            {
+                int pnlWidth = mainWindow.Panel1.Width;
+                Width = mainWindow.Panel1.Width + trv_limbBrowser.Right + 20;
+                mainWindow.SplitterDistance = pnlWidth;
+                trv_limbBrowser.Visible = true;
+            }
         }
         
         /// <summary>
@@ -98,7 +118,7 @@ namespace DoodleAnims
         /// <param name="e">The drawing arguments to use</param>
         private void dbpnl_renderScreen_Paint(object sender, PaintEventArgs e)
         {
-            _orginLimb.Paint(e.Graphics);
+            _skeleton.Paint(e.Graphics);
 
             if (_selectedLimb != null)
             {
@@ -117,7 +137,7 @@ namespace DoodleAnims
         {
             if (!_mouseDown)
             {
-                SelectedLimb = _orginLimb.Selected(e);
+                SelectedLimb = _skeleton.Root.Selected(e);
             }
 
             _mouseDown = true;
@@ -361,7 +381,7 @@ namespace DoodleAnims
         /// <param name="e">The blank event args</param>
         private void btn_remove_Click(object sender, EventArgs e)
         {
-            if (SelectedLimb != null)
+            if (SelectedLimb != null & SelectedLimb != _skeleton.Root)
             {
                 BoolDialog d = new BoolDialog("Are you sure you want to delete this limb segment?");
                 DialogResult result = d.ShowDialog();
@@ -372,10 +392,6 @@ namespace DoodleAnims
                     {
                         _selectedLimb.Parent.RemoveChild(_selectedLimb);
                         _selectedLimb = null;
-                    }
-                    else if (_selectedLimb == _orginLimb)
-                    {
-                        _orginLimb = null;
                     }
 
                     dbpnl_renderScreen.Invalidate();
@@ -395,11 +411,6 @@ namespace DoodleAnims
                 Limb l = new Limb(_selectedLimb, Color.Black);
                 SelectedLimb = l;
             }
-            else if (_orginLimb == null)
-            {
-                _orginLimb = new Limb(new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2), Color.Black, 0);
-                SelectedLimb = new Limb(_orginLimb, Color.Black, 16);
-            }
         }
 
         /// <summary>
@@ -409,8 +420,10 @@ namespace DoodleAnims
         /// <param name="e">The blank event args</param>
         private void tsi_new_Click(object sender, EventArgs e)
         {
-            _orginLimb = new Limb(new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2), Color.Black, 0);
-            SelectedLimb = new Limb(_orginLimb, Color.Black, 16);
+            _skeleton = new Skeleton("", new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2));
+            SelectedLimb = _skeleton.Root;
+            trv_limbBrowser.Nodes.Clear();
+            trv_limbBrowser.Nodes.Add(_skeleton.RootNode);
         }
 
         /// <summary>
@@ -427,7 +440,7 @@ namespace DoodleAnims
                 Stream s = File.OpenWrite(fdl_saveSkeleton.FileName);
                 BinaryWriter w = new BinaryWriter(s);
 
-                _orginLimb.Save(w);
+                _skeleton.Save(w);
 
                 w.Close();
                 w.Dispose();
@@ -449,13 +462,47 @@ namespace DoodleAnims
                 Stream s = File.OpenRead(fdl_loadSkeleton.FileName);
                 BinaryReader rd = new BinaryReader(s);
 
-                _orginLimb = Limb.Load(null, rd);
+                _skeleton = Skeleton.Load(rd);
 
-                SelectedLimb = _orginLimb;
+                SelectedLimb = _skeleton.Root;
+
+                trv_limbBrowser.Nodes.Clear();
+                trv_limbBrowser.Nodes.Add(_skeleton.RootNode);
 
                 rd.Close();
                 rd.Dispose();
                 s.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Called when a new limb is selected in the limb browser
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The related event arguments</param>
+        private void trv_limbBrowser_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            SelectedLimb = (Limb)e.Node.Tag;
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings settingsDialog = new Settings();
+            settingsDialog.ShowDialog();
+
+            if (!Properties.Settings.Default.ShowTree)
+            {
+                int pnlWidth = mainWindow.Panel1.Width;
+                Width = mainWindow.Panel1.Width + grp_properties.Right + 24;
+                mainWindow.SplitterDistance = pnlWidth;
+                trv_limbBrowser.Visible = false;
+            }
+            else
+            {
+                int pnlWidth = mainWindow.Panel1.Width;
+                Width = mainWindow.Panel1.Width + trv_limbBrowser.Right + 20;
+                mainWindow.SplitterDistance = pnlWidth;
+                trv_limbBrowser.Visible = true;
             }
         }
     }

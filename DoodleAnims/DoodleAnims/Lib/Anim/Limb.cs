@@ -23,6 +23,12 @@ namespace DoodleAnims.Lib.Anim
         List<Limb> _children = new List<Limb>();
         LimbType _limbType = LimbType.Line;
 
+        Skeleton _parentSkeleton;
+
+        TreeNode _treeNode;
+
+        int _id;
+
         PointF _orgin;
         PointF _startPos;
         PointF _endDrawPos;
@@ -41,6 +47,8 @@ namespace DoodleAnims.Lib.Anim
         Color _color;
 
         protected object _tag;
+
+        string _name;
 
         Pen _drawPen;
         #endregion
@@ -94,8 +102,8 @@ namespace DoodleAnims.Lib.Anim
         /// </summary>
         public string Name
         {
-            get;
-            set;
+            get { return _name; }
+            set { _name = value; if (_treeNode != null) _treeNode.Text = _name; }
         }
         /// <summary>
         /// Gets or sets the limb type for this limb
@@ -177,6 +185,33 @@ namespace DoodleAnims.Lib.Anim
         }
 
         /// <summary>
+        /// Gets the orgin for this limb
+        /// </summary>
+        public PointF Orgin
+        {
+            get { return _orgin; }
+            set
+            {
+                if (_parent == null)
+                    _orgin = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the root limb for this limb
+        /// </summary>
+        public Limb RootLimb
+        {
+            get
+            {
+                if (_parent == null)
+                    return _parent;
+                else
+                    return _parent.RootLimb;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the tag associated with this object. 
         /// Used for textured limbs
         /// </summary>
@@ -185,24 +220,45 @@ namespace DoodleAnims.Lib.Anim
             get { return _tag; }
             set { _tag = value; }
         }
+        /// <summary>
+        /// Gets a treenode representing this limb
+        /// </summary>
+        public TreeNode TreeNode
+        {
+            get { return _treeNode; }
+        }
+
+        /// <summary>
+        /// Gets the ID of this limb
+        /// </summary>
+        public int ID
+        {
+            get { return _id; }
+        }
         #endregion
 
         /// <summary>
-        /// Creates a new limb
+        /// Creates a new <b>root</b> limb
         /// </summary>
-        /// <param name="orgin">The orgin point for this limb</param>
+        /// <param name="skeleton">The owning skeleton, used to declare the root limb</param>
         /// <param name="color">The color of this limb</param>
         /// <param name="length">The length of this limb</param>
-        public Limb(PointF orgin, Color color, float length = 5)
+        public Limb(Skeleton skeleton, Color color, float length = 5)
         {
+            _parentSkeleton = skeleton;
             _scale = 1;
             _rotation = 0;
             _length = length;
             _color = color;
-            _orgin = orgin;
-            Name = "";
+            _orgin = skeleton.Orgin;
+            Name = "Orgin";
 
             _drawPen = new Pen(_color, _scale);
+            _id = skeleton.GetID();
+            _parentSkeleton.AddLimbRef(this);
+
+            _treeNode = new TreeNode(Name);
+            _treeNode.Tag = this;
         }
 
         /// <summary>
@@ -214,16 +270,24 @@ namespace DoodleAnims.Lib.Anim
         public Limb(Limb parent, Color color, float length = 5)
         {
             _parent = parent;
+            _parentSkeleton = _parent._parentSkeleton;
             _scale = 1;
             _rotation = 0;
             _length = length;
             _color = color;
 
-            Name = "";
 
             parent._children.Add(this);
 
             _drawPen = new Pen(_color, _scale);
+            _id = _parentSkeleton.GetID();
+            _parentSkeleton.AddLimbRef(this);
+            Name = _parentSkeleton.GetName();
+
+            _treeNode = new TreeNode(Name);
+            _treeNode.Tag = this;
+
+            _parent._treeNode.Nodes.Add(_treeNode);
         }
 
         /// <summary>
@@ -251,7 +315,15 @@ namespace DoodleAnims.Lib.Anim
         /// <returns>True if sucessfull</returns>
         public bool RemoveChild(Limb limb)
         {
-            return _children.Remove(limb);
+            bool opp = _children.Remove(limb);
+
+            if (opp)
+            {
+                _parentSkeleton.RemoveLimbRef(limb);
+                _treeNode.Nodes.Remove(limb.TreeNode);
+            }
+
+            return opp;
         }
 
         PointF _CENTRE;
@@ -351,31 +423,33 @@ namespace DoodleAnims.Lib.Anim
             w.Write(_parent != null);
             if (_parent == null)
             {
-                w.Write(_orgin.X);
-                w.Write(_orgin.Y);
+                w.Write(_children.Count);
             }
-            w.Write(Rotation);
-            w.Write(Length);
-            w.Write(Scale);
-
-            w.Write(OffsetX);
-            w.Write(OffsetY);
-
-            w.Write(XFlip);
-            w.Write(YFlip);
-            w.Write(ImageAngle);
-
-            w.Write(Color.R);
-            w.Write(Color.G);
-            w.Write(Color.B);
-            w.Write(Color.A);
-            w.Write((byte)LimbType);
-            w.Write(Tag != null);
-            if (Tag != null && LimbType == LimbType.Textured)
+            else
             {
-                w.WriteImage((Bitmap)_tag);
+                w.Write(Rotation);
+                w.Write(Length);
+                w.Write(Scale);
+
+                w.Write(OffsetX);
+                w.Write(OffsetY);
+
+                w.Write(XFlip);
+                w.Write(YFlip);
+                w.Write(ImageAngle);
+
+                w.Write(Color.R);
+                w.Write(Color.G);
+                w.Write(Color.B);
+                w.Write(Color.A);
+                w.Write((byte)LimbType);
+                w.Write(Tag != null);
+                if (Tag != null && LimbType == LimbType.Textured)
+                {
+                    w.WriteImage((Bitmap)_tag);
+                }
+                w.Write(_children.Count);
             }
-            w.Write(_children.Count);
 
             foreach (Limb l in _children)
             {
@@ -388,65 +462,63 @@ namespace DoodleAnims.Lib.Anim
         /// </summary>
         /// <param name="parent">The parent limb, or null to start from scratch</param>
         /// <param name="r">The binaryReader to use</param>
-        public static Limb Load(Limb parent, BinaryReader r)
+        public static Limb Load(Skeleton rootSkeleton, Limb parent, BinaryReader r)
         {
             string name = r.ReadString();
             bool hasParent = r.ReadBoolean();
-            PointF orgin = PointF.Empty;
-            if (!hasParent)
-            {
-                orgin.X = r.ReadSingle();
-                orgin.Y = r.ReadSingle();
-            }
-
-            float rot = r.ReadSingle();
-            float length = r.ReadSingle();
-            float scale = r.ReadSingle();
-
-            float offsetX = r.ReadSingle();
-            float offsetY = r.ReadSingle();
-
-            bool xFlip = r.ReadBoolean();
-            bool yFlip = r.ReadBoolean();
-            float imageAngle = r.ReadSingle();
-
-            byte R = r.ReadByte();
-            byte G = r.ReadByte();
-            byte B = r.ReadByte();
-            byte A = r.ReadByte();
-
-            LimbType limbType = (LimbType)r.ReadByte();
-            bool hasTag = r.ReadBoolean();
-            object tag = null;
-            if (hasTag && limbType == LimbType.Textured)
-            {
-                tag = r.ReadImage();
-            }
-            int children = r.ReadInt32();
-
             Limb l;
+            int children;
+
             if (hasParent)
             {
+                float rot = r.ReadSingle();
+                float length = r.ReadSingle();
+                float scale = r.ReadSingle();
+
+                float offsetX = r.ReadSingle();
+                float offsetY = r.ReadSingle();
+
+                bool xFlip = r.ReadBoolean();
+                bool yFlip = r.ReadBoolean();
+                float imageAngle = r.ReadSingle();
+
+                byte R = r.ReadByte();
+                byte G = r.ReadByte();
+                byte B = r.ReadByte();
+                byte A = r.ReadByte();
+
+                LimbType limbType = (LimbType)r.ReadByte();
+                bool hasTag = r.ReadBoolean();
+                object tag = null;
+                if (hasTag && limbType == LimbType.Textured)
+                {
+                    tag = r.ReadImage();
+                }
+
+                children = r.ReadInt32();
+
                 l = new Limb(parent, Color.FromArgb(A, R, G, B), length);
-            }
+
+                l._tag = tag;
+                l.Name = name;
+                l.Rotation = rot;
+                l.Scale = scale;
+                l.OffsetX = offsetX;
+                l.OffsetY = offsetY;
+                l.XFlip = xFlip;
+                l.YFlip = yFlip;
+                l.ImageAngle = imageAngle;
+                l.LimbType = limbType;
+            }            
             else
             {
-                l = new Limb(orgin, Color.FromArgb(A, R, G, B), length);
+                l = new Limb(rootSkeleton, Color.Transparent, 0);
+                children = r.ReadInt32();
             }
-            l._tag = tag;
-            l.Name = name;
-            l.Rotation = rot;
-            l.Scale = scale;
-            l.OffsetX = offsetX;
-            l.OffsetY = offsetY;
-            l.XFlip = xFlip;
-            l.YFlip = yFlip;
-            l.ImageAngle = imageAngle;
-            l.LimbType = limbType;
 
             for (int i = 0; i < children; i++)
             {
-                Load(l, r);
+                Load(rootSkeleton, l, r);
             }
 
             return l;

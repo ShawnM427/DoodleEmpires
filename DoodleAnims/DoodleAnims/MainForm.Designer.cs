@@ -29,12 +29,13 @@
         private void InitializeComponent()
         {
             this.mainWindow = new System.Windows.Forms.SplitContainer();
+            this.trv_limbBrowser = new System.Windows.Forms.TreeView();
             this.grp_properties = new System.Windows.Forms.GroupBox();
+            this.chk_yFlip = new System.Windows.Forms.CheckBox();
+            this.chk_xFlip = new System.Windows.Forms.CheckBox();
+            this.lbl_imageAngle = new System.Windows.Forms.Label();
             this.lbl_offsetY = new System.Windows.Forms.Label();
             this.lbl_offsetX = new System.Windows.Forms.Label();
-            this.btn_remove = new System.Windows.Forms.Button();
-            this.btn_add = new System.Windows.Forms.Button();
-            this.img_texture = new System.Windows.Forms.PictureBox();
             this.lbl_image = new System.Windows.Forms.Label();
             this.pnl_colorStrip = new System.Windows.Forms.Panel();
             this.txt_color = new System.Windows.Forms.Label();
@@ -49,11 +50,11 @@
             this.fdl_imageImport = new System.Windows.Forms.OpenFileDialog();
             this.fdl_saveSkeleton = new System.Windows.Forms.SaveFileDialog();
             this.fdl_loadSkeleton = new System.Windows.Forms.OpenFileDialog();
-            this.lbl_imageAngle = new System.Windows.Forms.Label();
-            this.chk_xFlip = new System.Windows.Forms.CheckBox();
-            this.chk_yFlip = new System.Windows.Forms.CheckBox();
+            this.btn_remove = new System.Windows.Forms.Button();
+            this.btn_add = new System.Windows.Forms.Button();
+            this.img_texture = new System.Windows.Forms.PictureBox();
             this.dbpnl_renderScreen = new DoodleAnims.DoubleBufferedPanel();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.mst_main = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsi_new = new System.Windows.Forms.ToolStripMenuItem();
             this.tsi_save = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,6 +64,7 @@
             this.tsi_loadSkele = new System.Windows.Forms.ToolStripMenuItem();
             this.tsi_loadAnim = new System.Windows.Forms.ToolStripMenuItem();
             this.tsi_export = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nib_imageAngle = new DoodleAnims.NumericInputBox();
             this.nib_offsetY = new DoodleAnims.NumericInputBox();
             this.nib_offsetX = new DoodleAnims.NumericInputBox();
@@ -76,7 +78,7 @@
             this.grp_properties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.img_texture)).BeginInit();
             this.dbpnl_renderScreen.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.mst_main.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainWindow
@@ -92,13 +94,24 @@
             // 
             // mainWindow.Panel2
             // 
+            this.mainWindow.Panel2.Controls.Add(this.trv_limbBrowser);
             this.mainWindow.Panel2.Controls.Add(this.grp_properties);
-            this.mainWindow.Size = new System.Drawing.Size(720, 411);
-            this.mainWindow.SplitterDistance = 533;
+            this.mainWindow.Size = new System.Drawing.Size(897, 425);
+            this.mainWindow.SplitterDistance = 537;
             this.mainWindow.TabIndex = 0;
+            // 
+            // trv_limbBrowser
+            // 
+            this.trv_limbBrowser.Indent = 6;
+            this.trv_limbBrowser.Location = new System.Drawing.Point(186, 3);
+            this.trv_limbBrowser.Name = "trv_limbBrowser";
+            this.trv_limbBrowser.Size = new System.Drawing.Size(167, 418);
+            this.trv_limbBrowser.TabIndex = 1;
+            this.trv_limbBrowser.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trv_limbBrowser_AfterSelect);
             // 
             // grp_properties
             // 
+            this.grp_properties.AutoSize = true;
             this.grp_properties.Controls.Add(this.chk_yFlip);
             this.grp_properties.Controls.Add(this.chk_xFlip);
             this.grp_properties.Controls.Add(this.nib_imageAngle);
@@ -125,10 +138,41 @@
             this.grp_properties.Controls.Add(this.lbl_name);
             this.grp_properties.Location = new System.Drawing.Point(3, 3);
             this.grp_properties.Name = "grp_properties";
-            this.grp_properties.Size = new System.Drawing.Size(177, 405);
+            this.grp_properties.Size = new System.Drawing.Size(177, 418);
             this.grp_properties.TabIndex = 0;
             this.grp_properties.TabStop = false;
             this.grp_properties.Text = "Properties";
+            // 
+            // chk_yFlip
+            // 
+            this.chk_yFlip.AutoSize = true;
+            this.chk_yFlip.Location = new System.Drawing.Point(119, 275);
+            this.chk_yFlip.Name = "chk_yFlip";
+            this.chk_yFlip.Size = new System.Drawing.Size(52, 17);
+            this.chk_yFlip.TabIndex = 24;
+            this.chk_yFlip.Text = "Y Flip";
+            this.chk_yFlip.UseVisualStyleBackColor = true;
+            this.chk_yFlip.CheckedChanged += new System.EventHandler(this.chk_yFlip_CheckedChanged);
+            // 
+            // chk_xFlip
+            // 
+            this.chk_xFlip.AutoSize = true;
+            this.chk_xFlip.Location = new System.Drawing.Point(58, 275);
+            this.chk_xFlip.Name = "chk_xFlip";
+            this.chk_xFlip.Size = new System.Drawing.Size(52, 17);
+            this.chk_xFlip.TabIndex = 23;
+            this.chk_xFlip.Text = "X Flip";
+            this.chk_xFlip.UseVisualStyleBackColor = true;
+            this.chk_xFlip.CheckedChanged += new System.EventHandler(this.chk_xFlip_CheckedChanged);
+            // 
+            // lbl_imageAngle
+            // 
+            this.lbl_imageAngle.AutoSize = true;
+            this.lbl_imageAngle.Location = new System.Drawing.Point(24, 252);
+            this.lbl_imageAngle.Name = "lbl_imageAngle";
+            this.lbl_imageAngle.Size = new System.Drawing.Size(37, 13);
+            this.lbl_imageAngle.TabIndex = 21;
+            this.lbl_imageAngle.Text = "Angle:";
             // 
             // lbl_offsetY
             // 
@@ -147,45 +191,6 @@
             this.lbl_offsetX.Size = new System.Drawing.Size(48, 13);
             this.lbl_offsetX.TabIndex = 17;
             this.lbl_offsetX.Text = "Offset X:";
-            // 
-            // btn_remove
-            // 
-            this.btn_remove.BackColor = System.Drawing.Color.Transparent;
-            this.btn_remove.BackgroundImage = global::DoodleAnims.Properties.Resources.minus;
-            this.btn_remove.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_remove.FlatAppearance.BorderSize = 0;
-            this.btn_remove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_remove.Location = new System.Drawing.Point(47, 364);
-            this.btn_remove.Name = "btn_remove";
-            this.btn_remove.Size = new System.Drawing.Size(35, 35);
-            this.btn_remove.TabIndex = 16;
-            this.btn_remove.UseVisualStyleBackColor = false;
-            this.btn_remove.Click += new System.EventHandler(this.btn_remove_Click);
-            // 
-            // btn_add
-            // 
-            this.btn_add.BackColor = System.Drawing.Color.Transparent;
-            this.btn_add.BackgroundImage = global::DoodleAnims.Properties.Resources.plus;
-            this.btn_add.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_add.FlatAppearance.BorderSize = 0;
-            this.btn_add.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_add.Location = new System.Drawing.Point(6, 364);
-            this.btn_add.Name = "btn_add";
-            this.btn_add.Size = new System.Drawing.Size(35, 35);
-            this.btn_add.TabIndex = 15;
-            this.btn_add.UseVisualStyleBackColor = false;
-            this.btn_add.Click += new System.EventHandler(this.btn_add_Click);
-            // 
-            // img_texture
-            // 
-            this.img_texture.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.img_texture.Location = new System.Drawing.Point(67, 177);
-            this.img_texture.Name = "img_texture";
-            this.img_texture.Size = new System.Drawing.Size(101, 66);
-            this.img_texture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.img_texture.TabIndex = 14;
-            this.img_texture.TabStop = false;
-            this.img_texture.Click += new System.EventHandler(this.img_texture_Click);
             // 
             // lbl_image
             // 
@@ -293,58 +298,68 @@
             this.fdl_loadSkeleton.DefaultExt = "des";
             this.fdl_loadSkeleton.Filter = "Doodle Empires Skeleton|*.des";
             // 
-            // lbl_imageAngle
+            // btn_remove
             // 
-            this.lbl_imageAngle.AutoSize = true;
-            this.lbl_imageAngle.Location = new System.Drawing.Point(24, 252);
-            this.lbl_imageAngle.Name = "lbl_imageAngle";
-            this.lbl_imageAngle.Size = new System.Drawing.Size(37, 13);
-            this.lbl_imageAngle.TabIndex = 21;
-            this.lbl_imageAngle.Text = "Angle:";
+            this.btn_remove.BackColor = System.Drawing.Color.Transparent;
+            this.btn_remove.BackgroundImage = global::DoodleAnims.Properties.Resources.minus;
+            this.btn_remove.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btn_remove.FlatAppearance.BorderSize = 0;
+            this.btn_remove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_remove.Location = new System.Drawing.Point(47, 364);
+            this.btn_remove.Name = "btn_remove";
+            this.btn_remove.Size = new System.Drawing.Size(35, 35);
+            this.btn_remove.TabIndex = 16;
+            this.btn_remove.UseVisualStyleBackColor = false;
+            this.btn_remove.Click += new System.EventHandler(this.btn_remove_Click);
             // 
-            // chk_xFlip
+            // btn_add
             // 
-            this.chk_xFlip.AutoSize = true;
-            this.chk_xFlip.Location = new System.Drawing.Point(58, 275);
-            this.chk_xFlip.Name = "chk_xFlip";
-            this.chk_xFlip.Size = new System.Drawing.Size(52, 17);
-            this.chk_xFlip.TabIndex = 23;
-            this.chk_xFlip.Text = "X Flip";
-            this.chk_xFlip.UseVisualStyleBackColor = true;
-            this.chk_xFlip.CheckedChanged += new System.EventHandler(this.chk_xFlip_CheckedChanged);
+            this.btn_add.BackColor = System.Drawing.Color.Transparent;
+            this.btn_add.BackgroundImage = global::DoodleAnims.Properties.Resources.plus;
+            this.btn_add.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btn_add.FlatAppearance.BorderSize = 0;
+            this.btn_add.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_add.Location = new System.Drawing.Point(6, 364);
+            this.btn_add.Name = "btn_add";
+            this.btn_add.Size = new System.Drawing.Size(35, 35);
+            this.btn_add.TabIndex = 15;
+            this.btn_add.UseVisualStyleBackColor = false;
+            this.btn_add.Click += new System.EventHandler(this.btn_add_Click);
             // 
-            // chk_yFlip
+            // img_texture
             // 
-            this.chk_yFlip.AutoSize = true;
-            this.chk_yFlip.Location = new System.Drawing.Point(119, 275);
-            this.chk_yFlip.Name = "chk_yFlip";
-            this.chk_yFlip.Size = new System.Drawing.Size(52, 17);
-            this.chk_yFlip.TabIndex = 24;
-            this.chk_yFlip.Text = "Y Flip";
-            this.chk_yFlip.UseVisualStyleBackColor = true;
-            this.chk_yFlip.CheckedChanged += new System.EventHandler(this.chk_yFlip_CheckedChanged);
+            this.img_texture.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.img_texture.Location = new System.Drawing.Point(67, 177);
+            this.img_texture.Name = "img_texture";
+            this.img_texture.Size = new System.Drawing.Size(101, 66);
+            this.img_texture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.img_texture.TabIndex = 14;
+            this.img_texture.TabStop = false;
+            this.img_texture.Click += new System.EventHandler(this.img_texture_Click);
             // 
             // dbpnl_renderScreen
             // 
-            this.dbpnl_renderScreen.Controls.Add(this.menuStrip1);
+            this.dbpnl_renderScreen.AutoSize = true;
+            this.dbpnl_renderScreen.Controls.Add(this.mst_main);
             this.dbpnl_renderScreen.Location = new System.Drawing.Point(0, 0);
             this.dbpnl_renderScreen.Name = "dbpnl_renderScreen";
-            this.dbpnl_renderScreen.Size = new System.Drawing.Size(534, 411);
+            this.dbpnl_renderScreen.Size = new System.Drawing.Size(537, 425);
             this.dbpnl_renderScreen.TabIndex = 0;
             this.dbpnl_renderScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.dbpnl_renderScreen_Paint);
             this.dbpnl_renderScreen.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dbpnl_renderScreen_MouseDown);
             this.dbpnl_renderScreen.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dbpnl_renderScreen_MouseMove);
             this.dbpnl_renderScreen.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dbpnl_renderScreen_MouseUp);
             // 
-            // menuStrip1
+            // mst_main
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(534, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
+            this.mst_main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.settingsToolStripMenuItem});
+            this.mst_main.Location = new System.Drawing.Point(0, 0);
+            this.mst_main.Name = "mst_main";
+            this.mst_main.Size = new System.Drawing.Size(537, 24);
+            this.mst_main.TabIndex = 0;
+            this.mst_main.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
@@ -422,6 +437,13 @@
             this.tsi_export.Size = new System.Drawing.Size(150, 22);
             this.tsi_export.Text = "Export";
             // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
             // nib_imageAngle
             // 
             this.nib_imageAngle.Integer = true;
@@ -492,13 +514,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(720, 411);
+            this.ClientSize = new System.Drawing.Size(897, 425);
             this.Controls.Add(this.mainWindow);
-            this.MainMenuStrip = this.menuStrip1;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MainMenuStrip = this.mst_main;
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Doodle Anims";
             this.mainWindow.Panel1.ResumeLayout(false);
+            this.mainWindow.Panel1.PerformLayout();
             this.mainWindow.Panel2.ResumeLayout(false);
+            this.mainWindow.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainWindow)).EndInit();
             this.mainWindow.ResumeLayout(false);
             this.grp_properties.ResumeLayout(false);
@@ -506,8 +532,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.img_texture)).EndInit();
             this.dbpnl_renderScreen.ResumeLayout(false);
             this.dbpnl_renderScreen.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.mst_main.ResumeLayout(false);
+            this.mst_main.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -535,7 +561,7 @@
         private System.Windows.Forms.Label lbl_image;
         private System.Windows.Forms.Button btn_add;
         private System.Windows.Forms.Button btn_remove;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip mst_main;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsi_new;
         private System.Windows.Forms.ToolStripMenuItem tsi_save;
@@ -555,6 +581,8 @@
         private System.Windows.Forms.CheckBox chk_xFlip;
         private NumericInputBox nib_imageAngle;
         private System.Windows.Forms.Label lbl_imageAngle;
+        private System.Windows.Forms.TreeView trv_limbBrowser;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
     }
 }
 
