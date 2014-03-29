@@ -1,5 +1,8 @@
 ﻿namespace DoodleAnims
 {
+    /// <summary>
+    /// The main editor form for DE Anims
+    /// </summary>
     partial class MainForm
     {
         /// <summary>

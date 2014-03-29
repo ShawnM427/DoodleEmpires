@@ -74,6 +74,9 @@ namespace DoodleAnims
             }
         }
 
+        /// <summary>
+        /// Creates a new main DE Anims form
+        /// </summary>
         public MainForm()
         {
             InitializeComponent();

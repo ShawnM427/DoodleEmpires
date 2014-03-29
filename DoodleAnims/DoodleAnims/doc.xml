@@ -1,0 +1,623 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DoodleAnims</name>
+    </assembly>
+    <members>
+        <member name="T:DoodleAnims.NumericInputBox">
+            <summary>
+            A text box that only accepts numeric input
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.NumericInputBox.OnKeyPress(System.Windows.Forms.KeyPressEventArgs)">
+            <summary>
+            Overrides the keypress to ignore all non-numeric inputs
+            </summary>
+            <param name="e">The key event to handle</param>
+        </member>
+        <member name="P:DoodleAnims.NumericInputBox.Value">
+            <summary>
+            Gets or sets the value for this control
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.NumericInputBox.Integer">
+            <summary>
+            Gets or sets whether this control should allow integers only
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.BoolDialog">
+            <summary>
+            Represents a simple dialog with a yes/no answer
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.BoolDialog.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.BoolDialog.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DoodleAnims.BoolDialog.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.BoolDialog.#ctor(System.String)">
+            <summary>
+            Creates a new boolean dialog box
+            </summary>
+            <param name="text">The message of the box</param>
+        </member>
+        <member name="M:DoodleAnims.BoolDialog.btn_yes_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when yes was clicked
+            </summary>
+            <param name="sender">The object that raised this event</param>
+            <param name="e">A blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.BoolDialog.btn_no_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when no was clicked
+            </summary>
+            <param name="sender">The object that raised this event</param>
+            <param name="e">A blank event args</param>
+        </member>
+        <member name="T:DoodleAnims.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Properties.Resources.minus">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Properties.Resources.plus">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.Lib.Anim.Limb">
+            <summary>
+            Represents a limb for a body
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.#ctor(DoodleAnims.Lib.Anim.Skeleton,System.Drawing.Color,System.Single)">
+            <summary>
+            Creates a new <b>root</b> limb
+            </summary>
+            <param name="skeleton">The owning skeleton, used to declare the root limb</param>
+            <param name="color">The color of this limb</param>
+            <param name="length">The length of this limb</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.#ctor(DoodleAnims.Lib.Anim.Limb,System.Drawing.Color,System.Single)">
+            <summary>
+            Creates a new limb
+            </summary>
+            <param name="parent">The parent limb</param>
+            <param name="color">The color of this limb</param>
+            <param name="length">The length of this limb</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.PointAt(System.Drawing.PointF)">
+            <summary>
+            Points this limb towards a given point
+            </summary>
+            <param name="pos">The point to point this limb at</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.PointAt(System.Drawing.Point)">
+            <summary>
+            Points this limb towards a given point
+            </summary>
+            <param name="pos">The point to point this limb at</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.RemoveChild(DoodleAnims.Lib.Anim.Limb)">
+            <summary>
+            Removes a limb from this limb's children limbs
+            </summary>
+            <param name="limb">The limb to remove</param>
+            <returns>True if sucessfull</returns>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.Paint(System.Drawing.Graphics)">
+            <summary>
+            Renders this limb and all children limbs to the screen
+            </summary>
+            <param name="graphics">The Graphics device to use</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.Selected(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Gets the limb within range of the mouse, or null if none is in range
+            </summary>
+            <param name="e">The MouseEventArgs to check</param>
+            <returns>Closest limb to the mouse, or null</returns>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.Save(System.IO.BinaryWriter)">
+            <summary>
+            Saves a skeleton to a memory stream
+            </summary>
+            <param name="w">The binary writer to use</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.Load(DoodleAnims.Lib.Anim.Skeleton,DoodleAnims.Lib.Anim.Limb,System.IO.BinaryReader)">
+            <summary>
+            Loads a skeleton from a memory stream
+            </summary>
+            <param name="rootSkeleton">The parent skeleton to load limbs into</param>
+            <param name="parent">The parent limb, or null to start from scratch</param>
+            <param name="r">The binaryReader to use</param>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.Scale">
+            <summary>
+            Gets or sets the scale for this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.Rotation">
+            <summary>
+            Gets or sets the rotation for this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.Length">
+            <summary>
+            Gets or sets the length for this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.Color">
+            <summary>
+            Gets or sets the color for this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.Name">
+            <summary>
+            Gets or sets the name for this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.LimbType">
+            <summary>
+            Gets or sets the limb type for this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.OffsetX">
+            <summary>
+            Gets or sets the offset x value
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.OffsetY">
+            <summary>
+            Gets or sets the offset y value
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.Offset">
+            <summary>
+            Gets or sets the offset value
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.XFlip">
+            <summary>
+            Gets or sets whether this limb flips it's image horizontally
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.YFlip">
+            <summary>
+            Gets or sets whether this limb flips it's image vertically
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.ImageAngle">
+            <summary>
+            Gets or sets the angle for this limb's image
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.Parent">
+            <summary>
+            Gets this limbs parent, or null
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.EndPoint">
+            <summary>
+            Gets the endpoint for this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.Orgin">
+            <summary>
+            Gets the orgin for this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.RootLimb">
+            <summary>
+            Gets the root limb for this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.Tag">
+            <summary>
+            Gets or sets the tag associated with this object. 
+            Used for textured limbs
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.TreeNode">
+            <summary>
+            Gets a treenode representing this limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Limb.ID">
+            <summary>
+            Gets the ID of this limb
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.Lib.Anim.LimbType">
+            <summary>
+            Represents the type of a limb
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.Lib.Anim.LimbType.Line">
+            <summary>
+            A simple line
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.Lib.Anim.LimbType.Circle">
+            <summary>
+            A circle
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.Lib.Anim.LimbType.Textured">
+            <summary>
+            A textured segment
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.MainForm">
+            <summary>
+            The main editor form for DE Anims
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.MainForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.MainForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.MainForm.#ctor">
+            <summary>
+            Creates a new main DE Anims form
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.MainForm.dbpnl_renderScreen_Paint(System.Object,System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Called when the main screen needs to render
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The drawing arguments to use</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.dbpnl_renderScreen_MouseDown(System.Object,System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Called when the mouse is pressed in the main render screen
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The mouse arguments</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.dbpnl_renderScreen_MouseUp(System.Object,System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Called when the mouse is released in the main render screen
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The mouse arguments</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.dbpnl_renderScreen_MouseMove(System.Object,System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Called when the mouse is moved over the main render screen
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The mouse arguments</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.cmb_type_KeyPress(System.Object,System.Windows.Forms.KeyPressEventArgs)">
+            <summary>
+            Called when a user tries to input text into the type picker
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The key event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.nib_rotation_ValueChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value for the rotation field has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event argument</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.nib_scale_TextChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value for the scale field has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.txt_name_TextChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value in the name field has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.nib_length_TextChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value for the length field has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.cmb_type_SelectedIndexChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when a new limb type is selected
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.pnl_colorStrip_DoubleClick(System.Object,System.EventArgs)">
+            <summary>
+            Called when the color strip is double clicked
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.img_texture_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when the image icon is double clicked
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.nib_offsetX_TextChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value for the x offset field has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.nib_offsetY_TextChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value for the y offset field has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.chk_xFlip_CheckedChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value for the x flip field has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.chk_yFlip_CheckedChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value for the y flip field has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.nib_imageAngle_TextChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value int the image anlge field has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.btn_remove_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when the remove button is clicked
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.btn_add_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when the add button is clicked
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.tsi_new_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when the new tool strip item is clicked
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.tsi_save_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when the save skeleton tool strip item is clicked
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.tsi_loadSkele_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when the load skeleton tool strip item is clicked
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.trv_limbBrowser_AfterSelect(System.Object,System.Windows.Forms.TreeViewEventArgs)">
+            <summary>
+            Called when a new limb is selected in the limb browser
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The related event arguments</param>
+        </member>
+        <member name="P:DoodleAnims.MainForm.SelectedLimb">
+            <summary>
+            Gets or sets the currently selected limb
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.DoubleBufferedPanel">
+            <summary>
+            A panel that uses double buffering
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.DoubleBufferedPanel.#ctor">
+            <summary>
+            Creates a new double-buffered panel
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.BinaryExtensions">
+            <summary>
+            Some basic extensions for binary data processing
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.BinaryExtensions.ReadImage(System.IO.BinaryReader)">
+            <summary>
+            Reads an image from a data stream
+            </summary>
+            <param name="r">The binary reader to use</param>
+            <returns>An image loaded from the stream</returns>
+        </member>
+        <member name="M:DoodleAnims.BinaryExtensions.WriteImage(System.IO.BinaryWriter,System.Drawing.Bitmap)">
+            <summary>
+            Writes an image to a data stream
+            </summary>
+            <param name="w">The binary writer to use</param>
+            <param name="i">The image to write</param>
+        </member>
+        <member name="M:DoodleAnims.Program.Main">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.Lib.Anim.Skeleton">
+            <summary>
+            Represents a skeleton
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.#ctor(System.String,System.Drawing.PointF)">
+            <summary>
+            Creates a new skeleton
+            </summary>
+            <param name="name">The name for this skeleton</param>
+            <param name="orgin">The orgin point of the skeleton</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.GetID">
+            <summary>
+            Gets the first available ID
+            </summary>
+            <returns>The first available ID</returns>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.GetName">
+            <summary>
+            Gets the first available generic name
+            </summary>
+            <returns>The first available generic name</returns>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.AddLimbRef(DoodleAnims.Lib.Anim.Limb)">
+            <summary>
+            Adds a limb refrence to this skeleton
+            </summary>
+            <param name="limb">The limb to add</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.RemoveLimbRef(DoodleAnims.Lib.Anim.Limb)">
+            <summary>
+            Removes a limb refrence to this skeleton
+            </summary>
+            <param name="limb">The limb to add</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.Paint(System.Drawing.Graphics)">
+            <summary>
+            Renders this skeleton
+            </summary>
+            <param name="graphics">The graphics device to use</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.Save(System.IO.BinaryWriter)">
+            <summary>
+            Saves this skeleton to a stream
+            </summary>
+            <param name="w">The binary writer to use</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.Load(System.IO.BinaryReader)">
+            <summary>
+            Loads a skeleton from a stream
+            </summary>
+            <param name="r">The binary reader to use</param>
+            <returns>A skeleton loaded from the stream</returns>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Skeleton.Root">
+            <summary>
+            Gets the root limb for this skeleton
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Skeleton.Orgin">
+            <summary>
+            Gets or sets the orgin position of this skeleton
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Skeleton.Name">
+            <summary>
+            Gets or sets the name of this skeleton
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Skeleton.RootNode">
+            <summary>
+            Gets the root treenode to represent this skeleton
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.Settings">
+            <summary>
+            A form where the user can edit settings
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Settings.#ctor">
+            <summary>
+            Creates a new settings form
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Settings.btn_ok_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when the user clicks ok
+            </summary>
+            <param name="sender">The object that raised this event</param>
+            <param name="e">A blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.Settings.btn_cancel_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when the user clicks cancel
+            </summary>
+            <param name="sender">The object that raised this event</param>
+            <param name="e">A blank event args</param>
+        </member>
+        <member name="F:DoodleAnims.Settings.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Settings.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DoodleAnims.Settings.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+    </members>
+</doc>

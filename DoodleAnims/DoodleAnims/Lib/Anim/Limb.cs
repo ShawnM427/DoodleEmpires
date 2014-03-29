@@ -46,7 +46,7 @@ namespace DoodleAnims.Lib.Anim
         float _scale = 1;
         Color _color;
 
-        protected object _tag;
+        object _tag;
 
         string _name;
 
@@ -460,6 +460,7 @@ namespace DoodleAnims.Lib.Anim
         /// <summary>
         /// Loads a skeleton from a memory stream
         /// </summary>
+        /// <param name="rootSkeleton">The parent skeleton to load limbs into</param>
         /// <param name="parent">The parent limb, or null to start from scratch</param>
         /// <param name="r">The binaryReader to use</param>
         public static Limb Load(Skeleton rootSkeleton, Limb parent, BinaryReader r)
@@ -530,8 +531,17 @@ namespace DoodleAnims.Lib.Anim
     /// </summary>
     public enum LimbType : byte
     {
+        /// <summary>
+        /// A simple line
+        /// </summary>
         Line = 0,
+        /// <summary>
+        /// A circle
+        /// </summary>
         Circle = 1,
+        /// <summary>
+        /// A textured segment
+        /// </summary>
         Textured = 2
     }
 }
