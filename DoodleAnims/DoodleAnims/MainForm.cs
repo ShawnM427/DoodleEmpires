@@ -19,7 +19,19 @@ namespace DoodleAnims
 
         Timer _clock = new Timer();
 
+        float _eMS;
+        float _oMS;
+        byte _eMT;
+        byte _oMT;
+
+        Brush _eBrush;
+        Pen _ePen;
+        Brush _oBrush;
+        Pen _oPen;
+
         bool _mouseDown = false;
+
+        SettingsDialog _settings = new SettingsDialog();
 
         /// <summary>
         /// Gets or sets the currently selected limb
@@ -40,13 +52,13 @@ namespace DoodleAnims
                     txt_name.Text = _selectedLimb.Name;
                     cmb_type.SelectedItem = _selectedLimb.LimbType;
                     cdl_color.Color = _selectedLimb.Color;
-                    pnl_colorStrip.BackColor = _selectedLimb.Color;
+                    cdd_limbColor.SelectedColor = _selectedLimb.Color;
                     nib_offsetX.Value = _selectedLimb.OffsetX;
                     nib_offsetY.Value = _selectedLimb.OffsetY;
 
                     nib_imageAngle.Value = _selectedLimb.ImageAngle;
-                    chk_xFlip.Checked = _selectedLimb.XFlip;
-                    chk_yFlip.Checked = _selectedLimb.YFlip;
+                    chk_xFlip.Checked = _selectedLimb.XScale == -1;
+                    chk_yFlip.Checked = _selectedLimb.YScale == -1;
 
                     if (_selectedLimb.LimbType == LimbType.Textured)
                     {
@@ -63,7 +75,7 @@ namespace DoodleAnims
                     txt_name.Text = "";
                     cmb_type.SelectedItem = LimbType.Line;
                     cdl_color.Color = Color.Black;
-                    pnl_colorStrip.BackColor = Color.Black;
+                    cdd_limbColor.SelectedColor = Color.Black;
                     nib_offsetX.Value = 0;
                     nib_offsetY.Value = 0;
                     nib_imageAngle.Value = 0;
@@ -79,7 +91,12 @@ namespace DoodleAnims
         /// </summary>
         public MainForm()
         {
+            #if DEBUG
+            //Properties.Settings.Default.Reset();
+            #endif
+
             InitializeComponent();
+            dbpnl_renderScreen.BackColor = Properties.Settings.Default.BackgroundColor;
 
             DoubleBuffered = true;
 
@@ -98,6 +115,28 @@ namespace DoodleAnims
 
             cmb_type.SelectedItem = LimbType.Line;
 
+            BuildSettingsRelated();
+        }
+
+        /// <summary>
+        /// Rebuilds anything that changes based on the settings
+        /// </summary>
+        private void BuildSettingsRelated()
+        {
+            dbpnl_renderScreen.BackColor = Properties.Settings.Default.BackgroundColor;
+
+            _eMS = Properties.Settings.Default.EndPointMarkerSize;
+            _oMS = Properties.Settings.Default.OrginMarkerSize;
+
+            _eMT = Properties.Settings.Default.EndPointMarkerType;
+            _oMT = Properties.Settings.Default.EndPointMarkerType;
+
+            _eBrush = new SolidBrush(Properties.Settings.Default.EndPointColor);
+            _ePen = new Pen(Properties.Settings.Default.EndPointColor);
+
+            _oBrush = new SolidBrush(Properties.Settings.Default.OrginColor);
+            _oPen = new Pen(Properties.Settings.Default.OrginColor);
+
             if (!Properties.Settings.Default.ShowTree)
             {
                 int pnlWidth = mainWindow.Panel1.Width;
@@ -112,6 +151,8 @@ namespace DoodleAnims
                 mainWindow.SplitterDistance = pnlWidth;
                 trv_limbBrowser.Visible = true;
             }
+
+            dbpnl_renderScreen.Invalidate();
         }
         
         /// <summary>
@@ -125,9 +166,27 @@ namespace DoodleAnims
 
             if (_selectedLimb != null)
             {
-                e.Graphics.FillEllipse(Brushes.Red, _selectedLimb.EndPoint.X - 4, _selectedLimb.EndPoint.Y - 4, 8, 8);
-                if (_selectedLimb.Parent != null)
-                    e.Graphics.FillEllipse(Brushes.Green, _selectedLimb.Parent.EndPoint.X - 2, _selectedLimb.Parent.EndPoint.Y - 2, 4, 4);
+                if (_eMT == 0)
+                {
+                    e.Graphics.FillEllipse(_eBrush,
+                        _selectedLimb.EndPoint.X - _eMS / 2, _selectedLimb.EndPoint.Y - _eMS / 2, _eMS, _eMS);
+                }
+                else if (_eMT == 1)
+                {
+                    e.Graphics.DrawEllipse(_ePen,
+                        _selectedLimb.EndPoint.X - _eMS / 2, _selectedLimb.EndPoint.Y - _eMS / 2, _eMS, _eMS);
+                }
+
+                if (_oMT == 0)
+                {
+                    e.Graphics.FillEllipse(_oBrush,
+                        _selectedLimb.Orgin.X - _oMS / 2, _selectedLimb.Orgin.Y - _oMS / 2, _oMS, _oMS);
+                }
+                else if (_oMT == 1)
+                {
+                    e.Graphics.DrawEllipse(_oPen,
+                        _selectedLimb.Orgin.X - _oMS / 2, _selectedLimb.Orgin.Y - _oMS / 2, _oMS, _oMS);
+                }
             }
         }
 
@@ -138,13 +197,15 @@ namespace DoodleAnims
         /// <param name="e">The mouse arguments</param>
         private void dbpnl_renderScreen_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!_mouseDown)
+            if (e.Button == MouseButtons.Left)
             {
-                SelectedLimb = _skeleton.Root.Selected(e);
-            }
+                if (!_mouseDown)
+                {
+                    SelectedLimb = _skeleton.Root.Selected(e);
+                }
 
-            _mouseDown = true;
-            //Capture = true;
+                _mouseDown = true;
+            }
         }
 
         /// <summary>
@@ -154,8 +215,10 @@ namespace DoodleAnims
         /// <param name="e">The mouse arguments</param>
         private void dbpnl_renderScreen_MouseUp(object sender, MouseEventArgs e)
         {
-            _mouseDown = false;
-            //Capture = false;
+            if (e.Button == MouseButtons.Left)
+            {
+                _mouseDown = false;
+            }
         }
 
         /// <summary>
@@ -267,24 +330,7 @@ namespace DoodleAnims
                 dbpnl_renderScreen.Invalidate();
             }
         }
-
-        /// <summary>
-        /// Called when the color strip is double clicked
-        /// </summary>
-        /// <param name="sender">The object that raised the event</param>
-        /// <param name="e">The blank event args</param>
-        private void pnl_colorStrip_DoubleClick(object sender, EventArgs e)
-        {
-            cdl_color.ShowDialog();
-            pnl_colorStrip.BackColor = cdl_color.Color;
-
-            if (SelectedLimb != null)
-            {
-                SelectedLimb.Color = cdl_color.Color;
-                dbpnl_renderScreen.Invalidate();
-            }
-        }
-
+        
         /// <summary>
         /// Called when the image icon is double clicked
         /// </summary>
@@ -344,7 +390,7 @@ namespace DoodleAnims
         {
             if (SelectedLimb != null)
             {
-                SelectedLimb.XFlip = chk_xFlip.Checked;
+                SelectedLimb.XScale = chk_xFlip.Checked ? -1 : 1;
                 dbpnl_renderScreen.Invalidate();
             }
         }
@@ -358,7 +404,7 @@ namespace DoodleAnims
         {
             if (SelectedLimb != null)
             {
-                SelectedLimb.YFlip = chk_yFlip.Checked;
+                SelectedLimb.YScale = chk_yFlip.Checked ? -1 : 1;
                 dbpnl_renderScreen.Invalidate();
             }
         }
@@ -479,6 +525,31 @@ namespace DoodleAnims
         }
 
         /// <summary>
+        /// Called when the settings tool strip item is clicked
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
+        private void tsi_settings_Click(object sender, EventArgs e)
+        {
+            DialogResult result = _settings.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                BuildSettingsRelated();
+            }
+        }
+
+        /// <summary>
+        /// Overrides the keypress for the mode dropdown
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The key event arguments</param>
+        private void tsc_mode_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        /// <summary>
         /// Called when a new limb is selected in the limb browser
         /// </summary>
         /// <param name="sender">The object that raised the event</param>
@@ -488,25 +559,18 @@ namespace DoodleAnims
             SelectedLimb = (Limb)e.Node.Tag;
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Called when the color selector's value has changed
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The blank event args</param>
+        private void cdd_limbColor_SelectedValueChanged(object sender, EventArgs e)
         {
-            Settings settingsDialog = new Settings();
-            settingsDialog.ShowDialog();
-
-            if (!Properties.Settings.Default.ShowTree)
+            if (SelectedLimb != null)
             {
-                int pnlWidth = mainWindow.Panel1.Width;
-                Width = mainWindow.Panel1.Width + grp_properties.Right + 24;
-                mainWindow.SplitterDistance = pnlWidth;
-                trv_limbBrowser.Visible = false;
+                SelectedLimb.Color = cdd_limbColor.SelectedColor;
+                dbpnl_renderScreen.Invalidate();
             }
-            else
-            {
-                int pnlWidth = mainWindow.Panel1.Width;
-                Width = mainWindow.Panel1.Width + trv_limbBrowser.Right + 20;
-                mainWindow.SplitterDistance = pnlWidth;
-                trv_limbBrowser.Visible = true;
-            }
-        }
+        }        
     }
 }

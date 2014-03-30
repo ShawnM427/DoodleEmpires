@@ -13,6 +13,11 @@ namespace DoodleAnims.Lib.Anim
     /// </summary>
     public class Skeleton
     {
+        /// <summary>
+        /// The current skeleton file version, should be updated whenever new parameters are added
+        /// </summary>
+        public const byte FILE_VERSION = 2;
+
         Limb _rootNode;
         PointF _orgin;
         string _name = "newSkeleton";
@@ -119,6 +124,59 @@ namespace DoodleAnims.Lib.Anim
         }
 
         /// <summary>
+        /// Dispenses a new keyframe
+        /// </summary>
+        /// <param name="time">The time in seconds that the keyframe exists</param>
+        /// <returns>A keyframe generated from this skeleton</returns>
+        public AnimKeyFrame GetKeyFrame(double time = 0)
+        {
+            return new AnimKeyFrame(_idLimbs, time);
+        }
+
+        /// <summary>
+        /// Applies a frame to this skeleton
+        /// </summary>
+        /// <param name="frame">The frame to apply</param>
+        public void ApplyFrame(AnimKeyFrame frame)
+        {
+            if (frame.KeyStates.Length == _idLimbs.Length)
+            {
+                for (int i = 0; i < frame.KeyStates.Length; i++)
+                {
+                    if (_idLimbs[i] != null & frame.KeyStates[i] != null)
+                    {
+                        ApplyAnimState(frame.KeyStates[i]);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("The keyframe must match this skeleton!");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Applies an animation state to this skeleton
+        /// </summary>
+        /// <param name="state">The state to apply</param>
+        private void ApplyAnimState(AnimState state)
+        {
+            if (state.ID < _idLimbs.Length & state.ID >= 0)
+            {
+                _idLimbs[state.ID].Rotation = state.Rotation;
+                _idLimbs[state.ID].OffsetX = state.OffsetX;
+                _idLimbs[state.ID].OffsetY = state.OffsetY;
+                _idLimbs[state.ID].ImageAngle = state.ImageAngle;
+                _idLimbs[state.ID].Scale = state.Scale;
+                _idLimbs[state.ID].Color = state.Color;
+                _idLimbs[state.ID].XScale = state.XScale;
+                _idLimbs[state.ID].YScale = state.YScale;
+            }
+            else
+                throw new InvalidOperationException("The anim state must match up with this skeleton!");
+        }
+
+        /// <summary>
         /// Renders this skeleton
         /// </summary>
         /// <param name="graphics">The graphics device to use</param>
@@ -126,7 +184,7 @@ namespace DoodleAnims.Lib.Anim
         {
             _rootNode.Paint(graphics);
         }
-
+        
         /// <summary>
         /// Saves this skeleton to a stream
         /// </summary>
@@ -134,7 +192,7 @@ namespace DoodleAnims.Lib.Anim
         public void Save(BinaryWriter w)
         {
             w.Write(Name);
-            w.Write((byte)1);
+            w.Write(FILE_VERSION);
             w.Write(_orgin.X);
             w.Write(_orgin.Y);
             _rootNode.Save(w);
@@ -155,7 +213,19 @@ namespace DoodleAnims.Lib.Anim
                 float y = r.ReadSingle();
 
                 Skeleton s = new Skeleton(name, new PointF(x, y));
-                s._rootNode = Limb.Load(s, null, r);
+
+                switch (version)
+                {
+                    case 1:
+                        s._rootNode = Limb.LoadV1(s, null, r);
+                        break;
+                    case 2:
+                        s._rootNode = Limb.LoadV2(s, null, r);
+                        break;
+                    default:
+                        s._rootNode = new Limb(s, Color.Transparent, 0);
+                        break;
+                }
 
                 return s;
             }

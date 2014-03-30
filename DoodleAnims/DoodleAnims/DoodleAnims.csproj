@@ -60,12 +60,19 @@
     <Compile Include="BoolDialog.Designer.cs">
       <DependentUpon>BoolDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ColorDropDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Lib\Anim\Animation.cs" />
+    <Compile Include="Lib\Anim\AnimKeyFrame.cs" />
+    <Compile Include="Lib\Anim\AnimState.cs" />
     <Compile Include="Lib\Anim\Skeleton.cs" />
-    <Compile Include="Settings.cs">
+    <Compile Include="MathExtensions.cs" />
+    <Compile Include="SettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Settings.Designer.cs">
-      <DependentUpon>Settings.cs</DependentUpon>
+    <Compile Include="SettingsDialog.Designer.cs">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
@@ -98,8 +105,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Settings.resx">
-      <DependentUpon>Settings.cs</DependentUpon>
+    <EmbeddedResource Include="SettingsDialog.resx">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -119,6 +126,10 @@
     <None Include="Resources\minus.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

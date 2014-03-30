@@ -93,6 +93,105 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="T:DoodleAnims.Lib.Anim.Skeleton">
+            <summary>
+            Represents a skeleton
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.Lib.Anim.Skeleton.FILE_VERSION">
+            <summary>
+            The current skeleton file version, should be updated whenever new parameters are added
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.#ctor(System.String,System.Drawing.PointF)">
+            <summary>
+            Creates a new skeleton
+            </summary>
+            <param name="name">The name for this skeleton</param>
+            <param name="orgin">The orgin point of the skeleton</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.GetID">
+            <summary>
+            Gets the first available ID
+            </summary>
+            <returns>The first available ID</returns>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.GetName">
+            <summary>
+            Gets the first available generic name
+            </summary>
+            <returns>The first available generic name</returns>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.AddLimbRef(DoodleAnims.Lib.Anim.Limb)">
+            <summary>
+            Adds a limb refrence to this skeleton
+            </summary>
+            <param name="limb">The limb to add</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.RemoveLimbRef(DoodleAnims.Lib.Anim.Limb)">
+            <summary>
+            Removes a limb refrence to this skeleton
+            </summary>
+            <param name="limb">The limb to add</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.GetKeyFrame(System.Double)">
+            <summary>
+            Dispenses a new keyframe
+            </summary>
+            <param name="time">The time in seconds that the keyframe exists</param>
+            <returns>A keyframe generated from this skeleton</returns>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.ApplyFrame(DoodleAnims.Lib.Anim.AnimKeyFrame)">
+            <summary>
+            Applies a frame to this skeleton
+            </summary>
+            <param name="frame">The frame to apply</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.ApplyAnimState(DoodleAnims.Lib.Anim.AnimState)">
+            <summary>
+            Applies an animation state to this skeleton
+            </summary>
+            <param name="state">The state to apply</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.Paint(System.Drawing.Graphics)">
+            <summary>
+            Renders this skeleton
+            </summary>
+            <param name="graphics">The graphics device to use</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.Save(System.IO.BinaryWriter)">
+            <summary>
+            Saves this skeleton to a stream
+            </summary>
+            <param name="w">The binary writer to use</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Skeleton.Load(System.IO.BinaryReader)">
+            <summary>
+            Loads a skeleton from a stream
+            </summary>
+            <param name="r">The binary reader to use</param>
+            <returns>A skeleton loaded from the stream</returns>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Skeleton.Root">
+            <summary>
+            Gets the root limb for this skeleton
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Skeleton.Orgin">
+            <summary>
+            Gets or sets the orgin position of this skeleton
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Skeleton.Name">
+            <summary>
+            Gets or sets the name of this skeleton
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Skeleton.RootNode">
+            <summary>
+            Gets the root treenode to represent this skeleton
+            </summary>
+        </member>
         <member name="T:DoodleAnims.Lib.Anim.Limb">
             <summary>
             Represents a limb for a body
@@ -152,7 +251,15 @@
             </summary>
             <param name="w">The binary writer to use</param>
         </member>
-        <member name="M:DoodleAnims.Lib.Anim.Limb.Load(DoodleAnims.Lib.Anim.Skeleton,DoodleAnims.Lib.Anim.Limb,System.IO.BinaryReader)">
+        <member name="M:DoodleAnims.Lib.Anim.Limb.LoadV2(DoodleAnims.Lib.Anim.Skeleton,DoodleAnims.Lib.Anim.Limb,System.IO.BinaryReader)">
+            <summary>
+            Loads a skeleton from a memory stream
+            </summary>
+            <param name="rootSkeleton">The parent skeleton to load limbs into</param>
+            <param name="parent">The parent limb, or null to start from scratch</param>
+            <param name="r">The binaryReader to use</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Limb.LoadV1(DoodleAnims.Lib.Anim.Skeleton,DoodleAnims.Lib.Anim.Limb,System.IO.BinaryReader)">
             <summary>
             Loads a skeleton from a memory stream
             </summary>
@@ -205,12 +312,12 @@
             Gets or sets the offset value
             </summary>
         </member>
-        <member name="P:DoodleAnims.Lib.Anim.Limb.XFlip">
+        <member name="P:DoodleAnims.Lib.Anim.Limb.XScale">
             <summary>
             Gets or sets whether this limb flips it's image horizontally
             </summary>
         </member>
-        <member name="P:DoodleAnims.Lib.Anim.Limb.YFlip">
+        <member name="P:DoodleAnims.Lib.Anim.Limb.YScale">
             <summary>
             Gets or sets whether this limb flips it's image vertically
             </summary>
@@ -303,6 +410,11 @@
             Creates a new main DE Anims form
             </summary>
         </member>
+        <member name="M:DoodleAnims.MainForm.BuildSettingsRelated">
+            <summary>
+            Rebuilds anything that changes based on the settings
+            </summary>
+        </member>
         <member name="M:DoodleAnims.MainForm.dbpnl_renderScreen_Paint(System.Object,System.Windows.Forms.PaintEventArgs)">
             <summary>
             Called when the main screen needs to render
@@ -369,13 +481,6 @@
         <member name="M:DoodleAnims.MainForm.cmb_type_SelectedIndexChanged(System.Object,System.EventArgs)">
             <summary>
             Called when a new limb type is selected
-            </summary>
-            <param name="sender">The object that raised the event</param>
-            <param name="e">The blank event args</param>
-        </member>
-        <member name="M:DoodleAnims.MainForm.pnl_colorStrip_DoubleClick(System.Object,System.EventArgs)">
-            <summary>
-            Called when the color strip is double clicked
             </summary>
             <param name="sender">The object that raised the event</param>
             <param name="e">The blank event args</param>
@@ -457,12 +562,33 @@
             <param name="sender">The object that raised the event</param>
             <param name="e">The blank event args</param>
         </member>
+        <member name="M:DoodleAnims.MainForm.tsi_settings_Click(System.Object,System.EventArgs)">
+            <summary>
+            Called when the settings tool strip item is clicked
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.tsc_mode_KeyPress(System.Object,System.Windows.Forms.KeyPressEventArgs)">
+            <summary>
+            Overrides the keypress for the mode dropdown
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The key event arguments</param>
+        </member>
         <member name="M:DoodleAnims.MainForm.trv_limbBrowser_AfterSelect(System.Object,System.Windows.Forms.TreeViewEventArgs)">
             <summary>
             Called when a new limb is selected in the limb browser
             </summary>
             <param name="sender">The object that raised the event</param>
             <param name="e">The related event arguments</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.cdd_limbColor_SelectedValueChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the color selector's value has changed
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The blank event args</param>
         </member>
         <member name="P:DoodleAnims.MainForm.SelectedLimb">
             <summary>
@@ -498,122 +624,336 @@
             <param name="w">The binary writer to use</param>
             <param name="i">The image to write</param>
         </member>
+        <member name="T:DoodleAnims.Math2">
+            <summary>
+            A class for some basic math stuffs
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Math2.Lerp(System.Single,System.Single,System.Single)">
+            <summary>
+            Performs linear interpolation between two values
+            </summary>
+            <param name="min">The minimum value</param>
+            <param name="max">The maximum value</param>
+            <param name="percent">The percent, between 0 and 1, to lerp</param>
+            <returns>A linear interpolation of min-max</returns>
+        </member>
+        <member name="M:DoodleAnims.Math2.Lerp(System.Double,System.Double,System.Double)">
+            <summary>
+            Performs linear interpolation between two values
+            </summary>
+            <param name="min">The minimum value</param>
+            <param name="max">The maximum value</param>
+            <param name="percent">The percent, between 0 and 1, to lerp</param>
+            <returns>A linear interpolation of min-max</returns>
+        </member>
+        <member name="M:DoodleAnims.Math2.Lerp(System.Int32,System.Int32,System.Double)">
+            <summary>
+            Performs linear interpolation between two values
+            </summary>
+            <param name="min">The minimum value</param>
+            <param name="max">The maximum value</param>
+            <param name="percent">The percent, between 0 and 1, to lerp</param>
+            <returns>A linear interpolation of min-max</returns>
+        </member>
+        <member name="M:DoodleAnims.Math2.Lerp(System.Drawing.Color,System.Drawing.Color,System.Single)">
+            <summary>
+            Performs linear interpolation between 2 colors
+            </summary>
+            <param name="min">The minimum value</param>
+            <param name="max">The maximum value</param>
+            <param name="percent">The percent, between 0 and 1, to lerp</param>
+            <returns>A linear interpolation of min-max</returns>
+        </member>
         <member name="M:DoodleAnims.Program.Main">
             <summary>
             The main entry point for the application.
             </summary>
         </member>
-        <member name="T:DoodleAnims.Lib.Anim.Skeleton">
+        <member name="T:DoodleAnims.Lib.Anim.AnimState">
             <summary>
-            Represents a skeleton
+            Represents a single limb's state
             </summary>
         </member>
-        <member name="M:DoodleAnims.Lib.Anim.Skeleton.#ctor(System.String,System.Drawing.PointF)">
+        <member name="M:DoodleAnims.Lib.Anim.AnimState.#ctor(System.Int32)">
             <summary>
-            Creates a new skeleton
+            Creates a new blank anim state bound to a specific ID
             </summary>
-            <param name="name">The name for this skeleton</param>
-            <param name="orgin">The orgin point of the skeleton</param>
+            <param name="id">The ID of the limb to bind to</param>
         </member>
-        <member name="M:DoodleAnims.Lib.Anim.Skeleton.GetID">
+        <member name="M:DoodleAnims.Lib.Anim.AnimState.#ctor(DoodleAnims.Lib.Anim.Limb)">
             <summary>
-            Gets the first available ID
+            Creates a new animation state from a limb's settings
             </summary>
-            <returns>The first available ID</returns>
+            <param name="baseLimb">The limb to grab the settings from</param>
         </member>
-        <member name="M:DoodleAnims.Lib.Anim.Skeleton.GetName">
+        <member name="M:DoodleAnims.Lib.Anim.AnimState.Lerp(DoodleAnims.Lib.Anim.AnimState,DoodleAnims.Lib.Anim.AnimState,System.Single)">
             <summary>
-            Gets the first available generic name
+            Performs linear interpolation over two anim states
             </summary>
-            <returns>The first available generic name</returns>
+            <param name="min">The start anim state</param>
+            <param name="max">The end anim state</param>
+            <param name="percent">The percentage from in to max, between 0 and 1</param>
+            <returns>An animation state lerped between the min and max</returns>
         </member>
-        <member name="M:DoodleAnims.Lib.Anim.Skeleton.AddLimbRef(DoodleAnims.Lib.Anim.Limb)">
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.ID">
             <summary>
-            Adds a limb refrence to this skeleton
+            Gets the ID of the limb that this anim state is associated with
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.Scale">
+            <summary>
+            Gets or sets the new scale for the limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.Rotation">
+            <summary>
+            Gets or sets the rotation for the limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.Color">
+            <summary>
+            Gets or sets the color for the limb
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.OffsetX">
+            <summary>
+            Gets or sets the offset x value
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.OffsetY">
+            <summary>
+            Gets or sets the offset y value
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.Offset">
+            <summary>
+            Gets or sets the offset value
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.XScale">
+            <summary>
+            Gets or sets whether this limb flips it's image horizontally
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.YScale">
+            <summary>
+            Gets or sets whether this limb flips it's image vertically
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.AnimState.ImageAngle">
+            <summary>
+            Gets or sets the angle for this limb's image
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.Lib.Anim.AnimKeyFrame">
+            <summary>
+            Represents a keyframe in an animation
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.AnimKeyFrame.#ctor(DoodleAnims.Lib.Anim.Limb[],System.Double)">
+            <summary>
+            Creates a new animation keyframe
+            </summary>
+            <param name="limbs">The list of limbs to build this keyframe for</param>
+            <param name="time">The time in milliseconds for this keyframe</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.AnimKeyFrame.AddLimbRef(DoodleAnims.Lib.Anim.Limb)">
+            <summary>
+            Adds a limb refrence to this animation keyframe
             </summary>
             <param name="limb">The limb to add</param>
         </member>
-        <member name="M:DoodleAnims.Lib.Anim.Skeleton.RemoveLimbRef(DoodleAnims.Lib.Anim.Limb)">
+        <member name="M:DoodleAnims.Lib.Anim.AnimKeyFrame.RemoveLimbRef(DoodleAnims.Lib.Anim.Limb)">
             <summary>
-            Removes a limb refrence to this skeleton
+            Removes a limb refrence to this animation keyframe
             </summary>
             <param name="limb">The limb to add</param>
         </member>
-        <member name="M:DoodleAnims.Lib.Anim.Skeleton.Paint(System.Drawing.Graphics)">
+        <member name="M:DoodleAnims.Lib.Anim.AnimKeyFrame.Lerp(DoodleAnims.Lib.Anim.AnimKeyFrame,DoodleAnims.Lib.Anim.AnimKeyFrame,System.Single)">
             <summary>
-            Renders this skeleton
+            Performs linear interpolation between two keyframes
             </summary>
-            <param name="graphics">The graphics device to use</param>
+            <param name="min">The minimum value</param>
+            <param name="max">The maximum value</param>
+            <param name="percent">The percent from min to max, from 0 to 1</param>
+            <returns>A keyframe lerped from min-max</returns>
         </member>
-        <member name="M:DoodleAnims.Lib.Anim.Skeleton.Save(System.IO.BinaryWriter)">
+        <member name="P:DoodleAnims.Lib.Anim.AnimKeyFrame.KeyStates">
             <summary>
-            Saves this skeleton to a stream
-            </summary>
-            <param name="w">The binary writer to use</param>
-        </member>
-        <member name="M:DoodleAnims.Lib.Anim.Skeleton.Load(System.IO.BinaryReader)">
-            <summary>
-            Loads a skeleton from a stream
-            </summary>
-            <param name="r">The binary reader to use</param>
-            <returns>A skeleton loaded from the stream</returns>
-        </member>
-        <member name="P:DoodleAnims.Lib.Anim.Skeleton.Root">
-            <summary>
-            Gets the root limb for this skeleton
+            Gets the states for this frame
             </summary>
         </member>
-        <member name="P:DoodleAnims.Lib.Anim.Skeleton.Orgin">
+        <member name="P:DoodleAnims.Lib.Anim.AnimKeyFrame.Time">
             <summary>
-            Gets or sets the orgin position of this skeleton
+            Gets the time for this key frame in milliseconds
             </summary>
         </member>
-        <member name="P:DoodleAnims.Lib.Anim.Skeleton.Name">
+        <member name="T:DoodleAnims.Lib.Anim.Animation">
             <summary>
-            Gets or sets the name of this skeleton
+            Represents an animation for a skeleton
             </summary>
         </member>
-        <member name="P:DoodleAnims.Lib.Anim.Skeleton.RootNode">
+        <member name="M:DoodleAnims.Lib.Anim.Animation.#ctor(DoodleAnims.Lib.Anim.Skeleton)">
             <summary>
-            Gets the root treenode to represent this skeleton
+            Creates a new animation
+            </summary>
+            <param name="skeleton">The skeleton to bind to</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Animation.AddKeyFrame(DoodleAnims.Lib.Anim.AnimKeyFrame)">
+            <summary>
+            Adds a keyframe to this animation
+            </summary>
+            <param name="frame">The frame to add</param>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Animation.RemoveKeyFrame(DoodleAnims.Lib.Anim.AnimKeyFrame)">
+            <summary>
+            Removes a keyrame from this animation
+            </summary>
+            <param name="frame">The frame to remove</param>
+            <returns>true if sucessfull</returns>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Animation.SortByTime(DoodleAnims.Lib.Anim.AnimKeyFrame,DoodleAnims.Lib.Anim.AnimKeyFrame)">
+            <summary>
+            Gets the sort ID for two frames based on time
+            </summary>
+            <param name="X">The first frame</param>
+            <param name="Y">The second frame</param>
+            <returns></returns>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Animation.Restart">
+            <summary>
+            Restarts and plays this animation
             </summary>
         </member>
-        <member name="T:DoodleAnims.Settings">
+        <member name="M:DoodleAnims.Lib.Anim.Animation.Play">
+            <summary>
+            Begins playing this animation
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Animation.Pause">
+            <summary>
+            Pauses this animation
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Animation.Stop">
+            <summary>
+            Stops this animation and sets it back to the start
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Lib.Anim.Animation.Update(System.TimeSpan)">
+            <summary>
+            Update the animation timeline.
+            </summary>
+            <param name="elapsedTime">The time since the last frame was displayed</param>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Animation.Length">
+            <summary>
+            Gets the length of this animation
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Animation.CurrentFrame">
+            <summary>
+            Gets the current frame of the animation
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Lib.Anim.Animation.CurrentTime">
+            <summary>
+            Gets or sets the current time in the animation
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.ColorDropDown">
+            <summary>
+            Represents a drop-down box for colors
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.ColorDropDown.#ctor">
+            <summary>
+            Creates a new Color Drop Down
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.ColorDropDown.OnKeyPress(System.Windows.Forms.KeyPressEventArgs)">
+            <summary>
+            Overrides the default keypress to disallow user editing
+            </summary>
+            <param name="e">The key arguments</param>
+        </member>
+        <member name="M:DoodleAnims.ColorDropDown.OnDrawItem(System.Windows.Forms.DrawItemEventArgs)">
+            <summary>
+            Overrides the item draw for this control
+            </summary>
+            <param name="e">The drawing event arguments</param>
+        </member>
+        <member name="M:DoodleAnims.ColorDropDown.OnMeasureItem(System.Windows.Forms.MeasureItemEventArgs)">
+            <summary>
+            Overrides the measure item
+            </summary>
+            <param name="e">The measure item arguments</param>
+        </member>
+        <member name="M:DoodleAnims.ColorDropDown.OnSelectionChangeCommitted(System.EventArgs)">
+            <summary>
+            Overrides the selected index changed event
+            </summary>
+            <param name="e">A blank event argument</param>
+        </member>
+        <member name="M:DoodleAnims.ColorDropDown.SplitCamelCase(System.String)">
+            <summary>
+            Splits a string by capitals
+            </summary>
+            <param name="source">The string to split</param>
+            <returns></returns>
+        </member>
+        <member name="P:DoodleAnims.ColorDropDown.SelectedColor">
+            <summary>
+            Gets the currently selected color
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.ColorDropDown.AllowCustomColor">
+            <summary>
+            Gets or sets whether this control allows the user to enter custom colors
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.ColorDropDown.AllowTransparent">
+            <summary>
+            Gets or sets whether this control allows the user to select transparent
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.SettingsDialog">
             <summary>
             A form where the user can edit settings
             </summary>
         </member>
-        <member name="M:DoodleAnims.Settings.#ctor">
+        <member name="M:DoodleAnims.SettingsDialog.#ctor">
             <summary>
             Creates a new settings form
             </summary>
         </member>
-        <member name="M:DoodleAnims.Settings.btn_ok_Click(System.Object,System.EventArgs)">
+        <member name="M:DoodleAnims.SettingsDialog.btn_ok_Click(System.Object,System.EventArgs)">
             <summary>
             Called when the user clicks ok
             </summary>
             <param name="sender">The object that raised this event</param>
             <param name="e">A blank event args</param>
         </member>
-        <member name="M:DoodleAnims.Settings.btn_cancel_Click(System.Object,System.EventArgs)">
+        <member name="M:DoodleAnims.SettingsDialog.btn_cancel_Click(System.Object,System.EventArgs)">
             <summary>
             Called when the user clicks cancel
             </summary>
             <param name="sender">The object that raised this event</param>
             <param name="e">A blank event args</param>
         </member>
-        <member name="F:DoodleAnims.Settings.components">
+        <member name="F:DoodleAnims.SettingsDialog.components">
             <summary>
             Required designer variable.
             </summary>
         </member>
-        <member name="M:DoodleAnims.Settings.Dispose(System.Boolean)">
+        <member name="M:DoodleAnims.SettingsDialog.Dispose(System.Boolean)">
             <summary>
             Clean up any resources being used.
             </summary>
             <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         </member>
-        <member name="M:DoodleAnims.Settings.InitializeComponent">
+        <member name="M:DoodleAnims.SettingsDialog.InitializeComponent">
             <summary>
             Required method for Designer support - do not modify
             the contents of this method with the code editor.

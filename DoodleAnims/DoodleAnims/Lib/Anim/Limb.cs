@@ -39,8 +39,8 @@ namespace DoodleAnims.Lib.Anim
         float _radRot = 0;
         float _length = 1;
 
-        bool _xFlip = false;
-        bool _yFlip = false;
+        float _xScale = 1;
+        float _yScale = 1;
         float _imageAngle = 0;
         
         float _scale = 1;
@@ -146,18 +146,18 @@ namespace DoodleAnims.Lib.Anim
         /// <summary>
         /// Gets or sets whether this limb flips it's image horizontally
         /// </summary>
-        public bool XFlip
+        public float XScale
         {
-            get { return _xFlip; }
-            set { _xFlip = value; }
+            get { return _xScale; }
+            set { _xScale = value; }
         }
         /// <summary>
         /// Gets or sets whether this limb flips it's image vertically
         /// </summary>
-        public bool YFlip
+        public float YScale
         {
-            get { return _yFlip; }
-            set { _yFlip = value; }
+            get { return _yScale; }
+            set { _yScale = value; }
         }
         /// <summary>
         /// Gets or sets the angle for this limb's image
@@ -378,7 +378,7 @@ namespace DoodleAnims.Lib.Anim
                         graphics.TranslateTransform(_CENTRE.X, _CENTRE.Y);
                         graphics.RotateTransform(_rotation + 90);
                         graphics.RotateTransform(_imageAngle);
-                        graphics.ScaleTransform(XFlip ? -1 : 1, YFlip ? -1 : 1);
+                        graphics.ScaleTransform(XScale, YScale);
                         graphics.TranslateTransform(-_length / 2, -_length / 2);
                         graphics.DrawImage((Image)_tag, 0, 0, _length, _length);
                         graphics.ResetTransform();
@@ -434,8 +434,8 @@ namespace DoodleAnims.Lib.Anim
                 w.Write(OffsetX);
                 w.Write(OffsetY);
 
-                w.Write(XFlip);
-                w.Write(YFlip);
+                w.Write(XScale);
+                w.Write(YScale);
                 w.Write(ImageAngle);
 
                 w.Write(Color.R);
@@ -463,7 +463,7 @@ namespace DoodleAnims.Lib.Anim
         /// <param name="rootSkeleton">The parent skeleton to load limbs into</param>
         /// <param name="parent">The parent limb, or null to start from scratch</param>
         /// <param name="r">The binaryReader to use</param>
-        public static Limb Load(Skeleton rootSkeleton, Limb parent, BinaryReader r)
+        public static Limb LoadV2(Skeleton rootSkeleton, Limb parent, BinaryReader r)
         {
             string name = r.ReadString();
             bool hasParent = r.ReadBoolean();
@@ -479,8 +479,8 @@ namespace DoodleAnims.Lib.Anim
                 float offsetX = r.ReadSingle();
                 float offsetY = r.ReadSingle();
 
-                bool xFlip = r.ReadBoolean();
-                bool yFlip = r.ReadBoolean();
+                float xScale = r.ReadSingle();
+                float yScale = r.ReadSingle();
                 float imageAngle = r.ReadSingle();
 
                 byte R = r.ReadByte();
@@ -506,8 +506,8 @@ namespace DoodleAnims.Lib.Anim
                 l.Scale = scale;
                 l.OffsetX = offsetX;
                 l.OffsetY = offsetY;
-                l.XFlip = xFlip;
-                l.YFlip = yFlip;
+                l.XScale = xScale;
+                l.YScale = yScale;
                 l.ImageAngle = imageAngle;
                 l.LimbType = limbType;
             }            
@@ -519,7 +519,75 @@ namespace DoodleAnims.Lib.Anim
 
             for (int i = 0; i < children; i++)
             {
-                Load(rootSkeleton, l, r);
+                LoadV2(rootSkeleton, l, r);
+            }
+
+            return l;
+        }
+
+        /// <summary>
+        /// Loads a skeleton from a memory stream
+        /// </summary>
+        /// <param name="rootSkeleton">The parent skeleton to load limbs into</param>
+        /// <param name="parent">The parent limb, or null to start from scratch</param>
+        /// <param name="r">The binaryReader to use</param>
+        public static Limb LoadV1(Skeleton rootSkeleton, Limb parent, BinaryReader r)
+        {
+            string name = r.ReadString();
+            bool hasParent = r.ReadBoolean();
+            Limb l;
+            int children;
+
+            if (hasParent)
+            {
+                float rot = r.ReadSingle();
+                float length = r.ReadSingle();
+                float scale = r.ReadSingle();
+
+                float offsetX = r.ReadSingle();
+                float offsetY = r.ReadSingle();
+
+                float xScale = r.ReadBoolean() ? -1 : 1;
+                float yScale = r.ReadBoolean() ? -1 : 1;
+                float imageAngle = r.ReadSingle();
+
+                byte R = r.ReadByte();
+                byte G = r.ReadByte();
+                byte B = r.ReadByte();
+                byte A = r.ReadByte();
+
+                LimbType limbType = (LimbType)r.ReadByte();
+                bool hasTag = r.ReadBoolean();
+                object tag = null;
+                if (hasTag && limbType == LimbType.Textured)
+                {
+                    tag = r.ReadImage();
+                }
+
+                children = r.ReadInt32();
+
+                l = new Limb(parent, Color.FromArgb(A, R, G, B), length);
+
+                l._tag = tag;
+                l.Name = name;
+                l.Rotation = rot;
+                l.Scale = scale;
+                l.OffsetX = offsetX;
+                l.OffsetY = offsetY;
+                l.XScale = xScale;
+                l.YScale = yScale;
+                l.ImageAngle = imageAngle;
+                l.LimbType = limbType;
+            }
+            else
+            {
+                l = new Limb(rootSkeleton, Color.Transparent, 0);
+                children = r.ReadInt32();
+            }
+
+            for (int i = 0; i < children; i++)
+            {
+                LoadV1(rootSkeleton, l, r);
             }
 
             return l;

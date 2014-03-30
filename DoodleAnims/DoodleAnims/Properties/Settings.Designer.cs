@@ -34,5 +34,89 @@ namespace DoodleAnims.Properties {
                 this["ShowTree"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Lime")]
+        public global::System.Drawing.Color OrginColor {
+            get {
+                return ((global::System.Drawing.Color)(this["OrginColor"]));
+            }
+            set {
+                this["OrginColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
+        public global::System.Drawing.Color EndPointColor {
+            get {
+                return ((global::System.Drawing.Color)(this["EndPointColor"]));
+            }
+            set {
+                this["EndPointColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public float OrginMarkerSize {
+            get {
+                return ((float)(this["OrginMarkerSize"]));
+            }
+            set {
+                this["OrginMarkerSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public float EndPointMarkerSize {
+            get {
+                return ((float)(this["EndPointMarkerSize"]));
+            }
+            set {
+                this["EndPointMarkerSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte OrginMarkerType {
+            get {
+                return ((byte)(this["OrginMarkerType"]));
+            }
+            set {
+                this["OrginMarkerType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte EndPointMarkerType {
+            get {
+                return ((byte)(this["EndPointMarkerType"]));
+            }
+            set {
+                this["EndPointMarkerType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("White")]
+        public global::System.Drawing.Color BackgroundColor {
+            get {
+                return ((global::System.Drawing.Color)(this["BackgroundColor"]));
+            }
+            set {
+                this["BackgroundColor"] = value;
+            }
+        }
     }
 }
