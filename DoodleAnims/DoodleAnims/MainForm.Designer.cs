@@ -32,29 +32,6 @@
         private void InitializeComponent()
         {
             this.mainWindow = new System.Windows.Forms.SplitContainer();
-            this.trv_limbBrowser = new System.Windows.Forms.TreeView();
-            this.grp_properties = new System.Windows.Forms.GroupBox();
-            this.chk_yFlip = new System.Windows.Forms.CheckBox();
-            this.chk_xFlip = new System.Windows.Forms.CheckBox();
-            this.lbl_imageAngle = new System.Windows.Forms.Label();
-            this.lbl_offsetY = new System.Windows.Forms.Label();
-            this.lbl_offsetX = new System.Windows.Forms.Label();
-            this.btn_remove = new System.Windows.Forms.Button();
-            this.btn_add = new System.Windows.Forms.Button();
-            this.img_texture = new System.Windows.Forms.PictureBox();
-            this.lbl_image = new System.Windows.Forms.Label();
-            this.txt_color = new System.Windows.Forms.Label();
-            this.cmb_type = new System.Windows.Forms.ComboBox();
-            this.lbl_type = new System.Windows.Forms.Label();
-            this.lbl_length = new System.Windows.Forms.Label();
-            this.txt_prop_scale = new System.Windows.Forms.Label();
-            this.txt_name = new System.Windows.Forms.TextBox();
-            this.lbl_rotation = new System.Windows.Forms.Label();
-            this.lbl_name = new System.Windows.Forms.Label();
-            this.cdl_color = new System.Windows.Forms.ColorDialog();
-            this.fdl_imageImport = new System.Windows.Forms.OpenFileDialog();
-            this.fdl_saveSkeleton = new System.Windows.Forms.SaveFileDialog();
-            this.fdl_loadSkeleton = new System.Windows.Forms.OpenFileDialog();
             this.dbpnl_renderScreen = new DoodleAnims.DoubleBufferedPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsi_file = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,21 +47,44 @@
             this.tss_1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsl_mode = new System.Windows.Forms.ToolStripLabel();
             this.tsc_mode = new System.Windows.Forms.ToolStripComboBox();
+            this.trv_limbBrowser = new System.Windows.Forms.TreeView();
+            this.grp_properties = new System.Windows.Forms.GroupBox();
+            this.cdd_limbColor = new DoodleAnims.ColorDropDown();
+            this.chk_yFlip = new System.Windows.Forms.CheckBox();
+            this.chk_xFlip = new System.Windows.Forms.CheckBox();
             this.nib_imageAngle = new DoodleAnims.NumericInputBox();
+            this.lbl_imageAngle = new System.Windows.Forms.Label();
             this.nib_offsetY = new DoodleAnims.NumericInputBox();
             this.nib_offsetX = new DoodleAnims.NumericInputBox();
+            this.lbl_offsetY = new System.Windows.Forms.Label();
+            this.lbl_offsetX = new System.Windows.Forms.Label();
+            this.btn_remove = new System.Windows.Forms.Button();
+            this.btn_add = new System.Windows.Forms.Button();
+            this.img_texture = new System.Windows.Forms.PictureBox();
+            this.lbl_image = new System.Windows.Forms.Label();
+            this.txt_color = new System.Windows.Forms.Label();
+            this.cmb_type = new System.Windows.Forms.ComboBox();
+            this.lbl_type = new System.Windows.Forms.Label();
             this.nib_length = new DoodleAnims.NumericInputBox();
+            this.lbl_length = new System.Windows.Forms.Label();
             this.nib_scale = new DoodleAnims.NumericInputBox();
+            this.txt_prop_scale = new System.Windows.Forms.Label();
             this.nib_rotation = new DoodleAnims.NumericInputBox();
-            this.cdd_limbColor = new DoodleAnims.ColorDropDown();
+            this.txt_name = new System.Windows.Forms.TextBox();
+            this.lbl_rotation = new System.Windows.Forms.Label();
+            this.lbl_name = new System.Windows.Forms.Label();
+            this.cdl_color = new System.Windows.Forms.ColorDialog();
+            this.fdl_imageImport = new System.Windows.Forms.OpenFileDialog();
+            this.fdl_saveSkeleton = new System.Windows.Forms.SaveFileDialog();
+            this.fdl_loadSkeleton = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.mainWindow)).BeginInit();
             this.mainWindow.Panel1.SuspendLayout();
             this.mainWindow.Panel2.SuspendLayout();
             this.mainWindow.SuspendLayout();
-            this.grp_properties.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.img_texture)).BeginInit();
             this.dbpnl_renderScreen.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.grp_properties.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.img_texture)).BeginInit();
             this.SuspendLayout();
             // 
             // mainWindow
@@ -106,6 +106,138 @@
             this.mainWindow.SplitterDistance = 537;
             this.mainWindow.TabIndex = 0;
             this.mainWindow.TabStop = false;
+            // 
+            // dbpnl_renderScreen
+            // 
+            this.dbpnl_renderScreen.AutoSize = true;
+            this.dbpnl_renderScreen.Controls.Add(this.toolStrip1);
+            this.dbpnl_renderScreen.Location = new System.Drawing.Point(0, 0);
+            this.dbpnl_renderScreen.Name = "dbpnl_renderScreen";
+            this.dbpnl_renderScreen.Size = new System.Drawing.Size(537, 425);
+            this.dbpnl_renderScreen.TabIndex = 0;
+            this.dbpnl_renderScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.dbpnl_renderScreen_Paint);
+            this.dbpnl_renderScreen.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dbpnl_renderScreen_MouseDown);
+            this.dbpnl_renderScreen.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dbpnl_renderScreen_MouseMove);
+            this.dbpnl_renderScreen.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dbpnl_renderScreen_MouseUp);
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsi_file,
+            this.tsi_settings,
+            this.tss_1,
+            this.tsl_mode,
+            this.tsc_mode});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(537, 25);
+            this.toolStrip1.TabIndex = 1;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // tsi_file
+            // 
+            this.tsi_file.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsi_new,
+            this.tsi_save,
+            this.tsi_load,
+            this.tsi_export});
+            this.tsi_file.Name = "tsi_file";
+            this.tsi_file.Size = new System.Drawing.Size(37, 25);
+            this.tsi_file.Text = "File";
+            // 
+            // tsi_new
+            // 
+            this.tsi_new.Name = "tsi_new";
+            this.tsi_new.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.tsi_new.Size = new System.Drawing.Size(150, 22);
+            this.tsi_new.Text = "New";
+            this.tsi_new.Click += new System.EventHandler(this.tsi_new_Click);
+            // 
+            // tsi_save
+            // 
+            this.tsi_save.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsi_saveSkele,
+            this.tsi_saveAnim});
+            this.tsi_save.Name = "tsi_save";
+            this.tsi_save.Size = new System.Drawing.Size(150, 22);
+            this.tsi_save.Text = "Save";
+            // 
+            // tsi_saveSkele
+            // 
+            this.tsi_saveSkele.Name = "tsi_saveSkele";
+            this.tsi_saveSkele.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.tsi_saveSkele.Size = new System.Drawing.Size(191, 22);
+            this.tsi_saveSkele.Text = "Skeleton";
+            this.tsi_saveSkele.Click += new System.EventHandler(this.tsi_save_Click);
+            // 
+            // tsi_saveAnim
+            // 
+            this.tsi_saveAnim.Name = "tsi_saveAnim";
+            this.tsi_saveAnim.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.tsi_saveAnim.Size = new System.Drawing.Size(191, 22);
+            this.tsi_saveAnim.Text = "Animation";
+            // 
+            // tsi_load
+            // 
+            this.tsi_load.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsi_loadSkele,
+            this.tsi_loadAnim});
+            this.tsi_load.Name = "tsi_load";
+            this.tsi_load.Size = new System.Drawing.Size(150, 22);
+            this.tsi_load.Text = "Load";
+            // 
+            // tsi_loadSkele
+            // 
+            this.tsi_loadSkele.Name = "tsi_loadSkele";
+            this.tsi_loadSkele.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.L)));
+            this.tsi_loadSkele.Size = new System.Drawing.Size(191, 22);
+            this.tsi_loadSkele.Text = "Skeleton";
+            this.tsi_loadSkele.Click += new System.EventHandler(this.tsi_loadSkele_Click);
+            // 
+            // tsi_loadAnim
+            // 
+            this.tsi_loadAnim.Name = "tsi_loadAnim";
+            this.tsi_loadAnim.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+            this.tsi_loadAnim.Size = new System.Drawing.Size(191, 22);
+            this.tsi_loadAnim.Text = "Animation";
+            // 
+            // tsi_export
+            // 
+            this.tsi_export.Name = "tsi_export";
+            this.tsi_export.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.tsi_export.Size = new System.Drawing.Size(150, 22);
+            this.tsi_export.Text = "Export";
+            // 
+            // tsi_settings
+            // 
+            this.tsi_settings.Name = "tsi_settings";
+            this.tsi_settings.Size = new System.Drawing.Size(61, 25);
+            this.tsi_settings.Text = "Settings";
+            this.tsi_settings.Click += new System.EventHandler(this.tsi_settings_Click);
+            // 
+            // tss_1
+            // 
+            this.tss_1.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+            this.tss_1.Name = "tss_1";
+            this.tss_1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tsl_mode
+            // 
+            this.tsl_mode.Name = "tsl_mode";
+            this.tsl_mode.Size = new System.Drawing.Size(41, 22);
+            this.tsl_mode.Text = "Mode:";
+            // 
+            // tsc_mode
+            // 
+            this.tsc_mode.Items.AddRange(new object[] {
+            "Rigging",
+            "Animation"});
+            this.tsc_mode.Name = "tsc_mode";
+            this.tsc_mode.Size = new System.Drawing.Size(80, 25);
+            this.tsc_mode.Text = "Rigging";
+            this.tsc_mode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tsc_mode_KeyPress);
             // 
             // trv_limbBrowser
             // 
@@ -150,6 +282,19 @@
             this.grp_properties.TabStop = false;
             this.grp_properties.Text = "Properties";
             // 
+            // cdd_limbColor
+            // 
+            this.cdd_limbColor.AllowCustomColor = true;
+            this.cdd_limbColor.AllowTransparent = true;
+            this.cdd_limbColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cdd_limbColor.ForeColor = System.Drawing.Color.Black;
+            this.cdd_limbColor.FormattingEnabled = true;
+            this.cdd_limbColor.Location = new System.Drawing.Point(67, 148);
+            this.cdd_limbColor.Name = "cdd_limbColor";
+            this.cdd_limbColor.Size = new System.Drawing.Size(104, 21);
+            this.cdd_limbColor.TabIndex = 22;
+            this.cdd_limbColor.SelectedValueChanged += new System.EventHandler(this.cdd_limbColor_SelectedValueChanged);
+            // 
             // chk_yFlip
             // 
             this.chk_yFlip.AutoSize = true;
@@ -172,6 +317,17 @@
             this.chk_xFlip.UseVisualStyleBackColor = true;
             this.chk_xFlip.CheckedChanged += new System.EventHandler(this.chk_xFlip_CheckedChanged);
             // 
+            // nib_imageAngle
+            // 
+            this.nib_imageAngle.Integer = true;
+            this.nib_imageAngle.Location = new System.Drawing.Point(67, 249);
+            this.nib_imageAngle.Name = "nib_imageAngle";
+            this.nib_imageAngle.Size = new System.Drawing.Size(104, 20);
+            this.nib_imageAngle.TabIndex = 6;
+            this.nib_imageAngle.Text = "0";
+            this.nib_imageAngle.Value = 0F;
+            this.nib_imageAngle.TextChanged += new System.EventHandler(this.nib_imageAngle_TextChanged);
+            // 
             // lbl_imageAngle
             // 
             this.lbl_imageAngle.AutoSize = true;
@@ -180,6 +336,28 @@
             this.lbl_imageAngle.Size = new System.Drawing.Size(37, 13);
             this.lbl_imageAngle.TabIndex = 21;
             this.lbl_imageAngle.Text = "Angle:";
+            // 
+            // nib_offsetY
+            // 
+            this.nib_offsetY.Integer = false;
+            this.nib_offsetY.Location = new System.Drawing.Point(64, 328);
+            this.nib_offsetY.Name = "nib_offsetY";
+            this.nib_offsetY.Size = new System.Drawing.Size(104, 20);
+            this.nib_offsetY.TabIndex = 10;
+            this.nib_offsetY.Text = "0";
+            this.nib_offsetY.Value = 0F;
+            this.nib_offsetY.TextChanged += new System.EventHandler(this.nib_offsetY_TextChanged);
+            // 
+            // nib_offsetX
+            // 
+            this.nib_offsetX.Integer = false;
+            this.nib_offsetX.Location = new System.Drawing.Point(64, 302);
+            this.nib_offsetX.Name = "nib_offsetX";
+            this.nib_offsetX.Size = new System.Drawing.Size(104, 20);
+            this.nib_offsetX.TabIndex = 9;
+            this.nib_offsetX.Text = "0";
+            this.nib_offsetX.Value = 0F;
+            this.nib_offsetX.TextChanged += new System.EventHandler(this.nib_offsetX_TextChanged);
             // 
             // lbl_offsetY
             // 
@@ -275,6 +453,17 @@
             this.lbl_type.TabIndex = 9;
             this.lbl_type.Text = "Type:";
             // 
+            // nib_length
+            // 
+            this.nib_length.Integer = false;
+            this.nib_length.Location = new System.Drawing.Point(67, 95);
+            this.nib_length.Name = "nib_length";
+            this.nib_length.Size = new System.Drawing.Size(104, 20);
+            this.nib_length.TabIndex = 3;
+            this.nib_length.Text = "0";
+            this.nib_length.Value = 0F;
+            this.nib_length.TextChanged += new System.EventHandler(this.nib_length_TextChanged);
+            // 
             // lbl_length
             // 
             this.lbl_length.AutoSize = true;
@@ -284,6 +473,17 @@
             this.lbl_length.TabIndex = 7;
             this.lbl_length.Text = "Length:";
             // 
+            // nib_scale
+            // 
+            this.nib_scale.Integer = false;
+            this.nib_scale.Location = new System.Drawing.Point(67, 69);
+            this.nib_scale.Name = "nib_scale";
+            this.nib_scale.Size = new System.Drawing.Size(104, 20);
+            this.nib_scale.TabIndex = 2;
+            this.nib_scale.Text = "0";
+            this.nib_scale.Value = 0F;
+            this.nib_scale.TextChanged += new System.EventHandler(this.nib_scale_TextChanged);
+            // 
             // txt_prop_scale
             // 
             this.txt_prop_scale.AutoSize = true;
@@ -292,6 +492,17 @@
             this.txt_prop_scale.Size = new System.Drawing.Size(37, 13);
             this.txt_prop_scale.TabIndex = 5;
             this.txt_prop_scale.Text = "Scale:";
+            // 
+            // nib_rotation
+            // 
+            this.nib_rotation.Integer = true;
+            this.nib_rotation.Location = new System.Drawing.Point(67, 43);
+            this.nib_rotation.Name = "nib_rotation";
+            this.nib_rotation.Size = new System.Drawing.Size(104, 20);
+            this.nib_rotation.TabIndex = 1;
+            this.nib_rotation.Text = "0";
+            this.nib_rotation.Value = 0F;
+            this.nib_rotation.TextChanged += new System.EventHandler(this.nib_rotation_ValueChanged);
             // 
             // txt_name
             // 
@@ -335,361 +546,6 @@
             this.fdl_loadSkeleton.DefaultExt = "des";
             this.fdl_loadSkeleton.Filter = "Doodle Empires Skeleton|*.des";
             // 
-            // dbpnl_renderScreen
-            // 
-            this.dbpnl_renderScreen.AutoSize = true;
-            this.dbpnl_renderScreen.Controls.Add(this.toolStrip1);
-            this.dbpnl_renderScreen.Location = new System.Drawing.Point(0, 0);
-            this.dbpnl_renderScreen.Name = "dbpnl_renderScreen";
-            this.dbpnl_renderScreen.Size = new System.Drawing.Size(537, 425);
-            this.dbpnl_renderScreen.TabIndex = 0;
-            this.dbpnl_renderScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.dbpnl_renderScreen_Paint);
-            this.dbpnl_renderScreen.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dbpnl_renderScreen_MouseDown);
-            this.dbpnl_renderScreen.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dbpnl_renderScreen_MouseMove);
-            this.dbpnl_renderScreen.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dbpnl_renderScreen_MouseUp);
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsi_file,
-            this.tsi_settings,
-            this.tss_1,
-            this.tsl_mode,
-            this.tsc_mode});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(537, 25);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // tsi_file
-            // 
-            this.tsi_file.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsi_new,
-            this.tsi_save,
-            this.tsi_load,
-            this.tsi_export});
-            this.tsi_file.Name = "tsi_file";
-            this.tsi_file.Size = new System.Drawing.Size(37, 25);
-            this.tsi_file.Text = "File";
-            // 
-            // tsi_new
-            // 
-            this.tsi_new.Name = "tsi_new";
-            this.tsi_new.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.tsi_new.Size = new System.Drawing.Size(152, 22);
-            this.tsi_new.Text = "New";
-            this.tsi_new.Click += new System.EventHandler(this.tsi_new_Click);
-            // 
-            // tsi_save
-            // 
-            this.tsi_save.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsi_saveSkele,
-            this.tsi_saveAnim});
-            this.tsi_save.Name = "tsi_save";
-            this.tsi_save.Size = new System.Drawing.Size(152, 22);
-            this.tsi_save.Text = "Save";
-            // 
-            // tsi_saveSkele
-            // 
-            this.tsi_saveSkele.Name = "tsi_saveSkele";
-            this.tsi_saveSkele.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.S)));
-            this.tsi_saveSkele.Size = new System.Drawing.Size(191, 22);
-            this.tsi_saveSkele.Text = "Skeleton";
-            this.tsi_saveSkele.Click += new System.EventHandler(this.tsi_save_Click);
-            // 
-            // tsi_saveAnim
-            // 
-            this.tsi_saveAnim.Name = "tsi_saveAnim";
-            this.tsi_saveAnim.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.tsi_saveAnim.Size = new System.Drawing.Size(191, 22);
-            this.tsi_saveAnim.Text = "Animation";
-            // 
-            // tsi_load
-            // 
-            this.tsi_load.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsi_loadSkele,
-            this.tsi_loadAnim});
-            this.tsi_load.Name = "tsi_load";
-            this.tsi_load.Size = new System.Drawing.Size(152, 22);
-            this.tsi_load.Text = "Load";
-            // 
-            // tsi_loadSkele
-            // 
-            this.tsi_loadSkele.Name = "tsi_loadSkele";
-            this.tsi_loadSkele.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.L)));
-            this.tsi_loadSkele.Size = new System.Drawing.Size(191, 22);
-            this.tsi_loadSkele.Text = "Skeleton";
-            this.tsi_loadSkele.Click += new System.EventHandler(this.tsi_loadSkele_Click);
-            // 
-            // tsi_loadAnim
-            // 
-            this.tsi_loadAnim.Name = "tsi_loadAnim";
-            this.tsi_loadAnim.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
-            this.tsi_loadAnim.Size = new System.Drawing.Size(191, 22);
-            this.tsi_loadAnim.Text = "Animation";
-            // 
-            // tsi_export
-            // 
-            this.tsi_export.Name = "tsi_export";
-            this.tsi_export.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.tsi_export.Size = new System.Drawing.Size(152, 22);
-            this.tsi_export.Text = "Export";
-            // 
-            // tsi_settings
-            // 
-            this.tsi_settings.Name = "tsi_settings";
-            this.tsi_settings.Size = new System.Drawing.Size(61, 25);
-            this.tsi_settings.Text = "Settings";
-            this.tsi_settings.Click += new System.EventHandler(this.tsi_settings_Click);
-            // 
-            // tss_1
-            // 
-            this.tss_1.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.tss_1.Name = "tss_1";
-            this.tss_1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // tsl_mode
-            // 
-            this.tsl_mode.Name = "tsl_mode";
-            this.tsl_mode.Size = new System.Drawing.Size(41, 22);
-            this.tsl_mode.Text = "Mode:";
-            // 
-            // tsc_mode
-            // 
-            this.tsc_mode.Items.AddRange(new object[] {
-            "Rigging",
-            "Animation"});
-            this.tsc_mode.Name = "tsc_mode";
-            this.tsc_mode.Size = new System.Drawing.Size(80, 25);
-            this.tsc_mode.Text = "Rigging";
-            this.tsc_mode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tsc_mode_KeyPress);
-            // 
-            // nib_imageAngle
-            // 
-            this.nib_imageAngle.Integer = true;
-            this.nib_imageAngle.Location = new System.Drawing.Point(67, 249);
-            this.nib_imageAngle.Name = "nib_imageAngle";
-            this.nib_imageAngle.Size = new System.Drawing.Size(104, 20);
-            this.nib_imageAngle.TabIndex = 6;
-            this.nib_imageAngle.Text = "0";
-            this.nib_imageAngle.Value = 0F;
-            this.nib_imageAngle.TextChanged += new System.EventHandler(this.nib_imageAngle_TextChanged);
-            // 
-            // nib_offsetY
-            // 
-            this.nib_offsetY.Integer = false;
-            this.nib_offsetY.Location = new System.Drawing.Point(64, 328);
-            this.nib_offsetY.Name = "nib_offsetY";
-            this.nib_offsetY.Size = new System.Drawing.Size(104, 20);
-            this.nib_offsetY.TabIndex = 10;
-            this.nib_offsetY.Text = "0";
-            this.nib_offsetY.Value = 0F;
-            this.nib_offsetY.TextChanged += new System.EventHandler(this.nib_offsetY_TextChanged);
-            // 
-            // nib_offsetX
-            // 
-            this.nib_offsetX.Integer = false;
-            this.nib_offsetX.Location = new System.Drawing.Point(64, 302);
-            this.nib_offsetX.Name = "nib_offsetX";
-            this.nib_offsetX.Size = new System.Drawing.Size(104, 20);
-            this.nib_offsetX.TabIndex = 9;
-            this.nib_offsetX.Text = "0";
-            this.nib_offsetX.Value = 0F;
-            this.nib_offsetX.TextChanged += new System.EventHandler(this.nib_offsetX_TextChanged);
-            // 
-            // nib_length
-            // 
-            this.nib_length.Integer = false;
-            this.nib_length.Location = new System.Drawing.Point(67, 95);
-            this.nib_length.Name = "nib_length";
-            this.nib_length.Size = new System.Drawing.Size(104, 20);
-            this.nib_length.TabIndex = 3;
-            this.nib_length.Text = "0";
-            this.nib_length.Value = 0F;
-            this.nib_length.TextChanged += new System.EventHandler(this.nib_length_TextChanged);
-            // 
-            // nib_scale
-            // 
-            this.nib_scale.Integer = false;
-            this.nib_scale.Location = new System.Drawing.Point(67, 69);
-            this.nib_scale.Name = "nib_scale";
-            this.nib_scale.Size = new System.Drawing.Size(104, 20);
-            this.nib_scale.TabIndex = 2;
-            this.nib_scale.Text = "0";
-            this.nib_scale.Value = 0F;
-            this.nib_scale.TextChanged += new System.EventHandler(this.nib_scale_TextChanged);
-            // 
-            // nib_rotation
-            // 
-            this.nib_rotation.Integer = true;
-            this.nib_rotation.Location = new System.Drawing.Point(67, 43);
-            this.nib_rotation.Name = "nib_rotation";
-            this.nib_rotation.Size = new System.Drawing.Size(104, 20);
-            this.nib_rotation.TabIndex = 1;
-            this.nib_rotation.Text = "0";
-            this.nib_rotation.Value = 0F;
-            this.nib_rotation.TextChanged += new System.EventHandler(this.nib_rotation_ValueChanged);
-            // 
-            // cdd_limbColor
-            // 
-            this.cdd_limbColor.AllowCustomColor = true;
-            this.cdd_limbColor.AllowTransparent = true;
-            this.cdd_limbColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cdd_limbColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cdd_limbColor.ForeColor = System.Drawing.Color.Black;
-            this.cdd_limbColor.FormattingEnabled = true;
-            this.cdd_limbColor.Items.AddRange(new object[] {
-            System.Drawing.Color.Transparent,
-            System.Drawing.Color.AliceBlue,
-            System.Drawing.Color.AntiqueWhite,
-            System.Drawing.Color.Aqua,
-            System.Drawing.Color.Aquamarine,
-            System.Drawing.Color.Azure,
-            System.Drawing.Color.Beige,
-            System.Drawing.Color.Bisque,
-            System.Drawing.Color.Black,
-            System.Drawing.Color.BlanchedAlmond,
-            System.Drawing.Color.Blue,
-            System.Drawing.Color.BlueViolet,
-            System.Drawing.Color.Brown,
-            System.Drawing.Color.BurlyWood,
-            System.Drawing.Color.CadetBlue,
-            System.Drawing.Color.Chartreuse,
-            System.Drawing.Color.Chocolate,
-            System.Drawing.Color.Coral,
-            System.Drawing.Color.CornflowerBlue,
-            System.Drawing.Color.Cornsilk,
-            System.Drawing.Color.Crimson,
-            System.Drawing.Color.Cyan,
-            System.Drawing.Color.DarkBlue,
-            System.Drawing.Color.DarkCyan,
-            System.Drawing.Color.DarkGoldenrod,
-            System.Drawing.Color.DarkGray,
-            System.Drawing.Color.DarkGreen,
-            System.Drawing.Color.DarkKhaki,
-            System.Drawing.Color.DarkMagenta,
-            System.Drawing.Color.DarkOliveGreen,
-            System.Drawing.Color.DarkOrange,
-            System.Drawing.Color.DarkOrchid,
-            System.Drawing.Color.DarkRed,
-            System.Drawing.Color.DarkSalmon,
-            System.Drawing.Color.DarkSeaGreen,
-            System.Drawing.Color.DarkSlateBlue,
-            System.Drawing.Color.DarkSlateGray,
-            System.Drawing.Color.DarkTurquoise,
-            System.Drawing.Color.DarkViolet,
-            System.Drawing.Color.DeepPink,
-            System.Drawing.Color.DeepSkyBlue,
-            System.Drawing.Color.DimGray,
-            System.Drawing.Color.DodgerBlue,
-            System.Drawing.Color.Firebrick,
-            System.Drawing.Color.FloralWhite,
-            System.Drawing.Color.ForestGreen,
-            System.Drawing.Color.Fuchsia,
-            System.Drawing.Color.Gainsboro,
-            System.Drawing.Color.GhostWhite,
-            System.Drawing.Color.Gold,
-            System.Drawing.Color.Goldenrod,
-            System.Drawing.Color.Gray,
-            System.Drawing.Color.Green,
-            System.Drawing.Color.GreenYellow,
-            System.Drawing.Color.Honeydew,
-            System.Drawing.Color.HotPink,
-            System.Drawing.Color.IndianRed,
-            System.Drawing.Color.Indigo,
-            System.Drawing.Color.Ivory,
-            System.Drawing.Color.Khaki,
-            System.Drawing.Color.Lavender,
-            System.Drawing.Color.LavenderBlush,
-            System.Drawing.Color.LawnGreen,
-            System.Drawing.Color.LemonChiffon,
-            System.Drawing.Color.LightBlue,
-            System.Drawing.Color.LightCoral,
-            System.Drawing.Color.LightCyan,
-            System.Drawing.Color.LightGoldenrodYellow,
-            System.Drawing.Color.LightGray,
-            System.Drawing.Color.LightGreen,
-            System.Drawing.Color.LightPink,
-            System.Drawing.Color.LightSalmon,
-            System.Drawing.Color.LightSeaGreen,
-            System.Drawing.Color.LightSkyBlue,
-            System.Drawing.Color.LightSlateGray,
-            System.Drawing.Color.LightSteelBlue,
-            System.Drawing.Color.LightYellow,
-            System.Drawing.Color.Lime,
-            System.Drawing.Color.LimeGreen,
-            System.Drawing.Color.Linen,
-            System.Drawing.Color.Magenta,
-            System.Drawing.Color.Maroon,
-            System.Drawing.Color.MediumAquamarine,
-            System.Drawing.Color.MediumBlue,
-            System.Drawing.Color.MediumOrchid,
-            System.Drawing.Color.MediumPurple,
-            System.Drawing.Color.MediumSeaGreen,
-            System.Drawing.Color.MediumSlateBlue,
-            System.Drawing.Color.MediumSpringGreen,
-            System.Drawing.Color.MediumTurquoise,
-            System.Drawing.Color.MediumVioletRed,
-            System.Drawing.Color.MidnightBlue,
-            System.Drawing.Color.MintCream,
-            System.Drawing.Color.MistyRose,
-            System.Drawing.Color.Moccasin,
-            System.Drawing.Color.NavajoWhite,
-            System.Drawing.Color.Navy,
-            System.Drawing.Color.OldLace,
-            System.Drawing.Color.Olive,
-            System.Drawing.Color.OliveDrab,
-            System.Drawing.Color.Orange,
-            System.Drawing.Color.OrangeRed,
-            System.Drawing.Color.Orchid,
-            System.Drawing.Color.PaleGoldenrod,
-            System.Drawing.Color.PaleGreen,
-            System.Drawing.Color.PaleTurquoise,
-            System.Drawing.Color.PaleVioletRed,
-            System.Drawing.Color.PapayaWhip,
-            System.Drawing.Color.PeachPuff,
-            System.Drawing.Color.Peru,
-            System.Drawing.Color.Pink,
-            System.Drawing.Color.Plum,
-            System.Drawing.Color.PowderBlue,
-            System.Drawing.Color.Purple,
-            System.Drawing.Color.Red,
-            System.Drawing.Color.RosyBrown,
-            System.Drawing.Color.RoyalBlue,
-            System.Drawing.Color.SaddleBrown,
-            System.Drawing.Color.Salmon,
-            System.Drawing.Color.SandyBrown,
-            System.Drawing.Color.SeaGreen,
-            System.Drawing.Color.SeaShell,
-            System.Drawing.Color.Sienna,
-            System.Drawing.Color.Silver,
-            System.Drawing.Color.SkyBlue,
-            System.Drawing.Color.SlateBlue,
-            System.Drawing.Color.SlateGray,
-            System.Drawing.Color.Snow,
-            System.Drawing.Color.SpringGreen,
-            System.Drawing.Color.SteelBlue,
-            System.Drawing.Color.Tan,
-            System.Drawing.Color.Teal,
-            System.Drawing.Color.Thistle,
-            System.Drawing.Color.Tomato,
-            System.Drawing.Color.Turquoise,
-            System.Drawing.Color.Violet,
-            System.Drawing.Color.Wheat,
-            System.Drawing.Color.White,
-            System.Drawing.Color.WhiteSmoke,
-            System.Drawing.Color.Yellow,
-            System.Drawing.Color.YellowGreen});
-            this.cdd_limbColor.Location = new System.Drawing.Point(67, 148);
-            this.cdd_limbColor.Name = "cdd_limbColor";
-            this.cdd_limbColor.SelectedColor = System.Drawing.Color.Transparent;
-            this.cdd_limbColor.Size = new System.Drawing.Size(104, 21);
-            this.cdd_limbColor.TabIndex = 22;
-            this.cdd_limbColor.SelectedValueChanged += new System.EventHandler(this.cdd_limbColor_SelectedValueChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -706,13 +562,13 @@
             this.mainWindow.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainWindow)).EndInit();
             this.mainWindow.ResumeLayout(false);
-            this.grp_properties.ResumeLayout(false);
-            this.grp_properties.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.img_texture)).EndInit();
             this.dbpnl_renderScreen.ResumeLayout(false);
             this.dbpnl_renderScreen.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.grp_properties.ResumeLayout(false);
+            this.grp_properties.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.img_texture)).EndInit();
             this.ResumeLayout(false);
 
         }

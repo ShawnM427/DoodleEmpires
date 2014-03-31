@@ -92,7 +92,8 @@ namespace DoodleAnims
         public MainForm()
         {
             #if DEBUG
-            //Properties.Settings.Default.Reset();
+            Properties.Settings.Default.Reset();
+            Properties.Settings.Default.Save();
             #endif
 
             InitializeComponent();
