@@ -5,13 +5,14 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using DoodleEmpires.Engine.Utilities;
 using Microsoft.Xna.Framework;
+using System.IO;
 
 namespace DoodleEmpires.Engine.Terrain
 {
     public class VoxelTerrain
     {
-        public const int TILE_WIDTH = 32;
-        public const int TILE_HEIGHT = 32;
+        public const int TILE_WIDTH = 16;
+        public const int TILE_HEIGHT = 16;
 
         protected Rectangle[,] _voxelBounds;
         protected byte[,] _tiles;
@@ -158,6 +159,66 @@ namespace DoodleEmpires.Engine.Terrain
             }
 
             _spriteBatch.End();
+        }
+
+        public void SaveToStream(Stream stream)
+        {
+            BinaryWriter writer = new BinaryWriter(stream);
+
+            writer.Write("Doodle Empires Voxel Terrain ");
+            writer.Write("0.0.1");
+
+            writer.Write(_width);
+            writer.Write(_height);
+
+            for (int y = 0; y < _height; y++)
+            {
+                for (int x = 0; x < _width; x++)
+                {
+                    writer.Write(_tiles[x, y]);
+                    writer.Write(_neighbourStates[x, y]);
+                }
+            }
+
+            writer.Dispose();
+        }
+
+        public static VoxelTerrain ReadFromStream(Stream stream, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        {
+            BinaryReader reader = new BinaryReader(stream);
+
+            string header = reader.ReadString();
+            string version = reader.ReadString();
+
+            switch (version)
+            {
+                case "0.0.1":
+                    return LoadVersion_0_0_1(reader, graphics, tileManager, atlas);
+                default:
+                    reader.Dispose();
+                    return null;
+            }
+
+        }
+
+        private static VoxelTerrain LoadVersion_0_0_1(BinaryReader reader, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        {
+            int width = reader.ReadInt32();
+            int height = reader.ReadInt32();
+
+            VoxelTerrain terrain = new VoxelTerrain(graphics, tileManager, atlas, width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    terrain._tiles[x, y] = reader.ReadByte();
+                    terrain._neighbourStates[x, y] = reader.ReadByte();
+                }
+            }
+
+            reader.Dispose();
+            return terrain;
         }
     }
 
