@@ -14,6 +14,31 @@ namespace DoodleAnims
     class ColorDropDown : ComboBox
     {
         /// <summary>
+        /// A list of all colors, exluding transparent
+        /// </summary>
+        static object[] _colors;
+
+        static ColorDropDown()
+        {
+            List<object> temp = new List<object>();
+            
+            //Loop through all known colors
+            foreach (KnownColor knownColor in Enum.GetValues(typeof(KnownColor)))
+            {
+                Color color = Color.FromKnownColor(knownColor); //get the actual color
+
+                if (!color.IsSystemColor) //if this is not a system color, add it
+                {
+                    temp.Add(color);
+                }
+            }
+
+            temp.Remove(Color.Transparent);
+
+            _colors = temp.ToArray();
+        }
+
+        /// <summary>
         /// Gets the currently selected color
         /// </summary>
         public Color SelectedColor
@@ -89,6 +114,7 @@ namespace DoodleAnims
         new public ComboBoxStyle DropDownStyle
         {
             get { return ComboBoxStyle.DropDownList; }
+            set { }
         }
 
         Color _customColor = Color.Black;
@@ -106,19 +132,8 @@ namespace DoodleAnims
             BeginUpdate();
 
             Items.Clear();
-            
-            //Loop through all known colors
-            foreach (KnownColor knownColor in Enum.GetValues(typeof(KnownColor)))
-            {
-                Color color = Color.FromKnownColor(knownColor); //get the actual color
 
-                if (!color.IsSystemColor) //if this is not a system color, add it
-                {
-                    Items.Add(color);
-                }
-            }
-
-            Items.Remove(Color.Transparent);
+            Items.AddRange(_colors);
             
             //Finish updating the item lists
             EndUpdate();
@@ -162,11 +177,12 @@ namespace DoodleAnims
                     string.Format("{{0},{1},{2},{3}}", new object[] { color.R, color.G, color.B, color.A });
 
                 // Get the brush color from the selected color  
-                Brush brush = new SolidBrush(color);
+                Brush brush = new SolidBrush(Enabled ? color : Math2.Lerp(color, Color.White, 0.5F));
+                Brush textBrush = new SolidBrush(Enabled ? ForeColor : Math2.Lerp(ForeColor, Color.White, 0.5F));
 
                 // Draws a rectangle, and the text next to it
                 e.Graphics.FillRectangle(brush, e.Bounds.X + 0.5F, e.Bounds.Y + 0.5F, e.Bounds.Height - 1, e.Bounds.Height - 1);
-                e.Graphics.DrawString(text, Font, Brushes.Black, e.Bounds.X + e.Bounds.Height, e.Bounds.Y);
+                e.Graphics.DrawString(text, Font, textBrush, e.Bounds.X + e.Bounds.Height, e.Bounds.Y);
             }
         }
 
@@ -220,8 +236,6 @@ namespace DoodleAnims
                 SelectedIndex = 0;
             }
 
-            ForeColor = SelectedColor != Color.Transparent | SelectedColor == Color.White ?
-            SelectedColor : Color.Black;
             Invalidate();
         }
 

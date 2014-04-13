@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DoodleEmpires.Engine.Entities;
+using System;
 
 public interface ICamera2D
 {
@@ -79,6 +80,11 @@ public interface ICamera2D
     /// <param name="screenCoords">The screen co-ordinates to convert</param>
     /// <returns>The point in the world relating to the point on the screen</returns>
     Vector2 PointToWorld(Vector2 screenCoords);
+
+    /// <summary>
+    /// Gets the world bounds that this camera displays
+    /// </summary>
+    Rectangle ScreenBounds { get; }
 }
 
 public class Camera2D : ICamera2D
@@ -86,6 +92,7 @@ public class Camera2D : ICamera2D
     private Vector2 _position;
     protected float _viewportHeight;
     protected float _viewportWidth;
+    protected Rectangle _screenBounds = new Rectangle(0,0,0,0);
 
     protected GraphicsDevice _graphics;
     
@@ -111,6 +118,7 @@ public class Camera2D : ICamera2D
     public Matrix Projection { get; set; }
     public IFocusable Focus { get; set; }
     public float MoveSpeed { get; set; }
+    public Rectangle ScreenBounds { get { return _screenBounds; } }
 
     #endregion
 
@@ -124,7 +132,7 @@ public class Camera2D : ICamera2D
 
         Scale = new Vector2(1, 1);
         ScreenCenter = new Vector2(_viewportWidth / 2, _viewportHeight / 2);
-        MoveSpeed = 1.25f;
+        MoveSpeed = 2f;
         
         Matrix projection = Matrix.CreateOrthographicOffCenter(0, _graphics.Viewport.Width, _graphics.Viewport.Height, 0, 0, 1);
         Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
@@ -132,26 +140,35 @@ public class Camera2D : ICamera2D
         Projection = halfPixelOffset * projection;
     }
 
+    /// <summary>
+    /// Updates this camera
+    /// </summary>
+    /// <param name="gameTime">The current game time</param>
     public void Update(GameTime gameTime)
     {
-        // Create the Transform used by any
-        // spritebatch process
-        Transform = Matrix.Identity *
-                    Matrix.CreateTranslation(-Position.X, -Position.Y, 0) *
-                    Matrix.CreateRotationZ(Rotation) *
-                    Matrix.CreateTranslation(Origin.X, Origin.Y, 0) *
-                    Matrix.CreateScale(new Vector3(Scale, 1.0F));
-
         Origin = ScreenCenter / Scale;
 
         if (Focus != null)
         {
             // Move the Camera to the position that it needs to go
-            var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _position.X += (Focus.Position.X - Position.X) * MoveSpeed * delta;
             _position.Y += (Focus.Position.Y - Position.Y) * MoveSpeed * delta;
         }
+
+        _screenBounds.X = (int)(Position.X - Origin.X);
+        _screenBounds.Y = (int)(Position.Y - Origin.Y);
+        _screenBounds.Width = (int)(Origin.X * 2) + 1;
+        _screenBounds.Height = (int)(Origin.Y * 2) + 1;
+
+        // Create the Transform used by any
+        // spritebatch process
+        Transform = Matrix.Identity *
+                    Matrix.CreateTranslation(-(int)Position.X, -(int)Position.Y, 0) *
+                    Matrix.CreateRotationZ(Rotation) *
+                    Matrix.CreateTranslation(Origin.X, Origin.Y, 0) *
+                    Matrix.CreateScale(new Vector3(Scale, 1.0F));
     }
 
     /// <summary>
@@ -187,6 +204,18 @@ public class Camera2D : ICamera2D
     public Vector2 PointToWorld(Vector2 screenPoint)
     {
         Vector3 temp = _graphics.Viewport.Unproject(new Vector3(screenPoint, 0), Projection, Transform, Matrix.Identity);
+        return new Vector2(temp.X, temp.Y);
+    }
+
+    /// <summary>
+    /// Gets the world co-ordinates for the given screen co-ordinates
+    /// </summary>
+    /// <param name="x">The x coordinate to translate</param>
+    /// <param name="y">The y coordinate to translete</param>
+    /// <returns>The point in the world relating to the point on the screen</returns>
+    public Vector2 PointToWorld(float x, float y)
+    {
+        Vector3 temp = _graphics.Viewport.Unproject(new Vector3(new Vector2(x, y), 0), Projection, Transform, Matrix.Identity);
         return new Vector2(temp.X, temp.Y);
     }
 }

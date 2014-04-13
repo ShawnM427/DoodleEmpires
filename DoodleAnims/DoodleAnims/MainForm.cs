@@ -19,19 +19,22 @@ namespace DoodleAnims
 
         Timer _clock = new Timer();
 
-        float _eMS;
-        float _oMS;
-        byte _eMT;
-        byte _oMT;
+        float _eMS; // Enpoint Marker size
+        float _oMS; // Orgin Marker Size
+        byte _eMT; // Endpoint Marker Type
+        byte _oMT; // Orgin Marker Type
 
-        Brush _eBrush;
-        Pen _ePen;
-        Brush _oBrush;
-        Pen _oPen;
+        Brush _eBrush; // Endpoint Brush
+        Pen _ePen; // Endpoint Pen
+        Brush _oBrush; // Endpoint Brush
+        Pen _oPen; // Endpoint Brush
 
         bool _mouseDown = false;
 
+        FormState _state = FormState.Rigging;
+
         SettingsDialog _settings = new SettingsDialog();
+        DisableableComboBox _disableBox;
 
         /// <summary>
         /// Gets or sets the currently selected limb
@@ -91,12 +94,37 @@ namespace DoodleAnims
         /// </summary>
         public MainForm()
         {
-            #if DEBUG
+            #if DEBUG && WIPE_SETTINGS
             Properties.Settings.Default.Reset();
             Properties.Settings.Default.Save();
             #endif
 
             InitializeComponent();
+
+            _disableBox = new DisableableComboBox();
+            _disableBox.Add(new DisableableComboBoxItem(FormState.Rigging, true));
+            _disableBox.Add(new DisableableComboBoxItem(FormState.Animation, true));
+            _disableBox.SelectedIndex = 0;
+            _disableBox.DropDownHeight = 100;
+            _disableBox.SelectedValueChanged += new EventHandler(disableBox_SelectedValueChanged);
+            ToolStripControlHost host = new ToolStripControlHost(_disableBox);
+            
+            if (_state == FormState.Animation)
+            {
+
+                dbpnl_renderScreen.Height = Height - _disableBox.Height;
+                amc_animControl.Visible = true;
+                grp_properties.Enabled = false;
+            }
+            else
+            {
+                dbpnl_renderScreen.Height = Height;
+                amc_animControl.Visible = false;
+                grp_properties.Enabled = true;
+            }
+
+            ts_main.Items.Add(host);
+
             dbpnl_renderScreen.BackColor = Properties.Settings.Default.BackgroundColor;
 
             DoubleBuffered = true;
@@ -551,16 +579,6 @@ namespace DoodleAnims
         }
 
         /// <summary>
-        /// Called when a new limb is selected in the limb browser
-        /// </summary>
-        /// <param name="sender">The object that raised the event</param>
-        /// <param name="e">The related event arguments</param>
-        private void trv_limbBrowser_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            SelectedLimb = (Limb)e.Node.Tag;
-        }
-
-        /// <summary>
         /// Called when the color selector's value has changed
         /// </summary>
         /// <param name="sender">The object that raised the event</param>
@@ -572,6 +590,61 @@ namespace DoodleAnims
                 SelectedLimb.Color = cdd_limbColor.SelectedColor;
                 dbpnl_renderScreen.Invalidate();
             }
-        }        
+        }
+
+        /// <summary>
+        /// Called when a new limb is selected in the limb browser
+        /// </summary>
+        /// <param name="sender">The object that raised the event</param>
+        /// <param name="e">The related event arguments</param>
+        private void trv_limbBrowser_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            SelectedLimb = (Limb)e.Node.Tag;
+        }
+
+        /// <summary>
+        /// Called when the value in the disable box has changed
+        /// </summary>
+        /// <param name="sender">The object that raised this event</param>
+        /// <param name="e">A blank event args</param>
+        void disableBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            _state = (FormState)_disableBox.SelectedItem;
+
+            if (_state == FormState.Animation)
+            {
+
+                dbpnl_renderScreen.Height = Height - _disableBox.Height;
+                amc_animControl.Visible = true;
+                grp_properties.Enabled = false;
+            }
+            else
+            {
+                dbpnl_renderScreen.Height = Height;
+                amc_animControl.Visible = false;
+                grp_properties.Enabled = true;
+            }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            chklst_test.Add("foo");
+            chklst_test.Add("bar");
+        }
+    }
+
+    /// <summary>
+    /// Represents the state of the main form
+    /// </summary>
+    public enum FormState
+    {
+        /// <summary>
+        /// The form is in rigging mode
+        /// </summary>
+        Rigging,
+        /// <summary>
+        /// The form is in animation mode
+        /// </summary>
+        Animation
     }
 }

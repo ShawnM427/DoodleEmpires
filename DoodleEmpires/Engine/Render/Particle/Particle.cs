@@ -59,5 +59,20 @@ namespace DoodleEmpires.Engine.Render.Particle
         {
             return !(a == b);
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj.GetType() == typeof(Particle) && (Particle)obj == this;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 13;
+            hash = (hash * 7) + Position.GetHashCode();
+            hash = (hash * 7) + Rotation.GetHashCode();
+            hash = (hash * 7) + Velocity.GetHashCode();
+            hash = (hash * 7) + AngularVelocity.GetHashCode();
+            return hash;
+        }
     }
 }

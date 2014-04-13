@@ -50,8 +50,14 @@
     <Compile Include="Engine\Render\Particle\ParticleEngine.cs" />
     <Compile Include="Engine\Terrain\FaultFormation.cs" />
     <Compile Include="Engine\Terrain\Terrain.cs" />
+    <Compile Include="Engine\Terrain\Tile.cs" />
+    <Compile Include="Engine\Terrain\TileManager.cs" />
     <Compile Include="Engine\Terrain\Utils.cs" />
     <Compile Include="Engine\Terrain\VolcanicFormation.cs" />
+    <Compile Include="Engine\Terrain\VoxelTerrain.cs" />
+    <Compile Include="Engine\Utilities\CustomGame.cs" />
+    <Compile Include="Engine\Utilities\FPSManager.cs" />
+    <Compile Include="Engine\Utilities\TextureAtlas.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +80,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Atlas.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Paper.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

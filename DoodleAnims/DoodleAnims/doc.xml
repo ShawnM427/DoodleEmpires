@@ -80,6 +80,166 @@
             Gets or sets the angle for this limb's image
             </summary>
         </member>
+        <member name="T:DoodleAnims.CheckList">
+            <summary>
+            Represents a combo box where individual items can be enabled and disabled with check boxes
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.CheckList.#ctor">
+            <summary>
+            Creates a new Color Drop Down
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.CheckList.Add(DoodleAnims.CheckListItem)">
+            <summary>
+            Adds a new items to this combo box
+            </summary>
+            <param name="item">The item to add</param>
+        </member>
+        <member name="M:DoodleAnims.CheckList.Add(System.Object,System.Boolean,System.Boolean)">
+            <summary>
+            Adds a new items to this combo box
+            </summary>
+            <param name="item">The item to add</param>
+            <param name="isChecked">True if the item should start as checked</param>
+            <param name="enabled">The item to add</param>
+        </member>
+        <member name="M:DoodleAnims.CheckList.OnKeyPress(System.Windows.Forms.KeyPressEventArgs)">
+            <summary>
+            Overrides the default keypress to disallow user editing
+            </summary>
+            <param name="e">The key arguments</param>
+        </member>
+        <member name="M:DoodleAnims.CheckList.OnDrawItem(System.Windows.Forms.DrawItemEventArgs)">
+            <summary>
+            Overrides the item draw for this control
+            </summary>
+            <param name="e">The drawing event arguments</param>
+        </member>
+        <member name="M:DoodleAnims.CheckList.OnMeasureItem(System.Windows.Forms.MeasureItemEventArgs)">
+            <summary>
+            Overrides the measure item
+            </summary>
+            <param name="e">The measure item arguments</param>
+        </member>
+        <member name="M:DoodleAnims.CheckList.OnSelectionChangeCommitted(System.EventArgs)">
+            <summary>
+            Handles when items are selected
+            </summary>
+            <param name="e">A blank event arguments</param>
+        </member>
+        <member name="M:DoodleAnims.CheckList.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Paints this control to the form
+            </summary>
+            <param name="paintEvent">The paint event arguments to use</param>
+        </member>
+        <member name="M:DoodleAnims.CheckList.OnLostFocus(System.EventArgs)">
+            <summary>
+            Called when this control loses focus
+            </summary>
+            <param name="e">A blank event argument</param>
+        </member>
+        <member name="P:DoodleAnims.CheckList.DisabledColor">
+            <summary>
+            Gets or sets the color for disabled items
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.CheckList.Items">
+            <summary>
+            Gets the items in this combo box
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.CheckList.SelectedItem">
+            <summary>
+            Gets the currently selected item
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.CheckList.DropDownStyle">
+            <summary>
+            Gets the drop down style for this control
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.CheckList.ShownText">
+            <summary>
+            Gets or sets the text shown in the edit box
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.CheckList.Text">
+            <summary>
+            Gets this check list's text
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.CheckListItem">
+            <summary>
+            Represents an object that can be disbaled in a combobox
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.CheckListItem.#ctor">
+            <summary>
+            Creates a new disableable item
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.CheckListItem.#ctor(System.Object,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a new disableable item
+            </summary>
+            <param name="item">The item in this object</param>
+            <param name="isChecked">True whether the item starts checked</param>
+            <param name="enabled">True if this item is enabled</param>
+        </member>
+        <member name="M:DoodleAnims.CheckListItem.ToString">
+            <summary>
+            Converts this item to a string representation
+            </summary>
+            <returns>The item's name</returns>
+        </member>
+        <member name="E:DoodleAnims.CheckListItem.CheckedChanged">
+            <summary>
+            Called when this item's checked status has changed
+            </summary>
+        </member>
+        <member name="E:DoodleAnims.CheckListItem.EnabledChanged">
+            <summary>
+            Called when this item's enabled status has changed
+            </summary>
+        </member>
+        <member name="E:DoodleAnims.CheckListItem.ItemChanged">
+            <summary>
+            Called when this item's item value changed
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.CheckListItem.Enabled">
+            <summary>
+            Gets or sets whether this object is enabled
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.CheckListItem.Checked">
+            <summary>
+            Gets or sets whether this item is checked
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.CheckListItem.Item">
+            <summary>
+            Gets or sets the item in this object
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.CheckListItemChanged">
+            <summary>
+            The event args to use when a parameter for a CheckListItem has changed
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.CheckListItemChanged.Item">
+            <summary>
+            Gets the item that is being checked
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.CheckListItemChanged.#ctor(DoodleAnims.CheckListItem)">
+            <summary>
+            Creates a new event argument
+            </summary>
+            <param name="item">The check list item that raised the event</param>
+        </member>
         <member name="T:DoodleAnims.NumericInputBox">
             <summary>
             A text box that only accepts numeric input
@@ -99,6 +259,59 @@
         <member name="P:DoodleAnims.NumericInputBox.Integer">
             <summary>
             Gets or sets whether this control should allow integers only
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.AnimController">
+            <summary>
+            Represents a control for editing animations
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.DoubleBufferedPanel">
+            <summary>
+            A panel that uses double buffering
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.DoubleBufferedPanel.#ctor">
+            <summary>
+            Creates a new double-buffered panel
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.AnimController.#ctor">
+            <summary>
+            Creates a new animation control
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.AnimController.OnResize(System.EventArgs)">
+            <summary>
+            Called when this control has been resized
+            </summary>
+            <param name="eventargs">A blank event arguments</param>
+        </member>
+        <member name="M:DoodleAnims.AnimController.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Paints this control to the screen
+            </summary>
+            <param name="e">The paint arguments</param>
+        </member>
+        <member name="M:DoodleAnims.AnimController.OnMouseDown(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Occurs when the mouse is pressed on this control
+            </summary>
+            <param name="e">The mouse event arguments</param>
+        </member>
+        <member name="P:DoodleAnims.AnimController.Animation">
+            <summary>
+            Gets or sets the animation to work on
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.AnimController.ButtonColor">
+            <summary>
+            Gets or sets the color for the line
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.AnimController.LineColor">
+            <summary>
+            Gets or sets the color for the line
             </summary>
         </member>
         <member name="T:DoodleAnims.SettingsDialog">
@@ -616,6 +829,106 @@
             A textured segment
             </summary>
         </member>
+        <member name="T:DoodleAnims.DisableableComboBox">
+            <summary>
+            Represents a combo box where individual items can be enabled and disabled
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBox.#ctor">
+            <summary>
+            Creates a new Color Drop Down
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBox.Add(DoodleAnims.DisableableComboBoxItem)">
+            <summary>
+            Adds a new items to this combo box
+            </summary>
+            <param name="item">The item to add</param>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBox.Add(System.Object,System.Boolean)">
+            <summary>
+            Adds a new items to this combo box
+            </summary>
+            <param name="item">The item to add</param>
+            <param name="enabled">The item to add</param>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBox.OnKeyPress(System.Windows.Forms.KeyPressEventArgs)">
+            <summary>
+            Overrides the default keypress to disallow user editing
+            </summary>
+            <param name="e">The key arguments</param>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBox.OnDrawItem(System.Windows.Forms.DrawItemEventArgs)">
+            <summary>
+            Overrides the item draw for this control
+            </summary>
+            <param name="e">The drawing event arguments</param>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBox.OnMeasureItem(System.Windows.Forms.MeasureItemEventArgs)">
+            <summary>
+            Overrides the measure item
+            </summary>
+            <param name="e">The measure item arguments</param>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBox.OnSelectionChangeCommitted(System.EventArgs)">
+            <summary>
+            Handles when items are selected
+            </summary>
+            <param name="e">A blank event arguments</param>
+        </member>
+        <member name="P:DoodleAnims.DisableableComboBox.DisabledColor">
+            <summary>
+            Gets or sets the color for disabled items
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.DisableableComboBox.Items">
+            <summary>
+            Gets the items in this combo box
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.DisableableComboBox.SelectedItem">
+            <summary>
+            Gets the currently selected item
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.DisableableComboBox.DropDownStyle">
+            <summary>
+            Gets the drop down style for this control
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.DisableableComboBoxItem">
+            <summary>
+            Represents an object that can be disbaled in a combobox
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBoxItem.#ctor">
+            <summary>
+            Creates a new disableable item
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBoxItem.#ctor(System.Object,System.Boolean)">
+            <summary>
+            Creates a new disableable item
+            </summary>
+            <param name="item">The item in this object</param>
+            <param name="enabled">True if this item is enabled</param>
+        </member>
+        <member name="M:DoodleAnims.DisableableComboBoxItem.ToString">
+            <summary>
+            Converts this item to a string representation
+            </summary>
+            <returns>The item's name</returns>
+        </member>
+        <member name="P:DoodleAnims.DisableableComboBoxItem.Enabled">
+            <summary>
+            Gets or sets whether this object is enabled
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.DisableableComboBoxItem.Item">
+            <summary>
+            Gets or sets the item in this object
+            </summary>
+        </member>
         <member name="T:DoodleAnims.MainForm">
             <summary>
             The main editor form for DE Anims
@@ -809,13 +1122,6 @@
             <param name="sender">The object that raised the event</param>
             <param name="e">The key event arguments</param>
         </member>
-        <member name="M:DoodleAnims.MainForm.trv_limbBrowser_AfterSelect(System.Object,System.Windows.Forms.TreeViewEventArgs)">
-            <summary>
-            Called when a new limb is selected in the limb browser
-            </summary>
-            <param name="sender">The object that raised the event</param>
-            <param name="e">The related event arguments</param>
-        </member>
         <member name="M:DoodleAnims.MainForm.cdd_limbColor_SelectedValueChanged(System.Object,System.EventArgs)">
             <summary>
             Called when the color selector's value has changed
@@ -823,24 +1129,33 @@
             <param name="sender">The object that raised the event</param>
             <param name="e">The blank event args</param>
         </member>
+        <member name="M:DoodleAnims.MainForm.trv_limbBrowser_NodeMouseClick(System.Object,System.Windows.Forms.TreeNodeMouseClickEventArgs)">
+            <summary>
+            Called when a new limb is selected in the limb browser
+            </summary>
+            <param name="sender">The object that raised the event</param>
+            <param name="e">The related event arguments</param>
+        </member>
+        <member name="M:DoodleAnims.MainForm.disableBox_SelectedValueChanged(System.Object,System.EventArgs)">
+            <summary>
+            Called when the value in the disable box has changed
+            </summary>
+            <param name="sender">The object that raised this event</param>
+            <param name="e">A blank event args</param>
+        </member>
         <member name="P:DoodleAnims.MainForm.SelectedLimb">
             <summary>
             Gets or sets the currently selected limb
             </summary>
         </member>
-        <member name="T:DoodleAnims.DoubleBufferedPanel">
-            <summary>
-            A panel that uses double buffering
-            </summary>
-        </member>
-        <member name="M:DoodleAnims.DoubleBufferedPanel.#ctor">
-            <summary>
-            Creates a new double-buffered panel
-            </summary>
-        </member>
         <member name="T:DoodleAnims.ColorDropDown">
             <summary>
             Represents a drop-down box for colors
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.ColorDropDown._colors">
+            <summary>
+            A list of all colors, exluding transparent
             </summary>
         </member>
         <member name="M:DoodleAnims.ColorDropDown.#ctor">
@@ -959,9 +1274,259 @@
             <param name="percent">The percent, between 0 and 1, to lerp</param>
             <returns>A linear interpolation of min-max</returns>
         </member>
+        <member name="T:DoodleAnims.FormState">
+            <summary>
+            Represents the state of the main form
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.FormState.Rigging">
+            <summary>
+            The form is in rigging mode
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.FormState.Animation">
+            <summary>
+            The form is in animation mode
+            </summary>
+        </member>
         <member name="M:DoodleAnims.Program.Main">
             <summary>
             The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.Utils.AnimControllerFiles">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.PanLeft">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.PanRight">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.PauseButton">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.PlayButton">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.ReverseButton">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.StopButton">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.ZoomIn">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:DoodleAnims.Utils.AnimControllerFiles.ZoomOut">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.RoundedRectangle">
+            <summary>
+            Used to draw rounded rectangles
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.RoundedRectangle.Create(System.Single,System.Single,System.Single,System.Single,System.Single,DoodleAnims.RoundedRectangle.RectangleCorners)">
+            <summary>
+            Creates a new graphics path for a rounded rectangle
+            </summary>
+            <param name="x">The top-left x coordinate</param>
+            <param name="y">The top-left y coordinate</param>
+            <param name="width">The width of the rectangle</param>
+            <param name="height">The height of the rectangle</param>
+            <param name="radius">The radius of the corners</param>
+            <param name="corners">The corners to be rounded</param>
+            <returns>A graphics path ready for rendering</returns>
+        </member>
+        <member name="M:DoodleAnims.RoundedRectangle.Create(System.Drawing.Rectangle,System.Single,DoodleAnims.RoundedRectangle.RectangleCorners)">
+            <summary>
+            Creates a new graphics path for a rounded rectangle
+            </summary>
+            <param name="rect">The rectangle to create a path for</param>
+            <param name="radius">The radius of the corners</param>
+            <param name="corners">The corners to be rounded</param>
+            <returns>A graphics path ready for rendering</returns>
+        </member>
+        <member name="M:DoodleAnims.RoundedRectangle.Create(System.Drawing.RectangleF,System.Single,DoodleAnims.RoundedRectangle.RectangleCorners)">
+            <summary>
+            Creates a new graphics path for a rounded rectangle
+            </summary>
+            <param name="rect">The rectangle to create a path for</param>
+            <param name="radius">The radius of the corners</param>
+            <param name="corners">The corners to be rounded</param>
+            <returns>A graphics path ready for rendering</returns>
+        </member>
+        <member name="M:DoodleAnims.RoundedRectangle.Create(System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Creates a new graphics path for a rounded rectangle
+            </summary>
+            <param name="x">The top-left x coordinate</param>
+            <param name="y">The top-left y coordinate</param>
+            <param name="width">The width of the rectangle</param>
+            <param name="height">The height of the rectangle</param>
+            <param name="radius">The radius of the corners</param>
+            <returns>A graphics path ready for rendering</returns>
+        </member>
+        <member name="M:DoodleAnims.RoundedRectangle.Create(System.Drawing.Rectangle,System.Single)">
+            <summary>
+            Creates a new graphics path for a rounded rectangle
+            </summary>
+            <param name="rect">The rectangle to create a path for</param>
+            <param name="radius">The radius of the corners</param>
+            <returns>A graphics path ready for rendering</returns>
+        </member>
+        <member name="M:DoodleAnims.RoundedRectangle.Create(System.Drawing.RectangleF,System.Single)">
+            <summary>
+            Creates a new graphics path for a rounded rectangle
+            </summary>
+            <param name="rect">The rectangle to create a path for</param>
+            <param name="radius">The radius of the corners</param>
+            <returns>A graphics path ready for rendering</returns>
+        </member>
+        <member name="M:DoodleAnims.RoundedRectangle.Create(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Creates a new graphics path for a rounded rectangle
+            </summary>
+            <param name="x">The top-left x coordinate</param>
+            <param name="y">The top-left y coordinate</param>
+            <param name="width">The width of the rectangle</param>
+            <param name="height">The height of the rectangle</param>
+            <returns>A graphics path ready for rendering</returns>
+        </member>
+        <member name="M:DoodleAnims.RoundedRectangle.Create(System.Drawing.Rectangle)">
+            <summary>
+            Creates a new graphics path for a rounded rectangle
+            </summary>
+            <param name="rect">The rectangle to create a path for</param>
+            <returns>A graphics path ready for rendering</returns>
+        </member>
+        <member name="M:DoodleAnims.RoundedRectangle.Create(System.Drawing.RectangleF)">
+            <summary>
+            Creates a new graphics path for a rounded rectangle
+            </summary>
+            <param name="rect">The rectangle to create a path for</param>
+            <returns>A graphics path ready for rendering</returns>
+        </member>
+        <member name="T:DoodleAnims.RoundedRectangle.RectangleCorners">
+            <summary>
+            The represents corners to round off
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.None">
+            <summary>
+            Round no corners
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.TopLeft">
+            <summary>
+            Round the top-left corner
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.TopRight">
+            <summary>
+            Round the top-right corner
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.BottomLeft">
+            <summary>
+            Round the bottom-left corner
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.BottomRight">
+            <summary>
+            Round the bottom-right corner
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.All">
+            <summary>
+            Round off all corners
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.Left">
+            <summary>
+            Round off all corners on the left side
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.Right">
+            <summary>
+            Round off all corners on the right side
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.Top">
+            <summary>
+            Round off all corners on the top
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.RoundedRectangle.RectangleCorners.Bottom">
+            <summary>
+            Round off all corners on the bottom
+            </summary>
+        </member>
+        <member name="T:DoodleAnims.Triangle">
+            <summary>
+            A class for drawing triangles
+            </summary>
+        </member>
+        <member name="M:DoodleAnims.Triangle.Create(System.Drawing.RectangleF,DoodleAnims.Triangle.Orientation)">
+            <summary>
+            Creates a new graphics path for a triangle
+            </summary>
+            <param name="bounds">The bounds of the triangle</param>
+            <param name="orientation">The orientation of the triangle in the rectangle</param>
+            <returns>A graphicsPath ready for drawing</returns>
+        </member>
+        <member name="T:DoodleAnims.Triangle.Orientation">
+            <summary>
+            Represents which way the triangle is pointing
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.Triangle.Orientation.Top">
+            <summary>
+            The triangle points towards the top
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.Triangle.Orientation.Right">
+            <summary>
+            The triangle points towards the right
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.Triangle.Orientation.Bottom">
+            <summary>
+            The triangle points towards the bottom
+            </summary>
+        </member>
+        <member name="F:DoodleAnims.Triangle.Orientation.Left">
+            <summary>
+            The triangle points towards the left
             </summary>
         </member>
     </members>

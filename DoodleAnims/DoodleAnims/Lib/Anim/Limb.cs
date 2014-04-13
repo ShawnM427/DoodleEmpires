@@ -254,6 +254,8 @@ namespace DoodleAnims.Lib.Anim
             Name = "Orgin";
 
             _drawPen = new Pen(_color, _scale);
+            _drawPen.EndCap = LineCap.Round;
+            _drawPen.StartCap = LineCap.Round;
             _id = skeleton.GetID();
             _parentSkeleton.AddLimbRef(this);
 
@@ -280,6 +282,8 @@ namespace DoodleAnims.Lib.Anim
             parent._children.Add(this);
 
             _drawPen = new Pen(_color, _scale);
+            _drawPen.EndCap = LineCap.Round;
+            _drawPen.StartCap = LineCap.Round;
             _id = _parentSkeleton.GetID();
             _parentSkeleton.AddLimbRef(this);
             Name = _parentSkeleton.GetName();
@@ -378,7 +382,7 @@ namespace DoodleAnims.Lib.Anim
                         graphics.TranslateTransform(_CENTRE.X, _CENTRE.Y);
                         graphics.RotateTransform(_rotation + 90);
                         graphics.RotateTransform(_imageAngle);
-                        graphics.ScaleTransform(XScale, YScale);
+                        graphics.ScaleTransform(YScale, XScale);
                         graphics.TranslateTransform(-_length / 2, -_length / 2);
                         graphics.DrawImage((Image)_tag, 0, 0, _length, _length);
                         graphics.ResetTransform();
