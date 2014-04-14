@@ -21,6 +21,7 @@ namespace DoodleAnims.Lib.Anim
         Limb _rootNode;
         PointF _orgin;
         string _name = "newSkeleton";
+        Control _parentControl;
 
         Limb[] _idLimbs;
 
@@ -64,8 +65,9 @@ namespace DoodleAnims.Lib.Anim
         /// </summary>
         /// <param name="name">The name for this skeleton</param>
         /// <param name="orgin">The orgin point of the skeleton</param>
-        public Skeleton(string name, PointF orgin)
+        public Skeleton(Control parentControl, string name, PointF orgin)
         {
+            _parentControl = parentControl;
             _orgin = orgin;
             _idLimbs = new Limb[1];
             _rootNode = new Limb(this, Color.Transparent, 0);
@@ -152,6 +154,8 @@ namespace DoodleAnims.Lib.Anim
                         throw new InvalidOperationException("The keyframe must match this skeleton!");
                     }
                 }
+
+                _parentControl.Invalidate();
             }
         }
 
@@ -203,7 +207,7 @@ namespace DoodleAnims.Lib.Anim
         /// </summary>
         /// <param name="r">The binary reader to use</param>
         /// <returns>A skeleton loaded from the stream</returns>
-        public static Skeleton Load(BinaryReader r)
+        public static Skeleton Load(Control parentControl, BinaryReader r)
         {
             try
             {
@@ -212,7 +216,7 @@ namespace DoodleAnims.Lib.Anim
                 float x = r.ReadSingle();
                 float y = r.ReadSingle();
 
-                Skeleton s = new Skeleton(name, new PointF(x, y));
+                Skeleton s = new Skeleton(parentControl, name, new PointF(x, y));
 
                 switch (version)
                 {
@@ -232,7 +236,7 @@ namespace DoodleAnims.Lib.Anim
             catch (Exception e)
             {
                 MessageBox.Show("An error occured when loading the file: \n" + e.Message, "Error loading file", MessageBoxButtons.OK);
-                return new Skeleton("newProject", new PointF(100,100));
+                return new Skeleton(parentControl, "newProject", new PointF(100, 100));
             }
         }
     }

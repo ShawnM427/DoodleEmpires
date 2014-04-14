@@ -6,6 +6,7 @@ using DoodleAnims.Lib.Anim;
 using System.Drawing;
 using DoodleAnims.Utils;
 using System.Drawing.Drawing2D;
+using System.Timers;
 
 namespace DoodleAnims
 {
@@ -84,6 +85,8 @@ namespace DoodleAnims
         Pen _linePen;
         Pen _dottedLinePen;
 
+        Timer _animTimer;
+
         float _timeWidth = 0;
         int _oppKeyframeHeight = 0;
         int _panButtonWidth = 0;
@@ -101,22 +104,33 @@ namespace DoodleAnims
             _linePen = new Pen(new SolidBrush(Color.Black));
             _dottedLinePen = new Pen(new SolidBrush(Color.Black));
             _dottedLinePen.DashStyle = DashStyle.Dot;
+
+            _animTimer = new Timer(10);
+            _animTimer.Elapsed += new ElapsedEventHandler(_animTimer_Elapsed);
+            _animTimer.Start();
+        }
+
+        void _animTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (_currentAnim != null)
+                _currentAnim.Update(new TimeSpan(0,0,0,0, (int)_animTimer.Interval));
         }
 
         /// <summary>
         /// Called when this control has been resized
         /// </summary>
         /// <param name="eventargs">A blank event arguments</param>
-        protected override void  OnResize(EventArgs eventargs)
+        protected override void OnResize(EventArgs eventargs)
         {
             _oppKeyframeHeight = Height - Height / 4;
             _panButtonWidth = Height / 4;
             _timeWidth = Width - Height - Height / 2;
 
+            _pauseButton = new Rectangle(Height / 2, 0, Height / 2, Height / 2);
             _playButton = new Rectangle(0, 0, Height / 2, Height / 2);
-            _stopButton = new Rectangle(Height / 2, 0, Height / 2, Height / 2);
+
             _reverseButton = new Rectangle(0, Height / 2, Height / 2, Height / 2 - 1);
-            _pauseButton = new Rectangle(Height / 2, Height / 2, Height / 2, Height / 2 -1);
+            _stopButton = new Rectangle(Height / 2, Height / 2, Height / 2, Height / 2 - 1);
 
             _panLeft = new Rectangle(Height, 0, _panButtonWidth, _oppKeyframeHeight);
             _panRight = new Rectangle(Width - _panButtonWidth - 1, 0, _panButtonWidth, _oppKeyframeHeight);
@@ -204,6 +218,21 @@ namespace DoodleAnims
                 _shownTime -= 0.1;
             if (_zoomOut.Contains(e.Location))
                 _shownTime += 0.1;
+
+            if (_currentAnim != null)
+            {
+                if (_playButton.Contains(e.Location))
+                    _currentAnim.Play();
+                if (_stopButton.Contains(e.Location))
+                    _currentAnim.Reset();
+                if (_pauseButton.Contains(e.Location))
+                    _currentAnim.Pause();
+                if (_reverseButton.Contains(e.Location))
+                {
+                    _currentAnim.IsReversed = !_currentAnim.IsReversed;
+                    _currentAnim.Play();
+                }
+            }
 
             _shownTime = _shownTime < 0.1 ? 0.1 : _shownTime;
 

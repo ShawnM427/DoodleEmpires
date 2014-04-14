@@ -129,7 +129,7 @@ namespace DoodleAnims
 
             DoubleBuffered = true;
 
-            _skeleton = new Skeleton("", new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2));
+            _skeleton = new Skeleton(dbpnl_renderScreen, "", new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2));
 
             SelectedLimb = _skeleton.Root;
 
@@ -498,7 +498,7 @@ namespace DoodleAnims
         /// <param name="e">The blank event args</param>
         private void tsi_new_Click(object sender, EventArgs e)
         {
-            _skeleton = new Skeleton("", new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2));
+            _skeleton = new Skeleton(dbpnl_renderScreen, "", new PointF(dbpnl_renderScreen.Size.Width / 2, dbpnl_renderScreen.Size.Height / 2));
             SelectedLimb = _skeleton.Root;
             trv_limbBrowser.Nodes.Clear();
             trv_limbBrowser.Nodes.Add(_skeleton.RootNode);
@@ -540,7 +540,7 @@ namespace DoodleAnims
                 Stream s = File.OpenRead(fdl_loadSkeleton.FileName);
                 BinaryReader rd = new BinaryReader(s);
 
-                _skeleton = Skeleton.Load(rd);
+                _skeleton = Skeleton.Load(dbpnl_renderScreen, rd);
 
                 SelectedLimb = _skeleton.Root;
 
@@ -550,6 +550,22 @@ namespace DoodleAnims
                 rd.Close();
                 rd.Dispose();
                 s.Dispose();
+
+
+                Animation anim = new Animation(_skeleton);
+                AnimKeyFrame frame1 = _skeleton.GetKeyFrame();
+                AnimKeyFrame frame2 = _skeleton.GetKeyFrame(1000);
+
+                Random rand = new Random();
+                foreach (AnimState state in frame2.KeyStates)
+                {
+                    state.Rotation = rand.Next(361);
+                }
+
+                anim.AddKeyFrame(frame1);
+                anim.AddKeyFrame(frame2);
+
+                amc_animControl.Animation = anim;
             }
         }
 
