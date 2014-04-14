@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DoodleEmpires.Engine.Net;
 #endregion
 
 namespace DoodleEmpires
@@ -18,7 +19,7 @@ namespace DoodleEmpires
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new GameClient())
                 game.Run();
         }
     }

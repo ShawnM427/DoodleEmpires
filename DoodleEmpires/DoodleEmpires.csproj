@@ -42,6 +42,9 @@
     <Compile Include="Engine\Entities\IFocusable.cs" />
     <Compile Include="Engine\Entities\Unit.cs" />
     <Compile Include="Engine\Entities\Vegetation.cs" />
+    <Compile Include="Engine\Net\GameClient.cs" />
+    <Compile Include="Engine\Net\NetManager.cs" />
+    <Compile Include="Engine\Net\NetMap.cs" />
     <Compile Include="Engine\Render\2DCamera.cs" />
     <Compile Include="Engine\Entities\CameraControl.cs" />
     <Compile Include="Engine\Render\ColoredMesh.cs" />
@@ -55,10 +58,11 @@
     <Compile Include="Engine\Terrain\Utils.cs" />
     <Compile Include="Engine\Terrain\VolcanicFormation.cs" />
     <Compile Include="Engine\Terrain\VoxelTerrain.cs" />
+    <Compile Include="Engine\Utilities\AdvancedGame.cs" />
     <Compile Include="Engine\Utilities\CustomGame.cs" />
     <Compile Include="Engine\Utilities\FPSManager.cs" />
+    <Compile Include="Engine\Utilities\Noise.cs" />
     <Compile Include="Engine\Utilities\TextureAtlas.cs" />
-    <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

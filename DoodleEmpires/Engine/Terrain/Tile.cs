@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace DoodleEmpires.Engine.Terrain
 {
@@ -11,6 +12,7 @@ namespace DoodleEmpires.Engine.Terrain
         public short TextureID;
         public RenderType RenderType;
         public bool Solid;
+        public Color Color;
 
         public Tile(byte type, short textureID, RenderType renderType = RenderType.Land, bool solid = false)
         {
@@ -18,6 +20,7 @@ namespace DoodleEmpires.Engine.Terrain
             TextureID = textureID;
             RenderType = renderType;
             Solid = solid;
+            Color = Color.White;
         }
     }
 

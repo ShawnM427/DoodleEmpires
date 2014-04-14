@@ -28,6 +28,8 @@ namespace DoodleEmpires.Engine.Terrain
         protected TextureAtlas _atlas;
         protected TileManager _tileManager;
 
+        protected Random _random;
+
         protected Color _transformColor = Color.White;
 
         public byte this[int x, int y]
@@ -42,9 +44,10 @@ namespace DoodleEmpires.Engine.Terrain
                 UpdateVoxel(x, y);
             }
         }
-
+        
         public VoxelTerrain(GraphicsDevice Graphics, TileManager tileManager, TextureAtlas atlas, int width, int height)
         {
+            _random = new Random();
             _tiles = new byte[width, height];
             _neighbourStates = new byte[width, height];
             _width = width;
@@ -55,20 +58,38 @@ namespace DoodleEmpires.Engine.Terrain
 
             _graphics = Graphics;
             _spriteBatch = new SpriteBatch(Graphics);
-            
-            for (int x = 0; x < 800; x++)
-            {
-                for (int y = 200; y < 400; y++)
-                {
-                    _tiles[x, y] = 1;
-                    _neighbourStates[x, y] = (byte)(MooreNeighbours.R | MooreNeighbours.BM | MooreNeighbours.L | MooreNeighbours.TM);
-                }
-                _neighbourStates[x, 199] = (byte)(MooreNeighbours.R | MooreNeighbours.BM | MooreNeighbours.L); ;
-            }
 
             _atlas = atlas;
             _tileManager = tileManager;
             BuildVoxelBouds();
+            
+            float tHeight;
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    tHeight = Noise.PerlinNoise_1D(x / 16);
+                    if (y > 200 + tHeight)
+                    {
+                        if (y > 200 + tHeight + 4)
+                            _tiles[x, y] = 2;
+                        else
+                            _tiles[x, y] = 1;
+
+                        _neighbourStates[x, y] = (byte)MooreNeighbours.All;
+                    }
+                }
+            }
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (_tiles[x, y] != 0)
+                    {
+                        _neighbourStates[x, y] = (byte)GetNeighbours(x, y);
+                    }
+                }
+            }
         }
 
         protected virtual void BuildVoxelBouds()
@@ -86,7 +107,7 @@ namespace DoodleEmpires.Engine.Terrain
 
         protected virtual void UpdateVoxel(int x, int y, bool doNeighbours = true)
         {
-            if (IsSolid(x, y))
+            if (IsNotAir(x, y))
             {
                 MooreNeighbours neighbours = GetNeighbours(x, y);
                 
@@ -95,15 +116,37 @@ namespace DoodleEmpires.Engine.Terrain
 
             if (doNeighbours)
             {
+                UpdateVoxel(x - 1, y - 1, false);
+                UpdateVoxel(x, y - 1, false);
+                UpdateVoxel(x + 1, y - 1, false);
+                UpdateVoxel(x - 1, y + 1, false);
+                UpdateVoxel(x, y + 1, false);
+                UpdateVoxel(x + 1, y + 1, false);
                 UpdateVoxel(x - 1, y, false);
                 UpdateVoxel(x + 1, y, false);
-                UpdateVoxel(x, y - 1, false);
-                UpdateVoxel(x, y + 1, false);
             }
         }
 
         protected MooreNeighbours GetNeighbours(int x, int y)
         {
+            byte cMaterial = GetMaterial(x,y);
+
+            if (!IsNotAir(x - 1, y) & !IsNotAir(x, y - 1) & !IsNotAir(x - 1, y - 1) &
+                 IsNotAir(x, y + 1) & IsNotAir(x + 1, y) & IsNotAir(x - 1, y + 1))
+                return MooreNeighbours.Diag;
+
+            if (!IsNotAir(x + 1, y) & !IsNotAir(x, y - 1) & !IsNotAir(x + 1, y - 1) &
+                 IsNotAir(x, y + 1) & IsNotAir(x - 1, y) & IsNotAir(x + 1, y + 1))
+                return MooreNeighbours.Diag + 1;
+
+            if (!IsNotAir(x - 1, y) & !IsNotAir(x, y + 1) & !IsNotAir(x - 1, y + 1) &
+                 IsNotAir(x, y - 1) & IsNotAir(x + 1, y) & IsNotAir(x - 1, y - 1))
+                return MooreNeighbours.Diag + 2;
+
+            if (!IsNotAir(x + 1, y) & !IsNotAir(x, y + 1) & !IsNotAir(x + 1, y + 1) &
+                 IsNotAir(x, y - 1) & IsNotAir(x - 1, y) & IsNotAir(x + 1, y - 1))
+                return MooreNeighbours.Diag + 3;
+
             return (MooreNeighbours)(0 +
                 //(IsSolid(x - 1, y - 1) ? MooreNeighbours.TL : 0) |
                 (CanConnect(GetMaterial(x, y), GetMaterial(x, y - 1)) ? MooreNeighbours.TM : 0) |
@@ -118,6 +161,11 @@ namespace DoodleEmpires.Engine.Terrain
         protected bool IsSolid(int x, int y)
         {
             return x >= 0 & x < _width & y >= 0 & y < _height ? _tileManager.IsSolid(_tiles[x, y]) : false;
+        }
+
+        protected bool IsNotAir(int x, int y)
+        {
+            return x >= 0 & x < _width & y >= 0 & y < _height ? _tiles[x, y] != 0 : false;
         }
 
         protected byte GetMaterial(int x, int y)
@@ -230,6 +278,8 @@ namespace DoodleEmpires.Engine.Terrain
         L = 1 << 1,
         R = 1 << 2,
         BM = 1 << 3,
+        Diag = 1 << 4,
+        All = TM | L | R | BM
     }
 
     public static class MooreNeighbourExtensions
