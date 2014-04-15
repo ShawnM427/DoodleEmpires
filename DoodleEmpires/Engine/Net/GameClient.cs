@@ -58,16 +58,17 @@ namespace DoodleEmpires.Engine.Net
         protected override void Initialize()
         {
             TileManager _tileManager = new TileManager();
-            _tileManager.RegisterTile(0, Color.Green, RenderType.Land, true); //grass
-            _tileManager.RegisterTile(0, Color.Gray, RenderType.Land, true);  //stone
-            _tileManager.RegisterTile(20, Color.Brown, RenderType.Land, false); //trees
-            _tileManager.RegisterTile(40, Color.Green, RenderType.Land, false); //leaves
-            _tileManager.RegisterConnect(1, 1);
-            _tileManager.RegisterConnect(2, 2);
-            _tileManager.RegisterConnect(3, 3);
-            _tileManager.RegisterConnect(4, 4);
-            _tileManager.RegisterConnect(1, 2);
-            _tileManager.RegisterConnect(3, 4);
+            _tileManager.RegisterTile("Grass", 0, Color.Green, RenderType.Land, true);
+            _tileManager.RegisterTile("Stone", 0, Color.Gray, RenderType.Land, true);
+            _tileManager.RegisterTile("Concrete", 0, Color.LightGray, RenderType.Land, true);
+            _tileManager.RegisterTile("Wood", 20, Color.Brown, RenderType.Land, false);
+            _tileManager.RegisterTile("Leaves", 40, Color.Green, RenderType.Land, false);
+            _tileManager.RegisterTile("Cobble", 60, Color.Gray, RenderType.Land, true);
+
+            _tileManager.RegisterConnect("Grass", "Stone");
+            _tileManager.RegisterConnect("Grass", "Concrete");
+            _tileManager.RegisterConnect("Grass", "Cobble");
+            _tileManager.RegisterConnect("Leaves", "Wood");
 
             _voxelTerrain = new VoxelTerrain(GraphicsDevice, _tileManager, new TextureAtlas(Content.Load<Texture2D>("Atlas"), 20, 20), 800, 400);
             _cameraController = new CameraControl();
@@ -136,11 +137,15 @@ namespace DoodleEmpires.Engine.Net
 
             if (args.LeftButton == ButtonState.Pressed & Keyboard.GetState().IsKeyDown(Keys.LeftControl))
             {
-                _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 4);
+                _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 5);
+            }
+            else if (args.LeftButton == ButtonState.Pressed & Keyboard.GetState().IsKeyDown(Keys.LeftAlt))
+            {
+                _voxelTerrain.GenTree((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT);
             }
             else if (args.LeftButton == ButtonState.Pressed)
             {
-                _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 3);
+                _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 4);
             }
             if (args.RightButton == ButtonState.Pressed)
             {
