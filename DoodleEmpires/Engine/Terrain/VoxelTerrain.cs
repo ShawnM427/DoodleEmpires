@@ -22,6 +22,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// Gets the height of a single voxel tile
         /// </summary>
         public const int TILE_HEIGHT = 16;
+        public const int TREE_DESNISTY = 1;
 
         #region Protected Vars
         /// <summary>
@@ -139,6 +140,12 @@ namespace DoodleEmpires.Engine.Terrain
                         _neighbourStates[x, y] = (byte)GetNeighbours(x, y);
                     }
                 }
+            }
+
+            for (int i = 0; i < TREE_DESNISTY * width / 32; i++)
+            {
+                int x = _random.Next(_width);
+                GenTree(x, 200 + (int)Noise.PerlinNoise_1D(x / 16));
             }
         }
 
