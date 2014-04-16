@@ -4,17 +4,14 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using DoodleEmpires.Engine.Utilities;
-using Microsoft.Xna.Framework.Input;
 
 namespace DoodleEmpires.Engine.GUI
 {
-    /// <summary>
-    /// Represents a control used for games
-    /// </summary>
-    public abstract class GUIContainer : IGUI
+    public class GUITextPane : GUIElement
     {
-        protected List<IGUI> _controls;
+        protected string _text;
+        protected string _drawnText;
+        protected SpriteFont _font;
         protected VertexPositionColor[] _cornerVerts = new VertexPositionColor[5]
         {
             new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black),
@@ -23,6 +20,8 @@ namespace DoodleEmpires.Engine.GUI
             new VertexPositionColor(new Vector3(0, 32, 0.5f), Color.Black),
             new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black)
         };
+        protected float _margin = 2.0f;
+        protected Vector2 _textPos = new Vector2(2.0f, 2.0f);
 
         /// <summary>
         /// The bounds relative to the parent container
@@ -45,43 +44,42 @@ namespace DoodleEmpires.Engine.GUI
             }
         }
         /// <summary>
-        /// Gets or sets the color of the border
+        /// Gets or sets the text for this label
         /// </summary>
-        public Color BorderColor
+        public virtual string Text
         {
-            get { return _cornerVerts[0].Color; }
+            get { return _text; }
             set
             {
-                _cornerVerts[0].Color = _cornerVerts[1].Color = _cornerVerts[2].Color =
-                    _cornerVerts[3].Color = _cornerVerts[4].Color = value;
+                _text = value;
+                _drawnText = _text.Wrap(_font, _bounds.Width - 2.0f * _margin);
+                Invalidating = true;
             }
         }
         /// <summary>
-        /// Gets or sets the background color for this control
+        /// Gets or sets the horizontal margin within this control
         /// </summary>
-        public Color BackColor
+        public virtual float Margin
         {
-            get { return _backColor; }
-            set { _backColor = value; }
+            get { return _margin; }
+            set
+            {
+                _margin = value;
+                _drawnText = _text.Wrap(_font, _bounds.Width - 2.0f * _margin);
+                _textPos.X = value;
+                Invalidating = true;
+            }
         }
 
-        public GUIContainer(GraphicsDevice graphics) : this(graphics, null)
-        {
-        }
-
-        public GUIContainer(GraphicsDevice graphics, GUIContainer parent)
+        public GUITextPane(GraphicsDevice graphics, SpriteFont font, GUIContainer parent)
             : base(graphics, parent)
         {
-            _controls = new List<IGUI>();
-        }
+            _font = font;
+            _text = "";
+            BackColor = Color.White;
 
-        /// <summary>
-        /// Adds a new component to this GUI container
-        /// </summary>
-        /// <param name="component">The component to add</param>
-        public void AddComponent(IGUI component)
-        {
-            _controls.Add(component);
+            _bounds.Width = (int)_font.MeasureString(_text).X;
+            _bounds.Height = (int)_font.MeasureString(_text).Y;
         }
 
         /// <summary>
@@ -98,30 +96,13 @@ namespace DoodleEmpires.Engine.GUI
             }
             return false;
         }
-        
-        /// <summary>
-        /// Ends the invalidation of the control
-        /// </summary>
-        protected override void EndInvalidate()
-        {
-            foreach (IGUI control in _controls)
-            {
-                if (control.Image != null)
-                    _spriteBatch.Draw(control.Image, control.Bounds, _colorMultiplier);
-            }
-
-            base.EndInvalidate();
-        }
 
         /// <summary>
-        /// Updates this control, MUST BE CALLED IN OVERRIDEN CLASSES
+        /// Renders this control's main features to the screen
         /// </summary>
-        public override void Update()
+        protected override void Invalidate()
         {
-            foreach (IGUI control in _controls)
-                control.Update();
-
-            base.Update();
+            _spriteBatch.DrawString(_font, _drawnText, _textPos, _foreColor);
         }
     }
 }

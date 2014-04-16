@@ -21,6 +21,9 @@ namespace DoodleEmpires.Engine.GUI
             set
             {
                 _text = value;
+                _bounds.Width = (int)_font.MeasureString(_text).X;
+                _bounds.Height = (int)_font.MeasureString(_text).Y;
+                Bounds = _bounds;
                 Invalidating = true;
             }
         }
@@ -30,14 +33,14 @@ namespace DoodleEmpires.Engine.GUI
         {
             _font = font;
             _text = "";
-        }
 
-        protected override void BeginInvalidate()
-        {
             _bounds.Width = (int)_font.MeasureString(_text).X;
             _bounds.Height = (int)_font.MeasureString(_text).Y;
+        }
 
-            base.BeginInvalidate();
+        protected override bool BeginInvalidate()
+        {
+            return base.BeginInvalidate();
         }
 
         protected override void Invalidate()

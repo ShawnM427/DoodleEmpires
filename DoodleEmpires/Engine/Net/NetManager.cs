@@ -10,13 +10,18 @@ namespace DoodleEmpires.Engine.Net
     public static class NetManager
     {
         static volatile bool _exiting;
-        static NetMap _map;
         static NetClient _netClient;
+        static GameClient _game;
+
+        public static void Initialize(GameClient client)
+        {
+            _game = client;
+        }
 
         public static bool Exiting
         {
-            get{return _exiting;}
-            set{_exiting = value;}
+            get { return _exiting; }
+            set { _exiting = value; }
         }
 
         public static void BeginRead()
@@ -29,29 +34,33 @@ namespace DoodleEmpires.Engine.Net
             while (!Exiting)
             {
                 NetIncomingMessage message;
+
                 if ((message = _netClient.ReadMessage()) != null)
                 {
                     while (message.PositionInBytes < message.LengthBytes)
                     {
-                        PacketTypes MID = (PacketTypes)message.ReadInt16();
-
-                        switch (MID)
-                        {
-                            case PacketTypes.MapSet:
-                                _map.HandleSetMessage(message);
-                                break;
-                        }
+                        _game.HandleNetMassage(message);
                     }
                 }
             }
         }
 
-        public enum PacketTypes : short
+        public static NetOutgoingMessage BuildMessage()
         {
-            Connect,
-            Disconnect,
-            PlayerJoined,
-            MapSet
+            return _netClient.CreateMessage();
         }
+
+        public static void SendMessage(NetOutgoingMessage message, NetDeliveryMethod deliveryMethod = NetDeliveryMethod.ReliableUnordered)
+        {
+            _netClient.SendMessage(message , deliveryMethod);
+        }
+    }
+
+    public enum PacketTypes : short
+    {
+        Connect,
+        Disconnect,
+        PlayerJoined,
+        MapSet
     }
 }

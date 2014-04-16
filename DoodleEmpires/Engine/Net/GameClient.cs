@@ -41,6 +41,28 @@ namespace DoodleEmpires.Engine.Net
 
         GUIContainer _mainControl;
 
+        /// <summary>
+        /// Gets or sets a tile at the given chunk coords
+        /// </summary>
+        /// <param name="x">The x coordinate (chunk coords)</param>
+        /// <param name="y">The y coordinate (chunk coords)</param>
+        /// <returns>The voxel type at (x, y)</returns>
+        public byte this[int x, int y]
+        {
+            get { return _voxelTerrain[x, y]; }
+            set
+            {
+                _voxelTerrain[x, y] = value;
+
+                NetOutgoingMessage message = NetManager.BuildMessage();
+                message.Write((short)PacketTypes.MapSet);
+                message.Write((short)x);
+                message.Write((short)y);
+                message.Write(value);
+                NetManager.SendMessage(message);
+            }
+        }
+
         public GameClient()
             : base()
         {
@@ -94,9 +116,18 @@ namespace DoodleEmpires.Engine.Net
             _paperTex = Content.Load<Texture2D>("Paper");
 
             _debugFont = Content.Load<SpriteFont>("debugFont");
+            SpriteFont _guiFont = Content.Load<SpriteFont>("GUIFont");
+            _guiFont.FixFont();
             
             _mainControl = new GUIPanel(GraphicsDevice, null);
             _mainControl.Bounds = new Rectangle(20, 60, 60, 120);
+
+            GUILabel label = new GUILabel(GraphicsDevice, _guiFont, _mainControl);
+            label.Text = "Testing 1 \nTesting 2";
+
+            GUITextPane textPane = new GUITextPane(GraphicsDevice, _guiFont, _mainControl);
+            textPane.Bounds = new Rectangle(0, label.Bounds.Height + 4, _mainControl.Bounds.Width, 40);
+            textPane.Text = "This is a very very very very very long peice of text to render to one control!";
         }
 
         /// <summary>
@@ -189,6 +220,18 @@ namespace DoodleEmpires.Engine.Net
             _mainControl.Draw();
 
             base.Draw(gameTime);
+        }
+
+        public void HandleNetMassage(NetIncomingMessage message)
+        {
+            PacketTypes MID = (PacketTypes)message.ReadInt16();
+
+            switch (MID)
+            {
+                case PacketTypes.MapSet:
+                    this[message.ReadInt16(), message.ReadInt16()] = message.ReadByte();
+                    break;
+            }
         }
     }
 }

@@ -8,8 +8,7 @@ namespace DoodleEmpires.Engine.Entities
 {
     public class Unit
     {
-        Rectangle _bounds;
-        Vector2 _position;
-
+        //Rectangle _bounds;
+        //Vector2 _position;
     }
 }

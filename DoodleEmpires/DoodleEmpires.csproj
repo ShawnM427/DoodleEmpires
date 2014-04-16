@@ -38,18 +38,17 @@
     <Compile Include="Engine\Economy\Resources.cs" />
     <Compile Include="Engine\Economy\TechNode.cs" />
     <Compile Include="Engine\Economy\TechTree.cs" />
-    <Compile Include="Engine\Entities\Building.cs" />
     <Compile Include="Engine\Entities\IFocusable.cs" />
     <Compile Include="Engine\Entities\Unit.cs" />
-    <Compile Include="Engine\Entities\Vegetation.cs" />
+    <Compile Include="Engine\GUI\GUITextPane.cs" />
     <Compile Include="Engine\GUI\GUIContainer.cs" />
     <Compile Include="Engine\GUI\GUIElement.cs" />
     <Compile Include="Engine\GUI\GUILabel.cs" />
     <Compile Include="Engine\GUI\GUIPanel.cs" />
     <Compile Include="Engine\GUI\IGUI.cs" />
+    <Compile Include="Engine\GUI\Utils.cs" />
     <Compile Include="Engine\Net\GameClient.cs" />
     <Compile Include="Engine\Net\NetManager.cs" />
-    <Compile Include="Engine\Net\NetMap.cs" />
     <Compile Include="Engine\Render\2DCamera.cs" />
     <Compile Include="Engine\Entities\CameraControl.cs" />
     <Compile Include="Engine\Render\ColoredMesh.cs" />
@@ -105,6 +104,9 @@
   <ItemGroup>
     <None Include="Content\debugFont.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\GUIFont.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
