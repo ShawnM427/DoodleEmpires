@@ -85,6 +85,25 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
+        /// Adds a new tile type to this tile manager
+        /// </summary>
+        /// <param name="tile">The tile to add</param>
+        /// <returns>The TileID for the new tile</returns>
+        public byte RegisterTile(Tile tile, string name)
+        {
+            if (!_tiles.ContainsKey(name))
+            {
+                tile.Type = (byte)_tileTypes.Count;
+                _tileTypes.Add(tile);
+                RegisterConnect(tile.Type, tile.Type);
+                _tiles.Add(name != null ? name : GenName(), tile.Type);
+                return tile.Type;
+            }
+            else
+                throw new ArgumentException(string.Format("There is already a tile named \"{0}\"", name));
+        }
+
+        /// <summary>
         /// Renders a tile to the screen
         /// </summary>
         /// <param name="spriteBatch">The spritebatch to use for rendering</param>
@@ -93,22 +112,10 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="mooreState">The neighbour states for this block</param>
         /// <param name="tileID">The ID of the tile to render</param>
         /// <param name="diffuseColor">The color to transform everything by</param>
-        public void RenderTile(SpriteBatch spriteBatch, Rectangle bounds, TextureAtlas atlas, byte mooreState, byte tileID, Color diffuseColor)
+        public void RenderTile(SpriteBatch spriteBatch, Rectangle bounds, TextureAtlas atlas, byte mooreState, 
+            byte tileID, byte metaData, Color diffuseColor)
         {
-            Color tileColor = Color.FromNonPremultiplied(
-                _tileTypes[tileID].Color.R * diffuseColor.R,
-                _tileTypes[tileID].Color.G * diffuseColor.G,
-                _tileTypes[tileID].Color.B * diffuseColor.B,
-                _tileTypes[tileID].Color.A * diffuseColor.A);
-            switch (_tileTypes[tileID].RenderType)
-            {
-                case RenderType.Land:
-                    spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(_tileTypes[tileID].TextureID + mooreState), tileColor);
-                    break;
-                case RenderType.Prop:
-                    spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(_tileTypes[tileID].TextureID), tileColor);
-                    break;
-            }
+            _tileTypes[tileID].Draw(spriteBatch, atlas, bounds, mooreState, metaData);
         }
 
         /// <summary>

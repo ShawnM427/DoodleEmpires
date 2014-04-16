@@ -25,7 +25,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// <summary>
         /// Gets the number of trees per 32 tiles
         /// </summary>
-        public const int TREE_DESNISTY = 1;
+        public const int TREE_DESNISTY = 4;
 
         #region Protected Vars
         /// <summary>
@@ -36,6 +36,10 @@ namespace DoodleEmpires.Engine.Terrain
         /// The materials for all the voxels
         /// </summary>
         protected byte[,] _tiles;
+        /// <summary>
+        /// The metadata for all the voxels
+        /// </summary>
+        protected byte[,] _meta;
         /// <summary>
         /// The neighbour states for the corresponding voxels
         /// </summary>
@@ -105,6 +109,7 @@ namespace DoodleEmpires.Engine.Terrain
         {
             _random = new Random();
             _tiles = new byte[width, height];
+            _meta = new byte[width, height];
             _neighbourStates = new byte[width, height];
             _width = width;
             _height = height;
@@ -123,6 +128,18 @@ namespace DoodleEmpires.Engine.Terrain
             GenTerrain();
         }
 
+        public void SetMeta(int x, int y, byte meta)
+        {
+            if (x >= 0 & x < _width & y >= 0 & y < _height)
+            {
+                _meta[x, y] = meta;
+                UpdateVoxel(x, y);
+            }
+        }
+
+        /// <summary>
+        /// Generates the terrain
+        /// </summary>
         protected virtual void GenTerrain()
         {
             float tHeight;
@@ -153,10 +170,9 @@ namespace DoodleEmpires.Engine.Terrain
                 }
             }
 
-            for (int i = 0; i < TREE_DESNISTY * _width / 32; i++)
+            for (int i = 0; i < _width; i+= (32 / TREE_DESNISTY) + _random.Next(-3, 3))
             {
-                int x = _random.Next(_width);
-                GenTree(x, 200 + (int)(Noise.PerlinNoise_1D(x / 16.0f) * _terrainHeightModifier));
+                GenTree(i, 200 + (int)(Noise.PerlinNoise_1D(i / 16.0f) * _terrainHeightModifier));
             }
         }
 
@@ -311,14 +327,25 @@ namespace DoodleEmpires.Engine.Terrain
 
                 SetSphere(x, y - height - radius + 1, radius, 5); //generate leaves
 
-                for (int yy = y; yy > y - height; yy--)
+                for (int i = 0; i < 10; i++)
+                {
+                    int xx = _random.Next(x-radius, x + radius + 1);
+                    int yy = _random.Next(y - height - radius, y - height);
+
+                    if (IsInsideOctagon(x, y - height - radius + 1, radius, xx, yy))
+                        SetMeta(xx, yy, 1);
+                }
+
+                for (int yy = y; yy > y - height + 1; yy--)
                 {
                     SetTileSafe(x, yy, 4);
                 }
-                for (int xx = x - radius; xx < x + radius; xx++)
+
+                for (int xx = x - radius / 2; xx <= x + radius/2; xx++)
                     SetTileSafe(xx, y - height + 1, 0);
 
-                SetTileSafe(x, y - height + 1, 4);
+
+                    SetTileSafe(x, y - height + 1, 4);
 
                 if (_random.Next(0, 3) == 1 && IsNotAir(x - 1, y + 1)) //33% chance of left root
                     SetTileSafe(x - 1, y, 4);
@@ -409,7 +436,8 @@ namespace DoodleEmpires.Engine.Terrain
             {
                 for (int x = _MINX; x <= _MAXX; x++)
                 {
-                    _tileManager.RenderTile(_spriteBatch, _voxelBounds[x, y], _atlas, _neighbourStates[x, y], _tiles[x, y], _transformColor);
+                    _tileManager.RenderTile(_spriteBatch, _voxelBounds[x, y], _atlas, _neighbourStates[x, y],
+                        _tiles[x, y], _meta[x, y], _transformColor);
                 }
             }
 

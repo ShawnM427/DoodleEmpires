@@ -39,7 +39,7 @@ namespace DoodleEmpires.Engine.Net
         
         Random _rand;
 
-        GameControl _mainControl;
+        GUIContainer _mainControl;
 
         public GameClient()
             : base()
@@ -65,7 +65,7 @@ namespace DoodleEmpires.Engine.Net
             _tileManager.RegisterTile("Stone", 0, Color.Gray, RenderType.Land, true);
             _tileManager.RegisterTile("Concrete", 0, Color.LightGray, RenderType.Land, true);
             _tileManager.RegisterTile("Wood", 20, Color.Brown, RenderType.Land, false);
-            _tileManager.RegisterTile("Leaves", 40, Color.Green, RenderType.Land, false);
+            _tileManager.RegisterTile(new Leaves(0), "Leaves");
             _tileManager.RegisterTile("Cobble", 60, Color.Gray, RenderType.Land, true);
 
             _tileManager.RegisterConnect("Grass", "Stone");
@@ -155,7 +155,11 @@ namespace DoodleEmpires.Engine.Net
             {
                 _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 4);
             }
-            if (args.RightButton == ButtonState.Pressed)
+            if (args.RightButton == ButtonState.Pressed & Keyboard.GetState().IsKeyDown(Keys.LeftAlt))
+            {
+                _voxelTerrain.SetMeta((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 1);
+            }
+            else if (args.RightButton == ButtonState.Pressed)
             {
                 _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 0);
             }

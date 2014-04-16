@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using DoodleEmpires.Engine.Utilities;
 using Microsoft.Xna.Framework.Input;
+using DoodleEmpires.Engine.Utilities;
 
 namespace DoodleEmpires.Engine.GUI
 {
     /// <summary>
     /// Represents a control used for games
     /// </summary>
-    public abstract class GameControl
+    public abstract class GUIElement : IGUI
     {
         protected GraphicsDevice _graphics;
         protected SpriteBatch _spriteBatch;
@@ -20,18 +20,10 @@ namespace DoodleEmpires.Engine.GUI
         protected RenderTarget2D _renderTarget;
         protected Rectangle _bounds;
         protected Rectangle _screenBounds;
-        protected Color _backColor = Color.LightGray;
-        protected List<GameControl> _controls;
         protected Color _colorMultiplier = Color.White;
-        protected GameControl _parent;
-        protected VertexPositionColor[] _cornerVerts = new VertexPositionColor[5]
-        {
-            new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3( 32, 0, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3(32, 32, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3(0, 32, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black)
-        };
+        protected Color _backColor = Color.Transparent;
+        protected Color _foreColor = Color.Black;
+        protected GUIContainer _parent;
 
         /// <summary>
         /// The bounds relative to the parent container
@@ -44,22 +36,15 @@ namespace DoodleEmpires.Engine.GUI
                 if (_bounds.Width != value.Width || _bounds.Height != value.Height)
                 {
                     _renderTarget = new RenderTarget2D(_graphics, _bounds.Width, _bounds.Height);
-                    _effect.Projection = Matrix.CreateOrthographicOffCenter( 0, value.Width, value.Height, 0,
+                    _effect.Projection = Matrix.CreateOrthographicOffCenter(0, value.Width, value.Height, 0,
                         1.0f, 1000.0f);
                     _effect.CurrentTechnique.Passes[0].Apply();
-
-                    _cornerVerts[0].Position = new Vector3(0, 0, 0.5f);
-                    _cornerVerts[1].Position = new Vector3(value.Width - 1, 0, 0.5f);
-                    _cornerVerts[2].Position = new Vector3(value.Width - 1, value.Height - 1, 0.5f);
-                    _cornerVerts[3].Position = new Vector3(0, value.Height - 1, 0.5f);
-                    _cornerVerts[4].Position = new Vector3(0, 0, 0.5f);
-
                     Invalidating = true;
                 }
 
                 _bounds = value;
                 _screenBounds = _bounds;
-                
+
                 if (_parent != null)
                     _screenBounds.Offset(_parent.Bounds.X, _parent.Bounds.Y);
             }
@@ -86,46 +71,47 @@ namespace DoodleEmpires.Engine.GUI
             get;
             set;
         }
+
         /// <summary>
-        /// Gets or sets the color of the border
+        /// Gets or sets the back color for this control
         /// </summary>
-        public Color BorderColor
+        public virtual Color BackColor
         {
-            get { return _cornerVerts[0].Color; }
+            get { return _backColor; }
             set
             {
-                _cornerVerts[0].Color = _cornerVerts[1].Color = _cornerVerts[2].Color =
-                    _cornerVerts[3].Color = _cornerVerts[4].Color = value;
+                _backColor = value;
+                Invalidating = true;
             }
         }
         /// <summary>
-        /// Gets or sets the background color for this control
+        /// Gets or sets the forecolor for this control
         /// </summary>
-        public Color BackColor
+        public virtual Color ForeColor
         {
-            get { return _backColor; }
-            set { _backColor = value; }
+            get { return _foreColor; }
+            set
+            {
+                _foreColor = value;
+                Invalidating = true;
+            }
         }
 
-        public GameControl(GraphicsDevice graphics) : this(graphics, null)
+        public GUIElement(GraphicsDevice graphics)
+            : this(graphics, null)
         {
         }
 
-        public GameControl(GraphicsDevice graphics, GameControl parent)
+        public GUIElement(GraphicsDevice graphics, GUIContainer parent)
         {
             _graphics = graphics;
             _spriteBatch = new SpriteBatch(graphics);
-            _controls = new List<GameControl>();
             _parent = parent;
 
             _effect = new BasicEffect(_graphics);
-            _effect.VertexColorEnabled = true; 
-            _effect.Projection = Matrix.CreateOrthographicOffCenter(
-                0,
-                800,
-                480,
-                0,
-                1.0f, 1000.0f);
+            _effect.VertexColorEnabled = true;
+            _effect.Projection = 
+                Matrix.CreateOrthographicOffCenter(0, 800, 480, 0, 1.0f, 1000.0f);
             _effect.World = Matrix.Identity;
 
         }
@@ -133,31 +119,18 @@ namespace DoodleEmpires.Engine.GUI
         /// <summary>
         /// Begins the invalidation of this control
         /// </summary>
-        private void BeginInvalidate()
+        protected override void BeginInvalidate()
         {
             _renderTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);
             _graphics.SetRenderTarget(_renderTarget);
-            _graphics.Clear(_backColor);
-
-            _effect.CurrentTechnique.Passes[0].Apply();
-            _graphics.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, _cornerVerts, 0, 4);
+            _graphics.Clear(Color.Transparent);
         }
-
-        /// <summary>
-        /// Renders this control
-        /// </summary>
-        protected abstract void Invalidate();
-
+        
         /// <summary>
         /// Ends the invalidation of the control
         /// </summary>
-        private void EndInvalidate()
+        protected override void EndInvalidate()
         {
-            foreach (GameControl control in _controls)
-            {
-                _spriteBatch.Draw(control.Image, control.Bounds, _colorMultiplier);
-            }
-
             _graphics.SetRenderTarget(null);
         }
 
@@ -187,15 +160,12 @@ namespace DoodleEmpires.Engine.GUI
         /// <summary>
         /// Draws this control to the screen
         /// </summary>
-        public virtual void Draw()
+        public override void Draw()
         {
             if (Image != null)
             {
                 _spriteBatch.Begin();
                 _spriteBatch.Draw(Image, ScreenBounds, _colorMultiplier);
-
-                foreach (GameControl control in _controls)
-                    control.Draw();
                 _spriteBatch.End();
             }
         }

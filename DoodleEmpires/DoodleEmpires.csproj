@@ -42,8 +42,11 @@
     <Compile Include="Engine\Entities\IFocusable.cs" />
     <Compile Include="Engine\Entities\Unit.cs" />
     <Compile Include="Engine\Entities\Vegetation.cs" />
-    <Compile Include="Engine\GUI\GameControl.cs" />
+    <Compile Include="Engine\GUI\GUIContainer.cs" />
+    <Compile Include="Engine\GUI\GUIElement.cs" />
+    <Compile Include="Engine\GUI\GUILabel.cs" />
     <Compile Include="Engine\GUI\GUIPanel.cs" />
+    <Compile Include="Engine\GUI\IGUI.cs" />
     <Compile Include="Engine\Net\GameClient.cs" />
     <Compile Include="Engine\Net\NetManager.cs" />
     <Compile Include="Engine\Net\NetMap.cs" />
@@ -57,6 +60,7 @@
     <Compile Include="Engine\Terrain\Terrain.cs" />
     <Compile Include="Engine\Terrain\Tile.cs" />
     <Compile Include="Engine\Terrain\TileManager.cs" />
+    <Compile Include="Engine\Terrain\TileType.cs" />
     <Compile Include="Engine\Terrain\Utils.cs" />
     <Compile Include="Engine\Terrain\VolcanicFormation.cs" />
     <Compile Include="Engine\Terrain\VoxelTerrain.cs" />

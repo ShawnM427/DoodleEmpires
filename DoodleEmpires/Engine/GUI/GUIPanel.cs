@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DoodleEmpires.Engine.GUI
 {
-    public class GUIPanel : GameControl
+    public class GUIPanel : GUIContainer
     {
-        public GUIPanel(GraphicsDevice graphics, GameControl parent) : base(graphics, parent) { }
+        public GUIPanel(GraphicsDevice graphics, GUIContainer parent) : base(graphics, parent) { }
 
         protected override void Invalidate()
         {
