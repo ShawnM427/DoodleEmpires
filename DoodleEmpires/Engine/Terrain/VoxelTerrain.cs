@@ -22,6 +22,9 @@ namespace DoodleEmpires.Engine.Terrain
         /// Gets the height of a single voxel tile
         /// </summary>
         public const int TILE_HEIGHT = 16;
+        /// <summary>
+        /// Gets the number of trees per 32 tiles
+        /// </summary>
         public const int TREE_DESNISTY = 1;
 
         #region Protected Vars
@@ -60,6 +63,8 @@ namespace DoodleEmpires.Engine.Terrain
 
         protected Random _random;
 
+        protected float _terrainHeightModifier;
+
         /// <summary>
         /// The transform color to multiply all tiles by
         /// </summary>
@@ -96,13 +101,14 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="atlas">The texture atlas to use</param>
         /// <param name="width">The width of the map, in tiles</param>
         /// <param name="height">The height of the map, in tiles</param>
-        public VoxelTerrain(GraphicsDevice Graphics, TileManager tileManager, TextureAtlas atlas, int width, int height)
+        public VoxelTerrain(GraphicsDevice Graphics, TileManager tileManager, TextureAtlas atlas, int width, int height, float terrainHeightModifier = 25)
         {
             _random = new Random();
             _tiles = new byte[width, height];
             _neighbourStates = new byte[width, height];
             _width = width;
             _height = height;
+            _terrainHeightModifier = terrainHeightModifier;
 
             _maxX = width - 1;
             _maxY = height - 1;
@@ -113,13 +119,18 @@ namespace DoodleEmpires.Engine.Terrain
             _atlas = atlas;
             _tileManager = tileManager;
             BuildVoxelBouds();
-            
+
+            GenTerrain();
+        }
+
+        protected virtual void GenTerrain()
+        {
             float tHeight;
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < _width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < _height; y++)
                 {
-                    tHeight = Noise.PerlinNoise_1D(x / 16);
+                    tHeight = Noise.PerlinNoise_1D(x / 16.0f) * _terrainHeightModifier;
                     if (y > 200 + tHeight)
                     {
                         if (y > 200 + tHeight + 4)
@@ -131,9 +142,9 @@ namespace DoodleEmpires.Engine.Terrain
                     }
                 }
             }
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < _width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < _height; y++)
                 {
                     if (_tiles[x, y] != 0)
                     {
@@ -142,10 +153,10 @@ namespace DoodleEmpires.Engine.Terrain
                 }
             }
 
-            for (int i = 0; i < TREE_DESNISTY * width / 32; i++)
+            for (int i = 0; i < TREE_DESNISTY * _width / 32; i++)
             {
                 int x = _random.Next(_width);
-                GenTree(x, 200 + (int)Noise.PerlinNoise_1D(x / 16));
+                GenTree(x, 200 + (int)(Noise.PerlinNoise_1D(x / 16.0f) * _terrainHeightModifier));
             }
         }
 
@@ -302,15 +313,16 @@ namespace DoodleEmpires.Engine.Terrain
 
                 for (int yy = y; yy > y - height; yy--)
                 {
-                    for (int xx = x - radius; xx < x + radius; xx++ )
-                        SetTileSafe(xx, yy, 0);
-
                     SetTileSafe(x, yy, 4);
                 }
+                for (int xx = x - radius; xx < x + radius; xx++)
+                    SetTileSafe(xx, y - height + 1, 0);
 
-                if (_random.Next(0, 3) == 1) //33% chance of left root
+                SetTileSafe(x, y - height + 1, 4);
+
+                if (_random.Next(0, 3) == 1 && IsNotAir(x - 1, y + 1)) //33% chance of left root
                     SetTileSafe(x - 1, y, 4);
-                if (_random.Next(0, 3) == 1) //33% chance of right root
+                if (_random.Next(0, 3) == 1 && IsNotAir(x + 1, y + 1)) //33% chance of right root
                     SetTileSafe(x + 1, y, 4);
                 if (_random.Next(0, 10) == 1) //10% chance of left branch
                     SetTileSafe(x - 1, y - height + 1, 4);

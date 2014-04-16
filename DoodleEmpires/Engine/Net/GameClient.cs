@@ -10,6 +10,7 @@ using DoodleEmpires.Engine.Entities;
 using Microsoft.Xna.Framework.Input;
 using System.Threading;
 using Lidgren.Network;
+using DoodleEmpires.Engine.GUI;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -37,6 +38,8 @@ namespace DoodleEmpires.Engine.Net
         Vector2 _otherTickPos = new Vector2(5, 85);
         
         Random _rand;
+
+        GameControl _mainControl;
 
         public GameClient()
             : base()
@@ -91,6 +94,9 @@ namespace DoodleEmpires.Engine.Net
             _paperTex = Content.Load<Texture2D>("Paper");
 
             _debugFont = Content.Load<SpriteFont>("debugFont");
+            
+            _mainControl = new GUIPanel(GraphicsDevice, null);
+            _mainControl.Bounds = new Rectangle(20, 60, 60, 120);
         }
 
         /// <summary>
@@ -108,7 +114,9 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
-        {
+        {            
+            base.Update(gameTime);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -123,8 +131,8 @@ namespace DoodleEmpires.Engine.Net
             _cameraController.Position += _moveVector * 10;
             _cameraController.Update(gameTime);
             _view.Update(gameTime);
-            
-            base.Update(gameTime);
+
+            _mainControl.Update();
         }
 
         /// <summary>
@@ -162,7 +170,7 @@ namespace DoodleEmpires.Engine.Net
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
             FPSManager.OnDraw(gameTime);
 
@@ -174,16 +182,9 @@ namespace DoodleEmpires.Engine.Net
             SpriteBatch.DrawString(_debugFont, "Framerate: " + FPSManager.AverageFramesPerSecond, _framerateTextPos, Color.Red);
             SpriteBatch.End();
 
-            //base.Draw(gameTime);
-        }
+            _mainControl.Draw();
 
-        private void DoMessShitUp()
-        {
-            while (true)
-            {
-                _voxelTerrain[_rand.Next(10), _rand.Next(400)] = 1;
-                Thread.Sleep(_rand.Next(20));
-            }
+            base.Draw(gameTime);
         }
     }
 }

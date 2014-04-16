@@ -387,22 +387,22 @@ namespace DoodleEmpires.Engine.Utilities
 
     public static class Noise
     {
-        public static float Persistence = 0.2F;
-        public static int Octaves = 8;
-        private static Random _rand;
+        public static float Persistence = 0.1F;
+        public static int Octaves = 4;
+        private static int _seed = 0;
         public static int Seed
         {
-            set { _rand = new Random(value); }
+            set { _seed = value; }
         }
 
         static Noise()
         {
-            _rand = new Random();
+            _seed = new Random().Next();
         }
 
         private static float Noise1(int x)
         {
-            x = (x<<13) ^ x;
+            x = (x<<13) ^ x + _seed;
             return (float)(1.0 - ((x * (x * x * 15731 + 789221) + 1376312589) & 2147483647) / 1073741824.0);
         }
 

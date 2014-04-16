@@ -43,6 +43,7 @@
     <Compile Include="Engine\Entities\Unit.cs" />
     <Compile Include="Engine\Entities\Vegetation.cs" />
     <Compile Include="Engine\GUI\GameControl.cs" />
+    <Compile Include="Engine\GUI\GUIPanel.cs" />
     <Compile Include="Engine\Net\GameClient.cs" />
     <Compile Include="Engine\Net\NetManager.cs" />
     <Compile Include="Engine\Net\NetMap.cs" />
