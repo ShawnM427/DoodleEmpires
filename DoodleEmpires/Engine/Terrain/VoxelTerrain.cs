@@ -172,7 +172,7 @@ namespace DoodleEmpires.Engine.Terrain
 
             for (int i = 0; i < _width; i+= (32 / TREE_DESNISTY) + _random.Next(-3, 3))
             {
-                GenTree(i, 200 + (int)(Noise.PerlinNoise_1D(i / 16.0f) * _terrainHeightModifier));
+                GenTree(i, 200 + (int)(Noise.PerlinNoise_1D(i / 16.0f) * _terrainHeightModifier) - 1);
             }
         }
 
@@ -343,8 +343,7 @@ namespace DoodleEmpires.Engine.Terrain
 
                 for (int xx = x - radius / 2; xx <= x + radius/2; xx++)
                     SetTileSafe(xx, y - height + 1, 0);
-
-
+                
                     SetTileSafe(x, y - height + 1, 4);
 
                 if (_random.Next(0, 3) == 1 && IsNotAir(x - 1, y + 1)) //33% chance of left root

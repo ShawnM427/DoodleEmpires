@@ -121,7 +121,7 @@ namespace DoodleEmpires.Engine.Utilities
     /// <summary>
     /// Represents the arguments for the mouse
     /// </summary>
-    public struct MouseEventArgs
+    public class MouseEventArgs : EventArgs
     {
         Vector2 _location;
         ButtonState _leftButton;
@@ -135,6 +135,7 @@ namespace DoodleEmpires.Engine.Utilities
         public Vector2 Location
         {
             get { return _location; }
+            set { _location = value; }
         }
         /// <summary>
         /// Gets the change in the scroll wheel value

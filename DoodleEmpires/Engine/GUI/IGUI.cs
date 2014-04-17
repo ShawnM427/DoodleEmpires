@@ -23,6 +23,15 @@ namespace DoodleEmpires.Engine.GUI
         protected Color _backColor = Color.LightGray;
         protected GUIContainer _parent;
 
+        protected VertexPositionColor[] _cornerVerts = new VertexPositionColor[5]
+        {
+            new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black),
+            new VertexPositionColor(new Vector3( 32, 0, 0.5f), Color.Black),
+            new VertexPositionColor(new Vector3(32, 32, 0.5f), Color.Black),
+            new VertexPositionColor(new Vector3(0, 32, 0.5f), Color.Black),
+            new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black)
+        };
+
         /// <summary>
         /// The bounds relative to the parent container
         /// </summary>
@@ -33,11 +42,16 @@ namespace DoodleEmpires.Engine.GUI
             {
                 if (_bounds.Width != value.Width || _bounds.Height != value.Height)
                 {
-                    _renderTarget = new RenderTarget2D(_graphics, _bounds.Width, _bounds.Height);
+
                     _effect.Projection = Matrix.CreateOrthographicOffCenter(0, value.Width, value.Height, 0,
                         1.0f, 1000.0f);
                     _effect.CurrentTechnique.Passes[0].Apply();
 
+                    _cornerVerts[0].Position = new Vector3(0, 0, 0.5f);
+                    _cornerVerts[1].Position = new Vector3(value.Width - 1, 0, 0.5f);
+                    _cornerVerts[2].Position = new Vector3(value.Width - 1, value.Height - 1, 0.5f);
+                    _cornerVerts[3].Position = new Vector3(0, value.Height - 1, 0.5f);
+                    _cornerVerts[4].Position = new Vector3(0, 0, 0.5f);
 
                     Invalidating = true;
                 }
@@ -45,6 +59,13 @@ namespace DoodleEmpires.Engine.GUI
                 _bounds = value;
                 Resized();
                 _screenBounds = _bounds;
+
+                if (_renderTarget != null)
+                {
+                    _renderTarget.Dispose();
+                    _renderTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);
+                }
+
 
                 if (_parent != null)
                 {
@@ -105,9 +126,13 @@ namespace DoodleEmpires.Engine.GUI
         {
             if (_screenBounds.Width > 0 && _screenBounds.Height > 0)
             {
-                _renderTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);
+                if (_renderTarget == null)
+                    _renderTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);
+
                 _graphics.SetRenderTarget(_renderTarget);
                 _graphics.Clear(_backColor);
+
+                _effect.CurrentTechnique.Passes[0].Apply();
                 _spriteBatch.Begin();
                 return true;
             }
@@ -129,8 +154,7 @@ namespace DoodleEmpires.Engine.GUI
         protected virtual void EndInvalidate()
         {
             _spriteBatch.End();
-            _graphics.SetRenderTarget(null);
-
+            
             if (_parent != null)
                 _parent.Invalidating = true;
         }

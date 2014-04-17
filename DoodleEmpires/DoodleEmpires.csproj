@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\WindowsGL\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINDOWS PROFILING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\WindowsGL\Release\</OutputPath>
-    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS PROFILING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -47,6 +47,7 @@
     <Compile Include="Engine\GUI\GUILabel.cs" />
     <Compile Include="Engine\GUI\GUIPanel.cs" />
     <Compile Include="Engine\GUI\IGUI.cs" />
+    <Compile Include="Engine\GUI\GUIGridView.cs" />
     <Compile Include="Engine\GUI\Utils.cs" />
     <Compile Include="Engine\Net\GameClient.cs" />
     <Compile Include="Engine\Net\NetManager.cs" />
@@ -91,6 +92,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Atlas.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ItemAtlas.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Paper.png">

@@ -14,6 +14,11 @@ namespace DoodleEmpires.Engine.Terrain
         bool[,] _connections = new bool[256,256];
         Dictionary<string, byte> _tiles = new Dictionary<string, byte>();
 
+        public List<Tile> Tiles
+        {
+            get { return _tileTypes; }
+        }
+
         public TileManager()
         {
             RegisterTile("Air",0, RenderType.None, false); //adds the air tile type
@@ -101,6 +106,11 @@ namespace DoodleEmpires.Engine.Terrain
             }
             else
                 throw new ArgumentException(string.Format("There is already a tile named \"{0}\"", name));
+        }
+
+        public string NameOf(byte ID)
+        {
+            return _tiles.First( x => x.Value == ID).Key;
         }
 
         /// <summary>

@@ -53,8 +53,16 @@ namespace DoodleEmpires.Engine.GUI
         {
             if (_screenBounds.Width > 0 && _screenBounds.Height > 0)
             {
-                _renderTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);
-                _internalTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);
+                if (_renderTarget != null)
+                {
+                    _renderTarget.Dispose();
+                    _renderTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);
+                }
+                if (_internalTarget != null)
+                {
+                    _internalTarget.Dispose();
+                    _internalTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);
+                }
                 return true;
             }
             return false;

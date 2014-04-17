@@ -15,35 +15,7 @@ namespace DoodleEmpires.Engine.GUI
     public abstract class GUIContainer : IGUI
     {
         protected List<IGUI> _controls;
-        protected VertexPositionColor[] _cornerVerts = new VertexPositionColor[5]
-        {
-            new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3( 32, 0, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3(32, 32, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3(0, 32, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black)
-        };
 
-        /// <summary>
-        /// The bounds relative to the parent container
-        /// </summary>
-        public override Rectangle Bounds
-        {
-            get { return base.Bounds; }
-            set
-            {
-                if (_bounds.Width != value.Width || _bounds.Height != value.Height)
-                {
-                    _cornerVerts[0].Position = new Vector3(0, 0, 0.5f);
-                    _cornerVerts[1].Position = new Vector3(value.Width - 1, 0, 0.5f);
-                    _cornerVerts[2].Position = new Vector3(value.Width - 1, value.Height - 1, 0.5f);
-                    _cornerVerts[3].Position = new Vector3(0, value.Height - 1, 0.5f);
-                    _cornerVerts[4].Position = new Vector3(0, 0, 0.5f);
-                }
-
-                base.Bounds = value;
-            }
-        }
         /// <summary>
         /// Gets or sets the color of the border
         /// </summary>
@@ -106,7 +78,7 @@ namespace DoodleEmpires.Engine.GUI
         {
             foreach (IGUI control in _controls)
             {
-                if (control != null)
+                if (control != null && control.Image != null)
                     _spriteBatch.Draw(control.Image, control.Bounds, Color.White);
             }
 

@@ -82,5 +82,33 @@ namespace DoodleEmpires.Engine.Utilities
         {
             get { return GetSource(ID); }
         }
+
+        public Texture2D[] GetTextures(GraphicsDevice graphics)
+        {
+            RenderTarget2D renderTarget = new RenderTarget2D(graphics, _texture.Width / _xTexs, _texture.Height / _yTexs, 
+                false, SurfaceFormat.Color, DepthFormat.None);
+            SpriteBatch batch = new SpriteBatch(graphics);
+            Rectangle bounds = new Rectangle(0, 0, _texture.Width / _xTexs, _texture.Height / _yTexs);
+
+            Texture2D[] _texs = new Texture2D[_xTexs * _yTexs];
+            
+            for (int i = 0; i < _sources.Length; i++)
+            {
+                graphics.SetRenderTarget(renderTarget);
+                graphics.Clear(Color.Transparent);
+                batch.Begin();
+                batch.Draw(Texture, bounds, _sources[i], Color.White);
+                batch.End();
+
+                graphics.SetRenderTarget(null);
+
+                _texs[i] = new Texture2D(graphics, bounds.Width, bounds.Height);
+                Color[] temp = new Color[bounds.Width * bounds.Height];
+                renderTarget.GetData<Color>(temp);
+                _texs[i].SetData<Color>(temp);
+            }
+
+                return _texs;
+        }
     }
 }
