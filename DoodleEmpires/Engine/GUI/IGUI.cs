@@ -11,6 +11,8 @@ namespace DoodleEmpires.Engine.GUI
 {
     public abstract class IGUI
     {
+        private bool _invalidating = true;
+
         protected GraphicsDevice _graphics;
         protected SpriteBatch _spriteBatch;
         protected BasicEffect _effect;
@@ -36,10 +38,12 @@ namespace DoodleEmpires.Engine.GUI
                         1.0f, 1000.0f);
                     _effect.CurrentTechnique.Passes[0].Apply();
 
+
                     Invalidating = true;
                 }
 
                 _bounds = value;
+                Resized();
                 _screenBounds = _bounds;
 
                 if (_parent != null)
@@ -68,8 +72,14 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         public bool Invalidating
         {
-            get;
-            set;
+            get { return _invalidating; }
+            set
+            {
+                _invalidating = value;
+
+                if (_parent != null)
+                    _parent.Invalidating = true;
+            }
         }
 
         public IGUI(GraphicsDevice graphics, GUIContainer parent)
@@ -150,20 +160,21 @@ namespace DoodleEmpires.Engine.GUI
 
                 Invalidating = false;
             }
-
-            MouseState mouseState = Mouse.GetState();
-
-            if (mouseState.LeftButton == ButtonState.Pressed || mouseState.RightButton == ButtonState.Pressed &&
-                _screenBounds.Contains(mouseState.Position))
-            {
-                MousePressed(new MouseEventArgs(mouseState, 0));
-            }
         }
         
         /// <summary>
-        /// Called when this control is clicked
+        /// Called when this control is clicked, returns true if the mouse input was handled
         /// </summary>
         /// <param name="e">The mouse event arguments</param>
-        protected virtual void MousePressed(MouseEventArgs e) { }
+        /// <returns>True if the input was handled</returns>
+        public virtual bool MousePressed(MouseEventArgs e) { return false; }
+
+        /// <summary>
+        /// Called when this component has been resized
+        /// </summary>
+        protected virtual void Resized()
+        {
+
+        }
     }
 }

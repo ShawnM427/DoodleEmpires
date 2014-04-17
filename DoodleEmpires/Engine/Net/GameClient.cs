@@ -128,6 +128,12 @@ namespace DoodleEmpires.Engine.Net
             GUITextPane textPane = new GUITextPane(GraphicsDevice, _guiFont, _mainControl);
             textPane.Bounds = new Rectangle(0, label.Bounds.Height + 4, _mainControl.Bounds.Width, 40);
             textPane.Text = "This is a very very very very very long peice of text to render to one control!";
+
+            GUIScrollPanel scrollPanel = new GUIScrollPanel(GraphicsDevice, _mainControl);
+            scrollPanel.Bounds = new Rectangle(0, textPane.Bounds.Bottom + 5, _mainControl.Bounds.Width, 40);
+
+            GUILabel label2 = new GUILabel(GraphicsDevice, _guiFont, scrollPanel);
+            label2.Text = "foo";
         }
 
         /// <summary>
@@ -173,26 +179,30 @@ namespace DoodleEmpires.Engine.Net
         protected override void MousePressed(MouseEventArgs args)
         {
             _mouseWorldPos = _view.PointToWorld(args.Location);
+            _mainControl.MousePressed(args);
 
-            if (args.LeftButton == ButtonState.Pressed & Keyboard.GetState().IsKeyDown(Keys.LeftControl))
+            if (!_mainControl.ScreenBounds.Contains(args.Location))
             {
-                _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 5);
-            }
-            else if (args.LeftButton == ButtonState.Pressed & Keyboard.GetState().IsKeyDown(Keys.LeftAlt))
-            {
-                _voxelTerrain.GenTree((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT);
-            }
-            else if (args.LeftButton == ButtonState.Pressed)
-            {
-                _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 4);
-            }
-            if (args.RightButton == ButtonState.Pressed & Keyboard.GetState().IsKeyDown(Keys.LeftAlt))
-            {
-                _voxelTerrain.SetMeta((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 1);
-            }
-            else if (args.RightButton == ButtonState.Pressed)
-            {
-                _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 0);
+                if (args.LeftButton == ButtonState.Pressed & Keyboard.GetState().IsKeyDown(Keys.LeftControl))
+                {
+                    _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 5);
+                }
+                else if (args.LeftButton == ButtonState.Pressed & Keyboard.GetState().IsKeyDown(Keys.LeftAlt))
+                {
+                    _voxelTerrain.GenTree((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT);
+                }
+                else if (args.LeftButton == ButtonState.Pressed)
+                {
+                    _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 4);
+                }
+                if (args.RightButton == ButtonState.Pressed & Keyboard.GetState().IsKeyDown(Keys.LeftAlt))
+                {
+                    _voxelTerrain.SetMeta((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 1);
+                }
+                else if (args.RightButton == ButtonState.Pressed)
+                {
+                    _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 0);
+                }
             }
 
             base.MousePressed(args);

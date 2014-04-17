@@ -106,8 +106,8 @@ namespace DoodleEmpires.Engine.GUI
         {
             foreach (IGUI control in _controls)
             {
-                if (control.Image != null)
-                    _spriteBatch.Draw(control.Image, control.Bounds, _colorMultiplier);
+                if (control != null)
+                    _spriteBatch.Draw(control.Image, control.Bounds, Color.White);
             }
 
             base.EndInvalidate();
@@ -122,6 +122,20 @@ namespace DoodleEmpires.Engine.GUI
                 control.Update();
 
             base.Update();
+        }
+
+        /// <summary>
+        /// Called when this control is clicked, returns true if the mouse input was handled
+        /// </summary>
+        /// <param name="e">The mouse event arguments</param>
+        /// <returns>True if the input was handled</returns>
+        public override bool MousePressed(MouseEventArgs e)
+        {
+            foreach (IGUI control in _controls)
+                if (control.MousePressed(e))
+                    return true;
+
+            return false;
         }
     }
 }

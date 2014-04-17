@@ -40,6 +40,7 @@
     <Compile Include="Engine\Economy\TechTree.cs" />
     <Compile Include="Engine\Entities\IFocusable.cs" />
     <Compile Include="Engine\Entities\Unit.cs" />
+    <Compile Include="Engine\GUI\GUIScrollPanel.cs" />
     <Compile Include="Engine\GUI\GUITextPane.cs" />
     <Compile Include="Engine\GUI\GUIContainer.cs" />
     <Compile Include="Engine\GUI\GUIElement.cs" />

@@ -37,12 +37,7 @@ namespace DoodleEmpires.Engine.GUI
             _bounds.Width = (int)_font.MeasureString(_text).X;
             _bounds.Height = (int)_font.MeasureString(_text).Y;
         }
-
-        protected override bool BeginInvalidate()
-        {
-            return base.BeginInvalidate();
-        }
-
+        
         protected override void Invalidate()
         {
             _spriteBatch.DrawString(_font, _text, Vector2.Zero, _foreColor);
