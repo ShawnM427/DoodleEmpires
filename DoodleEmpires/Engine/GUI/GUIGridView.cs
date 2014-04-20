@@ -169,7 +169,7 @@ namespace DoodleEmpires.Engine.GUI
         {
             Vector2 sMousePos = e.Location - new Vector2(_screenBounds.X, _screenBounds.Y);
 
-            if (_internalItemBounds.Contains(sMousePos))
+            //if (_internalItemBounds.Contains(sMousePos))
             {
                 for (int x = 0; x < _xItems; x++)
                 {

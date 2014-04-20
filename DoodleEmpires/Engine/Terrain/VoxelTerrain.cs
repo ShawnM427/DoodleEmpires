@@ -96,6 +96,30 @@ namespace DoodleEmpires.Engine.Terrain
                 UpdateVoxel(x, y);
             }
         }
+
+        /// <summary>
+        /// Gets the graphics device for this terrain
+        /// </summary>
+        public GraphicsDevice Graphics
+        {
+            get { return _graphics; }
+        }
+        /// <summary>
+        /// Gets or sets the texture atlas to use
+        /// </summary>
+        public TextureAtlas Atlas
+        {
+            get { return _atlas; }
+            set { _atlas = value; }
+        }
+        /// <summary>
+        /// Gets or sets the tile manager to use
+        /// </summary>
+        public TileManager TileManager
+        {
+            get { return _tileManager; }
+            set { _tileManager = value; }
+        }
         
         /// <summary>
         /// Creates a new voxel based terrain
@@ -452,7 +476,7 @@ namespace DoodleEmpires.Engine.Terrain
             BinaryWriter writer = new BinaryWriter(stream);
 
             writer.Write("Doodle Empires Voxel Terrain ");
-            writer.Write("0.0.1");
+            writer.Write("0.0.2");
 
             writer.Write(_width);
             writer.Write(_height);
@@ -463,6 +487,7 @@ namespace DoodleEmpires.Engine.Terrain
                 {
                     writer.Write(_tiles[x, y]);
                     writer.Write(_neighbourStates[x, y]);
+                    writer.Write(_meta[x, y]);
                 }
             }
 
@@ -488,6 +513,8 @@ namespace DoodleEmpires.Engine.Terrain
             {
                 case "0.0.1":
                     return LoadVersion_0_0_1(reader, graphics, tileManager, atlas);
+                case "0.0.2":
+                    return LoadVersion_0_0_2(reader, graphics, tileManager, atlas);
                 default:
                     reader.Dispose();
                     return null;
@@ -516,6 +543,35 @@ namespace DoodleEmpires.Engine.Terrain
                 {
                     terrain._tiles[x, y] = reader.ReadByte();
                     terrain._neighbourStates[x, y] = reader.ReadByte();
+                }
+            }
+
+            reader.Dispose();
+            return terrain;
+        }
+
+        /// <summary>
+        /// Reads a voxel terrain from the stream using Terrain Version 0.0.1
+        /// </summary>
+        /// <param name="reader">The stream to read from</param>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="tileManager">The tile manager to use</param>
+        /// <param name="atlas">The texture atlas to use</param>
+        /// <returns>A voxel terrain loaded from the stream</returns>
+        private static VoxelTerrain LoadVersion_0_0_2(BinaryReader reader, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        {
+            int width = reader.ReadInt32();
+            int height = reader.ReadInt32();
+
+            VoxelTerrain terrain = new VoxelTerrain(graphics, tileManager, atlas, width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    terrain._tiles[x, y] = reader.ReadByte();
+                    terrain._neighbourStates[x, y] = reader.ReadByte();
+                    terrain._meta[x, y] = reader.ReadByte();
                 }
             }
 

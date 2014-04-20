@@ -40,6 +40,7 @@
     <Compile Include="Engine\Economy\TechTree.cs" />
     <Compile Include="Engine\Entities\IFocusable.cs" />
     <Compile Include="Engine\Entities\Unit.cs" />
+    <Compile Include="Engine\GUI\GUIButton.cs" />
     <Compile Include="Engine\GUI\GUIScrollPanel.cs" />
     <Compile Include="Engine\GUI\GUITextPane.cs" />
     <Compile Include="Engine\GUI\GUIContainer.cs" />
@@ -53,10 +54,12 @@
     <Compile Include="Engine\Net\NetManager.cs" />
     <Compile Include="Engine\Render\2DCamera.cs" />
     <Compile Include="Engine\Entities\CameraControl.cs" />
+    <Compile Include="Engine\Terrain\ChunkedTerrainRenderer.cs" />
     <Compile Include="Engine\Render\ColoredMesh.cs" />
     <Compile Include="Engine\Render\Particle\Particle.cs" />
     <Compile Include="Engine\Render\Particle\ParticleEmitter.cs" />
     <Compile Include="Engine\Render\Particle\ParticleEngine.cs" />
+    <Compile Include="Engine\Render\RenderChunk.cs" />
     <Compile Include="Engine\Terrain\FaultFormation.cs" />
     <Compile Include="Engine\Terrain\Terrain.cs" />
     <Compile Include="Engine\Terrain\Tile.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="Engine\Utilities\CustomGame.cs" />
     <Compile Include="Engine\Utilities\FPSManager.cs" />
     <Compile Include="Engine\Utilities\Noise.cs" />
+    <Compile Include="Engine\Utilities\RectangleF.cs" />
     <Compile Include="Engine\Utilities\TextureAtlas.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

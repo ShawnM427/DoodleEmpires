@@ -21,7 +21,7 @@ namespace DoodleEmpires.Engine.Terrain
 
         public TileManager()
         {
-            RegisterTile("Air",0, RenderType.None, false); //adds the air tile type
+            RegisterTile("Air",0, Color.Transparent, RenderType.None, false); //adds the air tile type
         }
 
         /// <summary>

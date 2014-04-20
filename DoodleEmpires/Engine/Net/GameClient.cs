@@ -99,8 +99,8 @@ namespace DoodleEmpires.Engine.Net
             _tileManager.RegisterTile("Cobble", 60, Color.Gray, RenderType.Land, true);
 
             _tileManager.RegisterConnect("Grass", "Stone");
-            _tileManager.RegisterConnect("Grass", "Concrete");
-            _tileManager.RegisterConnect("Grass", "Cobble");
+            //_tileManager.RegisterConnect("Grass", "Concrete");
+            //_tileManager.RegisterConnect("Grass", "Cobble");
             _tileManager.RegisterConnect("Leaves", "Wood");
 
             _blockAtlas = new TextureAtlas(Content.Load<Texture2D>("Atlas"), 20, 20);
@@ -132,10 +132,22 @@ namespace DoodleEmpires.Engine.Net
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
             
             _mainControl = new GUIPanel(GraphicsDevice, null);
-            _mainControl.Bounds = new Rectangle(0, 0, 120, 140);
+            _mainControl.Bounds = new Rectangle(0, 0, 120, 160);
 
             _fpsLabel = new GUILabel(GraphicsDevice, _guiFont, _mainControl);
             _fpsLabel.Text = "";
+
+            GUIButton<string> saveButton = new GUIButton<string>(GraphicsDevice, _guiFont, _mainControl);
+            saveButton.Text = "Save";
+            saveButton.Bounds = new Rectangle(5, 140, 40, 20);
+            saveButton.OnMousePressed += new Action<string>(SaveGame);
+            saveButton.Tag = "tempSave";
+
+            GUIButton<string> loadButton = new GUIButton<string>(GraphicsDevice, _guiFont, _mainControl);
+            loadButton.Text = "Load";
+            loadButton.Bounds = new Rectangle(50, 140, 40, 20);
+            loadButton.OnMousePressed += new Action<string>(LoadGame);
+            loadButton.Tag = "tempSave";
 
             GUIGridView gridView = new GUIGridView(GraphicsDevice, _mainControl);
             gridView.Bounds = new Rectangle(0, 12, 121, 121);
@@ -175,8 +187,11 @@ namespace DoodleEmpires.Engine.Net
         protected override void Update(GameTime gameTime)
         {            
             base.Update(gameTime);
-            
-            #if PROFILING
+
+            _cameraController.Update(gameTime);
+            _view.Update(gameTime);
+
+#if PROFILING
             Window.Title = "" + FPSManager.AverageFramesPerSecond;
 
             if (Keyboard.GetState().IsKeyDown(Keys.PageUp))
@@ -184,7 +199,7 @@ namespace DoodleEmpires.Engine.Net
 
             if (Keyboard.GetState().IsKeyDown(Keys.PageDown))
                 return;
-            #endif
+#endif
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -197,30 +212,7 @@ namespace DoodleEmpires.Engine.Net
 
             _view.Scale *= keyState.IsKeyDown(Keys.OemPlus) ? 1.01F : keyState.IsKeyDown(Keys.OemMinus) ? 0.99F : 1;
 
-            if ((keyState.IsKeyDown(Keys.LeftControl) & keyState.IsKeyDown(Keys.S))
-                && (_prevKeyState.IsKeyUp(Keys.LeftControl) | _prevKeyState.IsKeyUp(Keys.S)))
-            {
-                Stream fileStream = File.OpenWrite("tempSave.dem");
-                _voxelTerrain.SaveToStream(fileStream);
-                fileStream.Close();
-                fileStream.Dispose();
-            }
-
-            if ((keyState.IsKeyDown(Keys.LeftControl) & keyState.IsKeyDown(Keys.L))
-                && (_prevKeyState.IsKeyUp(Keys.LeftControl) | _prevKeyState.IsKeyUp(Keys.L)))
-            {
-                if (File.Exists("tempSave.dem"))
-                {
-                    Stream fileStream = File.OpenRead("tempSave.dem");
-                    _voxelTerrain = VoxelTerrain.ReadFromStream(fileStream, GraphicsDevice, _tileManager, _blockAtlas);
-                    fileStream.Close();
-                    fileStream.Dispose();
-                }
-            }
-
             _cameraController.Position += _moveVector * 10;
-            _cameraController.Update(gameTime);
-            _view.Update(gameTime);
 
             _mainControl.Update();
 
@@ -260,18 +252,44 @@ namespace DoodleEmpires.Engine.Net
             GraphicsDevice.SetRenderTarget(null);
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            
+                        
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
             FPSManager.OnDraw(gameTime);
             
             _voxelTerrain.Render(_view);
-            
-            _fpsLabel.Text = " FPS: " + Math.Round(FPSManager.AverageFramesPerSecond, 1);
+
+            //_fpsLabel.Text = " FPS: " + Math.Round(FPSManager.AverageFramesPerSecond, 1);
             _mainControl.Draw();
 
 
             base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// Saves this game to a given file
+        /// </summary>
+        /// <param name="fName">The relative file name to save to</param>
+        private void SaveGame(string fName)
+        {
+            Stream fileStream = File.OpenWrite(fName + ".dem");
+            _voxelTerrain.SaveToStream(fileStream);
+            fileStream.Close();
+            fileStream.Dispose();
+        }
+
+        /// <summary>
+        /// Loads this game from a given file
+        /// </summary>
+        /// <param name="fName">The relative file name to load from</param>
+        private void LoadGame(string fName)
+        {
+            if (File.Exists(fName + ".dem"))
+            {
+                Stream fileStream = File.OpenRead(fName + ".dem");
+                _voxelTerrain = VoxelTerrain.ReadFromStream(fileStream, GraphicsDevice, _tileManager, _blockAtlas);
+                fileStream.Close();
+                fileStream.Dispose();
+            }
         }
 
         /// <summary>
