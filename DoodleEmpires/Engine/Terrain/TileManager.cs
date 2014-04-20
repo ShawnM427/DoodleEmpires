@@ -94,7 +94,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// </summary>
         /// <param name="tile">The tile to add</param>
         /// <returns>The TileID for the new tile</returns>
-        public byte RegisterTile(Tile tile, string name)
+        public byte RegisterTile(string name, Tile tile)
         {
             if (!_tiles.ContainsKey(name))
             {
@@ -178,6 +178,31 @@ namespace DoodleEmpires.Engine.Terrain
 
                 if (canConnect)
                     _connections[_tiles[tile2], _tiles[tile1]] = canConnect;
+            }
+        }
+
+        /// <summary>
+        /// Registers a connection between 1 tile and another. The second tile will not connect to the first
+        /// </summary>
+        /// <param name="sourceID">The ID of the first tile</param>
+        /// <param name="destinationID">The ID of the second tile</param>
+        /// <param name="canConnect">Whether or not these tiles can connect</param>
+        public void RegisterOneWayConnect(byte sourceID, byte destinationID, bool canConnect = true)
+        {
+            _connections[sourceID, destinationID] = canConnect;
+        }
+
+        /// <summary>
+        /// Registers a connection between 1 tile and another. The second tile will not connect to the first
+        /// </summary>
+        /// <param name="tile1">The name of the first tile</param>
+        /// <param name="tile2">The name of the second tile</param>
+        /// <param name="canConnect">Whether or not these tiles can connect</param>
+        public void RegisterOneWayConnect(string tile1, string tile2, bool canConnect = true)
+        {
+            if (_tiles.ContainsKey(tile1) && _tiles.ContainsKey(tile2))
+            {
+                _connections[_tiles[tile1], _tiles[tile2]] = canConnect;
             }
         }
 

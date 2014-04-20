@@ -252,33 +252,54 @@ namespace DoodleEmpires.Engine.Terrain
         /// <returns>The moore neighbour state for the given block</returns>
         protected MooreNeighbours GetNeighbours(int x, int y)
         {
-            byte cMaterial = GetMaterial(x,y);
+            byte cMaterial = GetMaterial(x, y);
 
-            if (!IsNotAir(x - 1, y) && !IsNotAir(x, y - 1) && (IsNotAir(x - 1, y + 1) || IsNotAir(x + 1, y - 1)) &&
+            if (_tileManager.Tiles[cMaterial].RenderType == RenderType.Land)
+            {
+                /*            
+                 * if (!IsNotAir(x - 1, y) && !IsNotAir(x, y - 1) && 
+                 * (IsNotAir(x - 1, y + 1) || IsNotAir(x + 1, y - 1)) &&
                  IsNotAir(x, y + 1) && IsNotAir(x + 1, y))
-                return MooreNeighbours.Diag;
 
-            if (!IsNotAir(x + 1, y) && !IsNotAir(x, y - 1) && (IsNotAir(x - 1, y - 1) || IsNotAir(x + 1, y + 1)) &&
-                 IsNotAir(x, y + 1) && IsNotAir(x - 1, y))
-                return MooreNeighbours.Diag + 1;
+                 */
+                if (!_tileManager.CanConnect(cMaterial,  GetMaterial(x - 1, y)) &&
+                    !_tileManager.CanConnect(cMaterial, GetMaterial(x, y - 1)) &&
+                    (_tileManager.CanConnect(cMaterial, GetMaterial(x - 1, y + 1)) ||
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x + 1, y - 1))) &&
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x, y + 1)) &&
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x + 1, y)))
+                    return MooreNeighbours.Diag;
 
-            if (!IsNotAir(x - 1, y) && !IsNotAir(x, y + 1) && (IsNotAir(x - 1, y - 1) || IsNotAir(x + 1, y + 1)) &&
-                 IsNotAir(x, y - 1) && IsNotAir(x + 1, y))
-                return MooreNeighbours.Diag + 2;
+                if (!_tileManager.CanConnect(cMaterial,  GetMaterial(x + 1, y)) &&
+                    !_tileManager.CanConnect(cMaterial, GetMaterial(x, y - 1)) &&
+                    (_tileManager.CanConnect(cMaterial, GetMaterial(x - 1, y - 1)) ||
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x + 1, y + 1))) &&
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x, y + 1)) &&
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x - 1, y)))
+                    return MooreNeighbours.Diag + 1;
 
-            if (!IsNotAir(x + 1, y) && !IsNotAir(x, y + 1) && (IsNotAir(x - 1, y + 1) || IsNotAir(x + 1, y - 1)) &&
-                 IsNotAir(x, y - 1) && IsNotAir(x - 1, y))
-                return MooreNeighbours.Diag + 3;
+                if (!_tileManager.CanConnect(cMaterial,  GetMaterial(x - 1, y)) &&
+                    !_tileManager.CanConnect(cMaterial, GetMaterial(x, y + 1)) &&
+                    (_tileManager.CanConnect(cMaterial, GetMaterial(x - 1, y - 1)) ||
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x + 1, y + 1))) &&
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x, y - 1)) &&
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x + 1, y)))
+                    return MooreNeighbours.Diag + 2;
+
+                if (!_tileManager.CanConnect(cMaterial,  GetMaterial(x + 1, y)) &&
+                    !_tileManager.CanConnect(cMaterial, GetMaterial(x, y + 1)) &&
+                    (_tileManager.CanConnect(cMaterial, GetMaterial(x - 1, y + 1)) ||
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x + 1, y - 1))) &&
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x, y - 1)) &&
+                     _tileManager.CanConnect(cMaterial, GetMaterial(x - 1, y)))
+                    return MooreNeighbours.Diag + 3;
+            }
 
             return (MooreNeighbours)(0 +
-                //(IsSolid(x - 1, y - 1) ? MooreNeighbours.TL : 0) |
                 (CanConnect(GetMaterial(x, y), GetMaterial(x, y - 1)) ? MooreNeighbours.TM : 0) |
-                //(IsSolid(x + 1, y - 1) ? MooreNeighbours.TR : 0) |
                 (CanConnect(GetMaterial(x, y), GetMaterial(x - 1, y)) ? MooreNeighbours.L : 0) |
                 (CanConnect(GetMaterial(x, y), GetMaterial(x + 1, y)) ? MooreNeighbours.R : 0) |
-                //(IsSolid(x - 1, y + 1) ? MooreNeighbours.BL : 0) |
-                (CanConnect(GetMaterial(x, y), GetMaterial(x, y + 1)) ? MooreNeighbours.BM : 0)); //|
-                //(IsSolid(x + 1, y + 1) ? MooreNeighbours.BR : 0));
+                (CanConnect(GetMaterial(x, y), GetMaterial(x, y + 1)) ? MooreNeighbours.BM : 0));
         }
 
         /// <summary>

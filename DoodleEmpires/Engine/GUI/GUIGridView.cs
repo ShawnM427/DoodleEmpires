@@ -134,7 +134,7 @@ namespace DoodleEmpires.Engine.GUI
                 _spriteBatch.DrawString(_font, _headerDrawnText, Vector2.Zero, _foreColor);
 
             _spriteBatch.End();
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null);
 
             for (int x = 0; x < _xItems; x++)
             {
@@ -153,6 +153,7 @@ namespace DoodleEmpires.Engine.GUI
         {
             _spriteBatch.End();
 
+            _effect.CurrentTechnique.Passes[0].Apply();
             _graphics.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, _cornerVerts, 0, 4);
             for (int x = 0; x < _xItems; x++)
             {

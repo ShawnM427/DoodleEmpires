@@ -12,6 +12,11 @@ using System.Threading;
 using Lidgren.Network;
 using DoodleEmpires.Engine.GUI;
 using System.IO;
+using System.Windows.Forms;
+
+using MouseEventArgs = DoodleEmpires.Engine.Utilities.MouseEventArgs;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -81,7 +86,7 @@ namespace DoodleEmpires.Engine.Net
             IsMouseVisible = true;
             IsFixedTimeStep = false;
         }
-
+        
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -95,13 +100,19 @@ namespace DoodleEmpires.Engine.Net
             _tileManager.RegisterTile("Stone", 0, Color.Gray, RenderType.Land, true);
             _tileManager.RegisterTile("Concrete", 0, Color.LightGray, RenderType.Land, true);
             _tileManager.RegisterTile("Wood", 20, Color.Brown, RenderType.Land, false);
-            _tileManager.RegisterTile(new Leaves(0), "Leaves");
+            _tileManager.RegisterTile("Leaves", new Leaves(0));
             _tileManager.RegisterTile("Cobble", 60, Color.Gray, RenderType.Land, true);
+            _tileManager.RegisterTile("Wooden Spikes", new WoodSpike(0));
+            _tileManager.RegisterTile("Ladder", new Ladder(0));
 
             _tileManager.RegisterConnect("Grass", "Stone");
-            //_tileManager.RegisterConnect("Grass", "Concrete");
-            //_tileManager.RegisterConnect("Grass", "Cobble");
-            _tileManager.RegisterConnect("Leaves", "Wood");
+            _tileManager.RegisterConnect("Stone", "Concrete");
+            _tileManager.RegisterConnect("Wood", "Grass");
+            _tileManager.RegisterConnect("Wood", "Leaves");
+
+            _tileManager.RegisterOneWayConnect("Ladder", "Wood");
+            _tileManager.RegisterOneWayConnect("Ladder", "Concrete");
+            _tileManager.RegisterOneWayConnect("Ladder", "Stone");
 
             _blockAtlas = new TextureAtlas(Content.Load<Texture2D>("Atlas"), 20, 20);
 
@@ -132,22 +143,20 @@ namespace DoodleEmpires.Engine.Net
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
             
             _mainControl = new GUIPanel(GraphicsDevice, null);
-            _mainControl.Bounds = new Rectangle(0, 0, 120, 160);
+            _mainControl.Bounds = new Rectangle(0, 0, 120, 165);
 
             _fpsLabel = new GUILabel(GraphicsDevice, _guiFont, _mainControl);
             _fpsLabel.Text = "";
 
-            GUIButton<string> saveButton = new GUIButton<string>(GraphicsDevice, _guiFont, _mainControl);
+            GUIButton saveButton = new GUIButton(GraphicsDevice, _guiFont, _mainControl);
             saveButton.Text = "Save";
             saveButton.Bounds = new Rectangle(5, 140, 40, 20);
-            saveButton.OnMousePressed += new Action<string>(SaveGame);
-            saveButton.Tag = "tempSave";
+            saveButton.OnMousePressed += new Action(saveButton_OnMousePressed);
 
-            GUIButton<string> loadButton = new GUIButton<string>(GraphicsDevice, _guiFont, _mainControl);
+            GUIButton loadButton = new GUIButton(GraphicsDevice, _guiFont, _mainControl);
             loadButton.Text = "Load";
             loadButton.Bounds = new Rectangle(50, 140, 40, 20);
-            loadButton.OnMousePressed += new Action<string>(LoadGame);
-            loadButton.Tag = "tempSave";
+            loadButton.OnMousePressed += new Action(loadButton_OnMousePressed);
 
             GUIGridView gridView = new GUIGridView(GraphicsDevice, _mainControl);
             gridView.Bounds = new Rectangle(0, 12, 121, 121);
@@ -168,6 +177,35 @@ namespace DoodleEmpires.Engine.Net
                     });
                 }
             }
+        }
+
+        void loadButton_OnMousePressed()
+        {
+            OpenFileDialog loadDialog = new OpenFileDialog();
+            loadDialog.Filter = "Doodle Empires Map|*.dem";
+            loadDialog.AddExtension = false;
+
+            DialogResult dResult = loadDialog.ShowDialog();
+
+            if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
+                LoadGame(loadDialog.FileName.Replace(".dem",""));
+        }
+
+        void saveButton_OnMousePressed()
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Doodle Empires Map|*.dem";
+            saveDialog.AddExtension = false;
+
+            DialogResult dResult = saveDialog.ShowDialog();
+
+            if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
+                SaveGame(saveDialog.FileName);
+        }
+
+        protected override void OnDeactivated(object sender, EventArgs args)
+        {
+            Mouse.GetState();
         }
 
         /// <summary>
@@ -191,7 +229,7 @@ namespace DoodleEmpires.Engine.Net
             _cameraController.Update(gameTime);
             _view.Update(gameTime);
 
-#if PROFILING
+            #if PROFILING
             Window.Title = "" + FPSManager.AverageFramesPerSecond;
 
             if (Keyboard.GetState().IsKeyDown(Keys.PageUp))
@@ -199,7 +237,7 @@ namespace DoodleEmpires.Engine.Net
 
             if (Keyboard.GetState().IsKeyDown(Keys.PageDown))
                 return;
-#endif
+            #endif
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -225,22 +263,25 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="args">The mouse event arguments</param>
         protected override void MouseDown(MouseEventArgs args)
         {
-            _mouseWorldPos = _view.PointToWorld(args.Location);
-            _mainControl.MousePressed(args);
-
-            if (!_mainControl.ScreenBounds.Contains(args.Location))
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed || Mouse.GetState().RightButton == ButtonState.Pressed)
             {
-                if (args.LeftButton == ButtonState.Pressed)
-                {
-                    _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, _editType);
-                }
-                else if (args.RightButton == ButtonState.Pressed)
-                {
-                    _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 0);
-                }
-            }
+                _mouseWorldPos = _view.PointToWorld(args.Location);
+                _mainControl.MousePressed(args);
 
-            base.MousePressed(args);
+                if (!_mainControl.ScreenBounds.Contains(args.Location))
+                {
+                    if (args.LeftButton == ButtonState.Pressed)
+                    {
+                        _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, _editType);
+                    }
+                    else if (args.RightButton == ButtonState.Pressed)
+                    {
+                        _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 0);
+                    }
+                }
+
+                base.MousePressed(args);
+            }
         }
 
         /// <summary>
@@ -253,7 +294,7 @@ namespace DoodleEmpires.Engine.Net
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
                         
-            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+            GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
             FPSManager.OnDraw(gameTime);
             
             _voxelTerrain.Render(_view);

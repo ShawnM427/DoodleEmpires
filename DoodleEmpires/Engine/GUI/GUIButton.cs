@@ -8,12 +8,13 @@ using DoodleEmpires.Engine.Utilities;
 
 namespace DoodleEmpires.Engine.GUI
 {
-    public class GUIButton<T> : GUILabel
+    public class GUIButton : GUILabel
     {
-        public event Action<T> OnMousePressed;
+        protected Vector2 _textSize;
+        protected Vector2 _textPos;
 
-        T _tag;
-
+        public event Action OnMousePressed;
+        
         /// <summary>
         /// Gets or sets the text on this button
         /// </summary>
@@ -26,27 +27,28 @@ namespace DoodleEmpires.Engine.GUI
             set
             {
                 _text = value;
+                _textSize = _font.MeasureString(_text);
+                _textPos = new Vector2(_bounds.Width / 2, _bounds.Height / 2) - (_textSize / 2);
                 Invalidating = true;
             }
-        }
-        /// <summary>
-        /// Gets or sets the action tag associated to this object
-        /// </summary>
-        public T Tag
-        {
-            get { return _tag; }
-            set { _tag = value; }
         }
 
         public GUIButton(GraphicsDevice graphics, SpriteFont font, GUIContainer parent)
             : base(graphics, font, parent)
         {
         }
-        
+
+        protected override void Resized()
+        {
+            _textPos = new Vector2(
+                    (int)(_bounds.Width / 2 - _textSize.X / 2), 
+                    (int)(_bounds.Height / 2 - _textSize.Y / 2));
+        }
+
         protected override void Invalidate()
         {
-            _graphics.DrawRect(_bounds, Color.Black);
-            _spriteBatch.DrawString(_font, _text, Vector2.Zero, _foreColor);
+            _graphics.DrawRect(0, 0, _bounds.Width, _bounds.Height, Color.Black);
+            _spriteBatch.DrawString(_font, _text, _textPos, _foreColor);
         }
 
         public override bool MousePressed(MouseEventArgs e)
@@ -55,7 +57,7 @@ namespace DoodleEmpires.Engine.GUI
             {
                 if (OnMousePressed != null)
                 {
-                    OnMousePressed.Invoke(_tag);
+                    OnMousePressed.Invoke();
                     return true;
                 }
             }
