@@ -152,6 +152,12 @@ namespace DoodleEmpires.Engine.Terrain
             GenTerrain();
         }
 
+        /// <summary>
+        /// Sets the metadata at the given chunk coords
+        /// </summary>
+        /// <param name="x">The x coordinate (chunk)</param>
+        /// <param name="y">The y coordinate (chunk)</param>
+        /// <param name="meta">The metadata to set to</param>
         public void SetMeta(int x, int y, byte meta)
         {
             if (x >= 0 & x < _width & y >= 0 & y < _height)
@@ -256,12 +262,6 @@ namespace DoodleEmpires.Engine.Terrain
 
             if (_tileManager.Tiles[cMaterial].RenderType == RenderType.Land)
             {
-                /*            
-                 * if (!IsNotAir(x - 1, y) && !IsNotAir(x, y - 1) && 
-                 * (IsNotAir(x - 1, y + 1) || IsNotAir(x + 1, y - 1)) &&
-                 IsNotAir(x, y + 1) && IsNotAir(x + 1, y))
-
-                 */
                 if (!_tileManager.CanConnect(cMaterial,  GetMaterial(x - 1, y)) &&
                     !_tileManager.CanConnect(cMaterial, GetMaterial(x, y - 1)) &&
                     (_tileManager.CanConnect(cMaterial, GetMaterial(x - 1, y + 1)) ||
@@ -359,6 +359,42 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
+        /// Checks if a rectangle intersects with this voxel map
+        /// </summary>
+        /// <param name="rect">The rectangle to check</param>
+        /// <returns>True if the rectangle intersects this voxel map</returns>
+        public bool Intersects(Rectangle rect)
+        {
+            int MinX = rect.Left / TILE_WIDTH;
+            int MinY = rect.Top / TILE_HEIGHT;
+            int MaxX = rect.Right / TILE_WIDTH;
+            int MaxY = rect.Bottom / TILE_HEIGHT;
+
+            for (int y = MinY < 0 ? 0 : MinY; y < MaxY; y++)
+            {
+                for (int x = MinX < 0 ? 0 : MinX; x < MaxX; x++)
+                {
+                    if (IsNotAir(x, y) && CheckCollision(x, y, rect))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks a tile collision at the given tile coords
+        /// </summary>
+        /// <param name="x">The x coordinate to check (chunk)</param>
+        /// <param name="y">The y coordinate to check (chunk)</param>
+        /// <param name="rect">The rectangle to check</param>
+        /// <returns>True if the tile intersects the rectangle</returns>
+        private bool CheckCollision(int x, int y, Rectangle rect)
+        {
+            return _tileManager.CheckCollision(GetMaterial(x, y), rect, _voxelBounds[x, y]);
+        }
+
+        /// <summary>
         /// Generates a tree at the given x and y
         /// </summary>
         /// <param name="x">The x coordinate of the base of the tree</param>
@@ -420,7 +456,7 @@ namespace DoodleEmpires.Engine.Terrain
                 }
             }
         }
-
+        
         /// <summary>
         /// Checks is a point is inside of a octagon
         /// </summary>
@@ -430,7 +466,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="x">The x coordinate to check</param>
         /// <param name="y">The y coordinate to check</param>
         /// <returns>True if the point is inside of the octagon</returns>
-        public bool IsInsideOctagon(int xx, int yy, int radius, int x, int y)
+        private bool IsInsideOctagon(int xx, int yy, int radius, int x, int y)
         {
             int relX = x - xx;
             int relY = y - yy;

@@ -42,7 +42,7 @@ namespace DoodleEmpires.Engine.Render.Particle
             {
                 _engine.AddParticle(Position, 
                     GeneralDirection * Force * ((float)_random.NextDouble() + 0.5F),
-                    (float)_random.NextDouble() + 0.5F, TTL + (float)_random.NextDouble() / 2.0F,
+                    (float)_random.NextDouble() + 0.5F, TTL + (float)_random.NextDouble() / 8.0F,
                     Color, (float)_random.NextDouble() * 6.28f, (float)_random.NextDouble());
             }
         }

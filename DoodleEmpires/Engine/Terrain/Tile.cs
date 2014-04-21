@@ -37,6 +37,11 @@ namespace DoodleEmpires.Engine.Terrain
                     break;
             }
         }
+
+        public bool Intersects(Rectangle check, Rectangle bounds)
+        {
+            return check.Intersects(bounds);
+        }
     }
 
     public enum RenderType

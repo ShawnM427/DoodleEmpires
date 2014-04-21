@@ -17,6 +17,9 @@ using System.Windows.Forms;
 using MouseEventArgs = DoodleEmpires.Engine.Utilities.MouseEventArgs;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
+using DoodleEmpires.Engine.Render.Particle;
+using DoodleEmpires.Engine.Sound;
+using Microsoft.Xna.Framework.Audio;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -31,6 +34,9 @@ namespace DoodleEmpires.Engine.Net
         VoxelTerrain _voxelTerrain;
         TileManager _tileManager;
         TextureAtlas _blockAtlas;
+
+        SoundEngine _soundEngine;
+
         Camera2D _view;
         CameraControl _cameraController;
         Texture2D _paperTex;
@@ -106,6 +112,7 @@ namespace DoodleEmpires.Engine.Net
             _tileManager.RegisterTile("Ladder", new Ladder(0));
 
             _tileManager.RegisterConnect("Grass", "Stone");
+            _tileManager.RegisterConnect("Grass", "Concrete");
             _tileManager.RegisterConnect("Stone", "Concrete");
             _tileManager.RegisterConnect("Wood", "Grass");
             _tileManager.RegisterConnect("Wood", "Leaves");
@@ -122,7 +129,7 @@ namespace DoodleEmpires.Engine.Net
             _view.Focus = _cameraController;
 
             _cameraController.Position = new Vector2(0, 200 * VoxelTerrain.TILE_HEIGHT);
-            
+                        
             _rand = new Random();
             
             base.Initialize();
@@ -139,6 +146,14 @@ namespace DoodleEmpires.Engine.Net
             _debugFont = Content.Load<SpriteFont>("debugFont");
             SpriteFont _guiFont = Content.Load<SpriteFont>("GUIFont");
             _guiFont.FixFont();
+
+            _soundEngine = new SoundEngine();
+
+            foreach (string s in Directory.GetFiles("Content\\Sounds"))
+            {
+                string sName = Path.GetFileNameWithoutExtension(s);
+                _soundEngine.AddSound(sName, Content.Load<SoundEffect>("Sounds\\" + sName));
+            }
 
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
             
@@ -253,6 +268,22 @@ namespace DoodleEmpires.Engine.Net
             _cameraController.Position += _moveVector * 10;
 
             _mainControl.Update();
+
+            _soundEngine.ListenerPosition = _cameraController.Position;
+
+            if (keyState.IsKeyDown(Keys.Space) && _prevKeyState.IsKeyUp(Keys.Space))
+            {
+                _soundEngine.PlaySound("rifle", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
+
+                if (_rand.NextDouble() < 0.6)
+                {
+                    if (_rand.NextDouble() < 0.5)
+                        _soundEngine.PlaySound("shell_01", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
+                    else
+
+                        _soundEngine.PlaySound("shell_02", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
+                    }
+            }
 
             _prevKeyState = keyState;
         }

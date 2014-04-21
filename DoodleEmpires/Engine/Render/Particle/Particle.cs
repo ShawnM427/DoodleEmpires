@@ -29,7 +29,7 @@ namespace DoodleEmpires.Engine.Render.Particle
         public float AngularVelocity;
         public Color Color;
         public float Scale;
-        public float TTL;
+        public double TTL;
 
         public Particle(Vector2 position, Vector2 velocity, float scale, float ttl, Color color, float rotation = 0, float angularVelocity = 0)
         {
@@ -44,8 +44,8 @@ namespace DoodleEmpires.Engine.Render.Particle
 
         public void Update(GameTime gameTime, Vector2 gravity)
         {
+            TTL -= 1.0;
             Velocity += gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            TTL -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             Position += Velocity;
         }
 

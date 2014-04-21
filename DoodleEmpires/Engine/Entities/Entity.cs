@@ -6,9 +6,14 @@ using Microsoft.Xna.Framework;
 
 namespace DoodleEmpires.Engine.Entities
 {
-    public class Unit
+    public class Entity
     {
-        //Rectangle _bounds;
-        //Vector2 _position;
+        Rectangle _bounds;
+        Vector2 _position;
+        int _textureID;
+
+        public Entity()
+        {
+        }
     }
 }

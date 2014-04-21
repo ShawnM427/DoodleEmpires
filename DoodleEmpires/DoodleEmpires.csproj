@@ -39,7 +39,8 @@
     <Compile Include="Engine\Economy\TechNode.cs" />
     <Compile Include="Engine\Economy\TechTree.cs" />
     <Compile Include="Engine\Entities\IFocusable.cs" />
-    <Compile Include="Engine\Entities\Unit.cs" />
+    <Compile Include="Engine\Entities\Entity.cs" />
+    <Compile Include="Engine\Entities\Pathfinding.cs" />
     <Compile Include="Engine\GUI\GUIButton.cs" />
     <Compile Include="Engine\GUI\GUIScrollPanel.cs" />
     <Compile Include="Engine\GUI\GUITextPane.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Engine\Net\NetManager.cs" />
     <Compile Include="Engine\Render\2DCamera.cs" />
     <Compile Include="Engine\Entities\CameraControl.cs" />
+    <Compile Include="Engine\Sound\SoundEngine.cs" />
     <Compile Include="Engine\Terrain\ChunkedTerrainRenderer.cs" />
     <Compile Include="Engine\Render\ColoredMesh.cs" />
     <Compile Include="Engine\Render\Particle\Particle.cs" />
@@ -97,6 +99,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Atlas.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\shell_01.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\shell_02.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\rifle.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\ItemAtlas.png">

@@ -129,6 +129,18 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
+        /// Checks if a tile will collide with the given bounds and check rectangles
+        /// </summary>
+        /// <param name="tileID">The ID of the tile</param>
+        /// <param name="rect">The rectangle to check</param>
+        /// <param name="bounds">The bounds of the tile</param>
+        /// <returns>True if <i>rect</i> intersects the tile</returns>
+        public bool CheckCollision(byte tileID, Rectangle rect, Rectangle bounds)
+        {
+            return _tileTypes[tileID].Intersects(rect, bounds);
+        }
+
+        /// <summary>
         /// Checks if a given tile ID is solid
         /// </summary>
         /// <param name="tileID">The tile ID to check</param>

@@ -28,6 +28,11 @@ namespace DoodleEmpires.Engine.Render.Particle
             _spriteBatch = new SpriteBatch(_graphics);
         }
 
+        public void AddEmitter(ParticleEmitter emitter)
+        {
+            _emitters.Add(emitter);
+        }
+
         public void AddParticle(Vector2 position, Vector2 velocity, float scale, float ttl, Color color, float rotation = 0, float angularVelocity = 0)
         {
             _particles.Add(new Particle(position, velocity, scale, ttl, color, rotation, angularVelocity));
