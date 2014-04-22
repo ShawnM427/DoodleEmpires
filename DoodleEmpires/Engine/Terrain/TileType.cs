@@ -62,8 +62,38 @@ namespace DoodleEmpires.Engine.Terrain
                 spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(TextureID), Color);
             else if (neighbours.HasFlag(MooreNeighbours.L))
                 spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(TextureID + 1), Color);
-            else
+            else if (neighbours.HasFlag(MooreNeighbours.R))
                 spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(TextureID + 2), Color);
+            else
+                spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(TextureID), Color);
         }
+    }
+
+    public class Door : Tile
+    {
+        public Door(byte type)
+            : base(type, 105, RenderType.Prop, false)
+        {
+            Color = Color.White;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, TextureAtlas atlas, Rectangle bounds, byte mooreState, byte meta)
+        {
+            MooreNeighbours neighbours = (MooreNeighbours)mooreState;
+            SpriteEffects flipped = meta >> 1 == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+            if (neighbours.HasFlag(MooreNeighbours.BM))
+                spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(TextureID + 1 + (meta >> 7 << 7)), Color, 0f, Vector2.Zero, flipped, 0.0f);
+            else
+                spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(TextureID + (meta >> 7 << 7)), Color, 0f, Vector2.Zero, flipped, 0.0f);
+        }
+
+        public override void AddToWorld(VoxelMap world, int x, int y)
+        {
+            world.SetTile(x, y, Type);
+            world.SetMeta(x, y, 2);
+            world.SetTile(x, y - 1, Type);
+            world.SetMeta(x, y - 1, 2);
+        }    
     }
 }

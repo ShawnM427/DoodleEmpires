@@ -72,13 +72,6 @@ namespace DoodleEmpires.Engine.Utilities
 
         protected abstract void Draw(GameTime gameTime);
 
-        public void Dispose()
-        {
-            _graphics.Dispose();
-            _graphicsManager.Dispose();
-            _content.Dispose();
-        }
-
         public object GetService(Type serviceType)
         {
             return this;

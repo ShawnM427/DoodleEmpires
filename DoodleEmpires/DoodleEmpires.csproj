@@ -38,9 +38,12 @@
     <Compile Include="Engine\Economy\Resources.cs" />
     <Compile Include="Engine\Economy\TechNode.cs" />
     <Compile Include="Engine\Economy\TechTree.cs" />
+    <Compile Include="Engine\Entities\EconomyBuff.cs" />
     <Compile Include="Engine\Entities\IFocusable.cs" />
     <Compile Include="Engine\Entities\Entity.cs" />
     <Compile Include="Engine\Entities\Pathfinding.cs" />
+    <Compile Include="Engine\Entities\UnitBuff.cs" />
+    <Compile Include="Engine\Entities\Zoning.cs" />
     <Compile Include="Engine\GUI\GUIButton.cs" />
     <Compile Include="Engine\GUI\GUIScrollPanel.cs" />
     <Compile Include="Engine\GUI\GUITextPane.cs" />
@@ -69,7 +72,7 @@
     <Compile Include="Engine\Terrain\TileType.cs" />
     <Compile Include="Engine\Terrain\Utils.cs" />
     <Compile Include="Engine\Terrain\VolcanicFormation.cs" />
-    <Compile Include="Engine\Terrain\VoxelTerrain.cs" />
+    <Compile Include="Engine\Terrain\VoxelMap.cs" />
     <Compile Include="Engine\Utilities\AdvancedGame.cs" />
     <Compile Include="Engine\Utilities\CustomGame.cs" />
     <Compile Include="Engine\Utilities\FPSManager.cs" />
@@ -90,7 +93,9 @@
     <Reference Include="Lidgren.Network">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MSBuild\..\MonoGame\v3.0\Assemblies\WindowsGL\Lidgren.Network.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Tao.Sdl">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MSBuild\..\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
     </Reference>

@@ -17,11 +17,17 @@ namespace DoodleEmpires.Engine.Entities
         const float SPEED = 4.0F;
 
         protected Vector2 _position = Vector2.Zero;
+        protected Rectangle _bounds = new Rectangle(0, 0, 800, 400);
 
         public Vector2 Position
         {
             get { return _position; }
             set { _position = value; }
+        }
+
+        public CameraControl(ICamera2D camera)
+        {
+            _bounds = camera.ScreenBounds;
         }
 
         KeyboardState _ks;

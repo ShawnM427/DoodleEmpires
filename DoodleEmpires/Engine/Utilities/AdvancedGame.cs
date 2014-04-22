@@ -6,15 +6,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace DoodleEmpires.Engine.Utilities
 {
     public abstract class AdvancedGame : Game
     {
-        private MouseState _prevMouseState = Mouse.GetState();
-        private MouseState _currentMouseState;
-        private MouseEventArgs _mouseArgs;
-
         /// <summary>
         /// Gets or sets the spritebatch for drawing
         /// </summary>
@@ -23,6 +20,8 @@ namespace DoodleEmpires.Engine.Utilities
         protected event MouseEvent MouseClickedEvent;
         protected event MouseEvent MouseReleasedEvent;
         protected event MouseEvent MouseDownEvent;
+
+        protected bool _mouseDown;
 
         /// <summary>
         /// Creates a new advanced game
@@ -41,7 +40,40 @@ namespace DoodleEmpires.Engine.Utilities
             // Create a new SpriteBatch, which can be used to draw textures.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Type t = typeof(OpenTKGameWindow);
+            PropertyInfo pInf = t.GetProperty("Window", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            OpenTK.GameWindow _window = (OpenTK.GameWindow)pInf.GetValue((OpenTKGameWindow)Window, new object[0]);
+
+            _window.Mouse.ButtonDown += new EventHandler<OpenTK.Input.MouseButtonEventArgs>(Mouse_ButtonDown);
+            _window.Mouse.ButtonUp += new EventHandler<OpenTK.Input.MouseButtonEventArgs>(Mouse_ButtonUp);
+
             base.Initialize();
+        }
+
+        void Mouse_ButtonUp(object sender, OpenTK.Input.MouseButtonEventArgs e)
+        {
+            _mouseDown = false;
+
+            MouseReleased(
+                new MouseEventArgs(new MouseState(e.X, e.Y, 0,
+                e.Button == OpenTK.Input.MouseButton.Left ? ButtonState.Pressed : ButtonState.Released,
+                e.Button == OpenTK.Input.MouseButton.Middle ? ButtonState.Pressed : ButtonState.Released,
+                e.Button == OpenTK.Input.MouseButton.Right ? ButtonState.Pressed : ButtonState.Released,
+                e.Button == OpenTK.Input.MouseButton.Button1 ? ButtonState.Pressed : ButtonState.Released,
+                e.Button == OpenTK.Input.MouseButton.Button2 ? ButtonState.Pressed : ButtonState.Released), 0));
+        }
+
+        void Mouse_ButtonDown(object sender, OpenTK.Input.MouseButtonEventArgs e)
+        {
+            _mouseDown = true;
+
+            MousePressed(
+                new MouseEventArgs(new MouseState(e.X, e.Y, 0,
+                e.Button == OpenTK.Input.MouseButton.Left ? ButtonState.Pressed : ButtonState.Released,
+                e.Button == OpenTK.Input.MouseButton.Middle ? ButtonState.Pressed : ButtonState.Released,
+                e.Button == OpenTK.Input.MouseButton.Right ? ButtonState.Pressed : ButtonState.Released,
+                e.Button == OpenTK.Input.MouseButton.Button1 ? ButtonState.Pressed : ButtonState.Released,
+                e.Button == OpenTK.Input.MouseButton.Button2 ? ButtonState.Pressed : ButtonState.Released), 0));
         }
 
         /// <summary>
@@ -50,33 +82,11 @@ namespace DoodleEmpires.Engine.Utilities
         /// <param name="gameTime">The current game time</param>
         protected override void Update(GameTime gameTime)
         {
-            _currentMouseState = Mouse.GetState();
-            _mouseArgs = 
-                new MouseEventArgs(_currentMouseState, _currentMouseState.ScrollWheelValue - _prevMouseState.ScrollWheelValue);
+            if (!IsActive)
+                _mouseDown = false;
 
-            if (_currentMouseState.LeftButton == ButtonState.Pressed & _prevMouseState.LeftButton == ButtonState.Released ||
-                _currentMouseState.RightButton == ButtonState.Pressed & _prevMouseState.RightButton == ButtonState.Released)
-            {
-                MousePressed(_mouseArgs);
-                if (MouseClickedEvent != null)
-                    MouseClickedEvent(_mouseArgs);
-            }
-
-            if (_currentMouseState.LeftButton == ButtonState.Released & _prevMouseState.LeftButton == ButtonState.Pressed ||
-                _currentMouseState.RightButton == ButtonState.Released & _prevMouseState.RightButton == ButtonState.Pressed)
-            {
-                MouseReleased(_mouseArgs);
-                if (MouseReleasedEvent != null)
-                    MouseReleasedEvent(_mouseArgs);
-            }
-
-            if (_currentMouseState.LeftButton == ButtonState.Pressed | _currentMouseState.RightButton == ButtonState.Pressed)
-            {
-                MouseDown(_mouseArgs);
-                if (MouseDownEvent != null)
-                    MouseDownEvent(_mouseArgs);
-            }
-            _prevMouseState = Mouse.GetState();
+            if (_mouseDown)
+                MouseDown(new MouseEventArgs(Mouse.GetState(), 0));
 
             base.Update(gameTime);
         }
@@ -117,7 +127,7 @@ namespace DoodleEmpires.Engine.Utilities
     }
 
     public delegate void MouseEvent(MouseEventArgs args);
-
+    
     /// <summary>
     /// Represents the arguments for the mouse
     /// </summary>

@@ -20,6 +20,7 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 using DoodleEmpires.Engine.Render.Particle;
 using DoodleEmpires.Engine.Sound;
 using Microsoft.Xna.Framework.Audio;
+using System.ComponentModel;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -31,7 +32,7 @@ namespace DoodleEmpires.Engine.Net
         GraphicsDeviceManager graphicsManager;
         SpriteFont _debugFont;
 
-        VoxelTerrain _voxelTerrain;
+        VoxelMap _voxelTerrain;
         TileManager _tileManager;
         TextureAtlas _blockAtlas;
 
@@ -110,6 +111,7 @@ namespace DoodleEmpires.Engine.Net
             _tileManager.RegisterTile("Cobble", 60, Color.Gray, RenderType.Land, true);
             _tileManager.RegisterTile("Wooden Spikes", new WoodSpike(0));
             _tileManager.RegisterTile("Ladder", new Ladder(0));
+            _tileManager.RegisterTile("Door", new Door(0));
 
             _tileManager.RegisterConnect("Grass", "Stone");
             _tileManager.RegisterConnect("Grass", "Concrete");
@@ -117,18 +119,21 @@ namespace DoodleEmpires.Engine.Net
             _tileManager.RegisterConnect("Wood", "Grass");
             _tileManager.RegisterConnect("Wood", "Leaves");
 
+            _tileManager.RegisterOneWayConnect("Ladder", "Door");
             _tileManager.RegisterOneWayConnect("Ladder", "Wood");
             _tileManager.RegisterOneWayConnect("Ladder", "Concrete");
             _tileManager.RegisterOneWayConnect("Ladder", "Stone");
 
             _blockAtlas = new TextureAtlas(Content.Load<Texture2D>("Atlas"), 20, 20);
 
-            _voxelTerrain = new VoxelTerrain(GraphicsDevice, _tileManager, _blockAtlas, 800, 400);
-            _cameraController = new CameraControl();
+            _voxelTerrain = new VoxelMap(GraphicsDevice, _tileManager, _blockAtlas, 800, 400);
             _view = new Camera2D(GraphicsDevice);
-            _view.Focus = _cameraController;
+            _view.ScreenBounds = new Rectangle(0, 0, _voxelTerrain.WorldWidth, _voxelTerrain.WorldHeight);
 
-            _cameraController.Position = new Vector2(0, 200 * VoxelTerrain.TILE_HEIGHT);
+            _cameraController = new CameraControl(_view);
+            _cameraController.Position = new Vector2(0, 200 * VoxelMap.TILE_HEIGHT);
+
+            _view.Focus = _cameraController;
                         
             _rand = new Random();
             
@@ -142,6 +147,8 @@ namespace DoodleEmpires.Engine.Net
         protected override void LoadContent()
         {
             _paperTex = Content.Load<Texture2D>("Paper");
+
+            _voxelTerrain.BackDrop = _paperTex;
 
             _debugFont = Content.Load<SpriteFont>("debugFont");
             SpriteFont _guiFont = Content.Load<SpriteFont>("GUIFont");
@@ -204,6 +211,8 @@ namespace DoodleEmpires.Engine.Net
 
             if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
                 LoadGame(loadDialog.FileName.Replace(".dem",""));
+
+            _mouseDown = false;
         }
 
         void saveButton_OnMousePressed()
@@ -216,6 +225,8 @@ namespace DoodleEmpires.Engine.Net
 
             if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
                 SaveGame(saveDialog.FileName);
+
+            _mouseDown = false;
         }
 
         protected override void OnDeactivated(object sender, EventArgs args)
@@ -303,11 +314,11 @@ namespace DoodleEmpires.Engine.Net
                 {
                     if (args.LeftButton == ButtonState.Pressed)
                     {
-                        _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, _editType);
+                        _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelMap.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelMap.TILE_HEIGHT, _editType);
                     }
                     else if (args.RightButton == ButtonState.Pressed)
                     {
-                        _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelTerrain.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelTerrain.TILE_HEIGHT, 0);
+                        _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelMap.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelMap.TILE_HEIGHT, 0);
                     }
                 }
 
@@ -323,7 +334,7 @@ namespace DoodleEmpires.Engine.Net
         {
             GraphicsDevice.SetRenderTarget(null);
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
                         
             GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
             FPSManager.OnDraw(gameTime);
@@ -343,7 +354,7 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="fName">The relative file name to save to</param>
         private void SaveGame(string fName)
         {
-            Stream fileStream = File.OpenWrite(fName + ".dem");
+            Stream fileStream = File.OpenWrite(fName.Replace(".dem", "") + ".dem");
             _voxelTerrain.SaveToStream(fileStream);
             fileStream.Close();
             fileStream.Dispose();
@@ -358,7 +369,7 @@ namespace DoodleEmpires.Engine.Net
             if (File.Exists(fName + ".dem"))
             {
                 Stream fileStream = File.OpenRead(fName + ".dem");
-                _voxelTerrain = VoxelTerrain.ReadFromStream(fileStream, GraphicsDevice, _tileManager, _blockAtlas);
+                _voxelTerrain = VoxelMap.ReadFromStream(fileStream, GraphicsDevice, _tileManager, _blockAtlas);
                 fileStream.Close();
                 fileStream.Dispose();
             }

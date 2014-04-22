@@ -14,8 +14,6 @@ namespace DoodleEmpires.Engine.Economy
         string _name;
         string _description;
         Texture2D _icon;
-        TechNode[] _requiredNodes;
-        List<TechNode> _childrenNodes;
 
         /// <summary>
         /// Gets the name of this tech node
@@ -38,13 +36,6 @@ namespace DoodleEmpires.Engine.Economy
         {
             get { return _icon; }
         }
-        /// <summary>
-        /// Gets the required nodes to be researched before this node
-        /// </summary>
-        public TechNode[] RequiredNodes
-        {
-            get { return _requiredNodes; }
-        }
 
         /// <summary>
         /// Creates a new tech node
@@ -53,11 +44,10 @@ namespace DoodleEmpires.Engine.Economy
         /// <param name="description">The description for this node</param>
         /// <param name="icon">The icon for this node</param>
         /// <param name="requiredNodes">The required nodes for this node</param>
-        protected TechNode(string name, string description, Texture2D icon, TechNode[] requiredNodes)
+        protected TechNode(string name, string description, Texture2D icon)
         {
             _name = name;
             _icon = icon;
-            _requiredNodes = requiredNodes;
         }
     }
 }

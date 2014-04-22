@@ -38,9 +38,15 @@ namespace DoodleEmpires.Engine.Terrain
             }
         }
 
-        public bool Intersects(Rectangle check, Rectangle bounds)
+        public virtual bool Intersects(Rectangle check, Rectangle bounds)
         {
             return check.Intersects(bounds);
+        }
+
+        public virtual void AddToWorld(VoxelMap world, int x, int y)
+        {
+            world.SetTile(x, y, Type);
+            world.SetMeta(x, y, 0);
         }
     }
 

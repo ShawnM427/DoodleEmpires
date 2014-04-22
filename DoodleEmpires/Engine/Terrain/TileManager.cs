@@ -19,6 +19,11 @@ namespace DoodleEmpires.Engine.Terrain
             get { return _tileTypes; }
         }
 
+        public Tile this[int ID]
+        {
+            get { return _tileTypes[ID]; }
+        }
+
         public TileManager()
         {
             RegisterTile("Air",0, Color.Transparent, RenderType.None, false); //adds the air tile type

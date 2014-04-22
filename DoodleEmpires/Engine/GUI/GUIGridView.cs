@@ -197,7 +197,7 @@ namespace DoodleEmpires.Engine.GUI
 
                 return true;
             }
-            return false;
+            //return false;
         }
     }
 

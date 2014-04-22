@@ -84,7 +84,12 @@ public interface ICamera2D
     /// <summary>
     /// Gets the world bounds that this camera displays
     /// </summary>
-    Rectangle ScreenBounds { get; }
+    Rectangle ViewBounds { get; }
+
+    /// <summary>
+    /// Gets or sets the bounds that this camera is limited to
+    /// </summary>
+    Rectangle ScreenBounds { get; set; }
 }
 
 public class Camera2D : ICamera2D
@@ -92,7 +97,7 @@ public class Camera2D : ICamera2D
     private Vector2 _position;
     protected float _viewportHeight;
     protected float _viewportWidth;
-    protected Rectangle _screenBounds = new Rectangle(0,0,0,0);
+    protected Rectangle _viewBounds = new Rectangle(0,0,0,0);
 
     protected GraphicsDevice _graphics;
     
@@ -118,7 +123,8 @@ public class Camera2D : ICamera2D
     public Matrix Projection { get; set; }
     public IFocusable Focus { get; set; }
     public float MoveSpeed { get; set; }
-    public Rectangle ScreenBounds { get { return _screenBounds; } }
+    public Rectangle ViewBounds { get { return _viewBounds; } }
+    public Rectangle ScreenBounds { get; set; }
 
     #endregion
 
@@ -157,10 +163,26 @@ public class Camera2D : ICamera2D
             _position.Y += (Focus.Position.Y - Position.Y) * MoveSpeed * delta;
         }
 
-        _screenBounds.X = (int)(Position.X - Origin.X);
-        _screenBounds.Y = (int)(Position.Y - Origin.Y);
-        _screenBounds.Width = (int)(Origin.X * 2) + 1;
-        _screenBounds.Height = (int)(Origin.Y * 2) + 1;
+        if (_position.X - Origin.X < ScreenBounds.Left)
+            _position.X = ScreenBounds.Left + Origin.X;
+        if (_position.Y - Origin.Y < ScreenBounds.Top)
+            _position.Y = ScreenBounds.Top + Origin.Y;
+
+        if (_position.X + Origin.X > ScreenBounds.Right)
+            _position.X = ScreenBounds.Right - Origin.X;
+        if (_position.Y + Origin.Y > ScreenBounds.Bottom)
+            _position.Y = ScreenBounds.Bottom - Origin.Y;
+
+        _viewBounds.X = (int)(Position.X - Origin.X);
+        _viewBounds.Y = (int)(Position.Y - Origin.Y);
+        _viewBounds.Width = (int)(Origin.X * 2) + 1;
+        _viewBounds.Height = (int)(Origin.Y * 2) + 1;
+
+        //if (!ScreenBounds.Contains(ViewBounds))
+        //{
+        //    _position.X = ViewBounds.X < ScreenBounds.X ? ScreenBounds.X + Origin.X : _position.X;
+        //    _position.Y = ViewBounds.X < ScreenBounds.Y ? ScreenBounds.Y + Origin.Y : _position.Y;
+        //}
 
         // Create the Transform used by any
         // spritebatch process
