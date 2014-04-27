@@ -10,6 +10,16 @@ namespace DoodleEmpires.Engine.Terrain
 {
     public class Leaves : Tile
     {
+        static Random _random = new Random();
+
+        public override bool NeedsUpdate
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public Leaves(byte type)
             : base(type, 40, RenderType.Land, false)
         {
@@ -18,12 +28,37 @@ namespace DoodleEmpires.Engine.Terrain
 
         public override void Draw(SpriteBatch spriteBatch, TextureAtlas atlas, Rectangle bounds, byte mooreState, byte meta)
         {
-            if (meta == 1)
+            if (meta == 255)
             {
                 spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(80 + mooreState) ,Color);
             }
             else
                 spriteBatch.Draw(atlas.Texture, bounds, atlas.GetSource(TextureID + mooreState), Color);
+        }
+
+        public override void AddToWorld(VoxelMap world, int x, int y)
+        {
+            base.AddToWorld(world, x, y);
+            world.SetMeta(x, y, (byte)_random.Next(0, 256));
+        }
+
+        public override void OnTick(VoxelMap world, int x, int y)
+        {
+            byte meta = world.GetMeta(x, y);
+
+            if (meta < 255)
+            {
+                meta += (byte)_random.Next(0, 2);
+                world.SetMeta(x, y, meta);
+            }
+            if (meta == 255)
+            {
+                if (_random.NextDouble() < 0.01f)
+                {
+                    meta = 0;
+                    world.SetMeta(x, y, meta);
+                }
+            }
         }
     }
 

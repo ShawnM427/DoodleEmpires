@@ -7,6 +7,10 @@ using DoodleEmpires.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using System.IO;
 using DoodleEmpires.Engine.Entities;
+using System.Threading;
+using System.Diagnostics;
+using System.ComponentModel;
+using DoodleEmpires.Engine.Economy;
 
 namespace DoodleEmpires.Engine.Terrain
 {
@@ -30,7 +34,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// <summary>
         /// Gets the alpha component for drawing zones
         /// </summary>
-        public const float ZONE_ALPHA = 0.15f;
+        public const float ZONE_ALPHA = 0.5f;
         
         #region Protected Vars
         /// <summary>
@@ -75,10 +79,17 @@ namespace DoodleEmpires.Engine.Terrain
 
         protected float _terrainHeightModifier;
 
+        protected BackgroundWorker _updateThread;
+
         /// <summary>
         /// The transform color to multiply all tiles by
         /// </summary>
         protected Color _transformColor = Color.White;
+
+        List<Zoning> _zones = new List<Zoning>();
+        VertexPositionColor[] _zoneVerts = new VertexPositionColor[0];
+        int[] _zoneIndices = new int[0];
+
         #endregion
 
         int _maxX;
@@ -103,6 +114,8 @@ namespace DoodleEmpires.Engine.Terrain
             }
         }
 
+        #region Public Properties
+
         /// <summary>
         /// Gets the graphics device for this terrain
         /// </summary>
@@ -126,11 +139,7 @@ namespace DoodleEmpires.Engine.Terrain
             get { return _tileManager; }
             set { _tileManager = value; }
         }
-
-        List<Zoning> _zones = new List<Zoning>();
-        VertexPositionColor[] _zoneVerts = new VertexPositionColor[0];
-        int[] _zoneIndices = new int[0];
-
+        
         /// <summary>
         /// Gets the width of the world in world coords
         /// </summary>
@@ -146,12 +155,25 @@ namespace DoodleEmpires.Engine.Terrain
             get { return _height * TILE_HEIGHT; }
         }
 
+        /// <summary>
+        /// Gets a list of zones in this voxel map
+        /// </summary>
+        public List<Zoning> Zones
+        {
+            get { return _zones; }
+        }
+
+        /// <summary>
+        /// Gets or sets the backdrop texture
+        /// </summary>
         public Texture2D BackDrop
         {
             get;
             set;
         }
-        
+
+        #endregion
+
         /// <summary>
         /// Creates a new voxel based terrain
         /// </summary>
@@ -179,10 +201,8 @@ namespace DoodleEmpires.Engine.Terrain
 
             _basicEffect = new BasicEffect(_graphics);
             _basicEffect.VertexColorEnabled = true;
-            _basicEffect.Projection = Matrix.CreateOrthographicOffCenter
-                (0, _graphics.Viewport.Width,     // left, right
-                _graphics.Viewport.Height, 0,    // bottom, top
-                0, 1);
+            _basicEffect.Projection =
+                Matrix.CreateOrthographicOffCenter(0, _graphics.Viewport.Width, _graphics.Viewport.Height, 0, 0, 1);
             _basicEffect.Alpha = ZONE_ALPHA;
 
             _atlas = atlas;
@@ -190,7 +210,35 @@ namespace DoodleEmpires.Engine.Terrain
             BuildVoxelBouds();
 
             GenTerrain();
+
+            _updateThread = new BackgroundWorker();
+            _updateThread.DoWork += BeginUpdateLoop;
+            _updateThread.RunWorkerAsync();
         }
+
+        private void BeginUpdateLoop(object sender, DoWorkEventArgs e)
+        {
+            System.Timers.Timer _updateTimer = new System.Timers.Timer();
+            _updateTimer.Elapsed += new System.Timers.ElapsedEventHandler(_updateTimer_Elapsed);
+            _updateTimer.Interval = 1000 / 5;
+            _updateTimer.Start();
+        }
+
+        void _updateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                for (int y = 0; y < _height; y++)
+                {
+                    byte tID = GetMaterial(x, y);
+
+                    if (_tileManager[tID].NeedsUpdate)
+                        _tileManager[tID].OnTick(this, x, y);
+                }
+            }
+        }
+
+        #region Zoning
 
         /// <summary>
         /// Defines a zone
@@ -202,9 +250,48 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="zone">The zone to add</param>
         public void DefineZone(int minX, int minY, int maxX, int maxY, Zoning zone)
         {
-            zone.Bounds = new Rectangle(minX * TILE_WIDTH, minY * TILE_HEIGHT, maxX * TILE_WIDTH, maxY * TILE_HEIGHT);
+            zone.Bounds = new Rectangle(minX * TILE_WIDTH, minY * TILE_HEIGHT, (maxX - minX) * TILE_WIDTH, (maxY - minY) * TILE_HEIGHT);
 
             AddZone(zone);
+        }
+
+        /// <summary>
+        /// Defines a zone
+        /// </summary>
+        /// <param name="min">The minimum bounds of the zone, in world coords</param>
+        /// <param name="max">The maximum bounds of the zone, in world coords</param>
+        /// <param name="zone">The zone to add</param>
+        public void DefineZone(Vector2 min, Vector2 max, Zoning zone)
+        {
+            int minX = (int)Math.Floor(Math.Min(min.X, max.X) / VoxelMap.TILE_WIDTH);
+            int minY = (int)Math.Floor(Math.Min(min.Y, max.Y) / VoxelMap.TILE_HEIGHT);
+
+            int maxX = (int)Math.Ceiling(Math.Max(min.X, max.X) / VoxelMap.TILE_WIDTH);
+            int maxY = (int)Math.Ceiling(Math.Max(min.Y, max.Y) / VoxelMap.TILE_HEIGHT);
+
+            DefineZone(minX, minY, maxX, maxY, zone);
+        }
+
+        /// <summary>
+        /// Deletes a specific zone
+        /// </summary>
+        /// <param name="zone">The zone to delete</param>
+        public void DeleteZone(Zoning zone)
+        {
+            if (_zones.Contains(zone))
+            {
+                int id = _zones.IndexOf(zone);
+
+                List<VertexPositionColor> temp = _zoneVerts.ToList();
+                temp.RemoveRange(id * 4, 4);
+                _zoneVerts = temp.ToArray();
+
+                List<int> temp2 = _zoneIndices.ToList();
+                temp2.RemoveRange(id * 6, 6);
+                _zoneIndices = temp2.ToArray();
+
+                _zones.RemoveAt(id);
+            }
         }
 
         /// <summary>
@@ -232,7 +319,11 @@ namespace DoodleEmpires.Engine.Terrain
             _zoneIndices[iID + 4] = vID + 1;
             _zoneIndices[iID + 5] = vID + 3;
         }
-        
+
+        #endregion
+
+        #region Meta
+
         /// <summary>
         /// Sets the metadata at the given chunk coords
         /// </summary>
@@ -247,6 +338,25 @@ namespace DoodleEmpires.Engine.Terrain
                 UpdateVoxel(x, y);
             }
         }
+
+        /// <summary>
+        /// Gets the metadata at the given chunk coords
+        /// </summary>
+        /// <param name="x">The x coordinate (chunk)</param>
+        /// <param name="y">The y coordinate (chunk)</param>
+        /// <returns>The metadata at the given x and y</returns>
+        public byte GetMeta(int x, int y)
+        {
+            if (x >= 0 & x < _width & y >= 0 & y < _height)
+            {
+                return _meta[x, y];
+            }
+            else { return 0; }
+        }
+
+        #endregion
+
+        #region Initialization
 
         /// <summary>
         /// Generates the terrain
@@ -286,7 +396,7 @@ namespace DoodleEmpires.Engine.Terrain
                 GenTree(i, 200 + (int)(Noise.PerlinNoise_1D(i / 16.0f) * _terrainHeightModifier) - 1);
             }
         }
-
+        
         /// <summary>
         /// Builds all the voxel bounds for this map
         /// </summary>
@@ -302,6 +412,54 @@ namespace DoodleEmpires.Engine.Terrain
                 }
             }
         }
+
+        /// <summary>
+        /// Generates a tree at the given x and y
+        /// </summary>
+        /// <param name="x">The x coordinate of the base of the tree</param>
+        /// <param name="y">The y coordinate of the base of the tree</param>
+        public void GenTree(int x, int y)
+        {
+            if (GetMaterial(x, y + 1) == 1)
+            {
+                int height = _random.Next(3, 7);
+                int radius = _random.Next(3, 5);
+
+                SetSphere(x, y - height - radius + 1, radius, 5); //generate leaves
+
+                for (int i = 0; i < 10; i++)
+                {
+                    int xx = _random.Next(x - radius, x + radius + 1);
+                    int yy = _random.Next(y - height - radius, y - height);
+
+                    if (IsInsideOctagon(x, y - height - radius + 1, radius, xx, yy))
+                        SetMeta(xx, yy, 1);
+                }
+
+                for (int yy = y; yy > y - height + 1; yy--)
+                {
+                    SetTile(x, yy, 4);
+                }
+
+                for (int xx = x - radius / 2; xx <= x + radius / 2; xx++)
+                    SetTile(xx, y - height + 1, 0);
+
+                SetTile(x, y - height + 1, 4);
+
+                if (_random.Next(0, 3) == 1 && IsNotAir(x - 1, y + 1)) //33% chance of left root
+                    SetTile(x - 1, y, 4);
+                if (_random.Next(0, 3) == 1 && IsNotAir(x + 1, y + 1)) //33% chance of right root
+                    SetTile(x + 1, y, 4);
+                if (_random.Next(0, 10) == 1) //10% chance of left branch
+                    SetTile(x - 1, y - height + 1, 4);
+                if (_random.Next(0, 10) == 1) //10% chance of right branch
+                    SetTile(x + 1, y - height + 1, 4);
+            }
+        }
+
+        #endregion
+
+        #region Render
 
         /// <summary>
         /// Update the voxel at the given position
@@ -382,6 +540,60 @@ namespace DoodleEmpires.Engine.Terrain
                 (CanConnect(GetMaterial(x, y), GetMaterial(x + 1, y)) ? MooreNeighbours.R : 0) |
                 (CanConnect(GetMaterial(x, y), GetMaterial(x, y + 1)) ? MooreNeighbours.BM : 0));
         }
+        
+        int _MINX, _MINY, _MAXX, _MAXY;
+        /// <summary>
+        /// Renders this voxel terrain
+        /// </summary>
+        /// <param name="camera">The camera to render with</param>
+        public virtual void Render(ICamera2D camera)
+        {
+            if (BackDrop != null)
+            {
+                _spriteBatch.Begin(SpriteSortMode.Texture, null, SamplerState.LinearWrap, null, null);
+
+                _spriteBatch.Draw(BackDrop, new Rectangle(0, -1, _graphics.Viewport.Width, _graphics.Viewport.Height),
+                    camera.ViewBounds, Color.FromNonPremultiplied(255, 255, 255, 64));
+
+                _spriteBatch.End();
+            }
+
+            if (_zones.Count > 0)
+            {
+                _basicEffect.View = camera.Transform;
+                _basicEffect.CurrentTechnique.Passes[0].Apply();
+                _graphics.RasterizerState = RasterizerState.CullNone;
+                _graphics.DrawUserIndexedPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, _zoneVerts,
+                    0, _zoneVerts.Length, _zoneIndices, 0, _zoneIndices.Length / 3);
+            }
+
+            _spriteBatch.Begin(SpriteSortMode.Texture, null, SamplerState.PointWrap, null, null, null, camera.Transform);
+
+            _MINX = camera.ViewBounds.X / TILE_WIDTH - 1;
+            _MINY = camera.ViewBounds.Y / TILE_HEIGHT - 1;
+            _MAXX = camera.ViewBounds.Right / TILE_WIDTH + 1;
+            _MAXY = camera.ViewBounds.Bottom / TILE_HEIGHT + 1;
+
+            _MINX = _MINX < 0 ? 0 : _MINX;
+            _MINY = _MINY < 0 ? 0 : _MINY;
+            _MAXX = _MAXX > _maxX ? _maxX : _MAXX;
+            _MAXY = _MAXY > _maxY ? _maxY : _MAXY;
+
+            for (int y = _MINY; y <= _MAXY; y++)
+            {
+                for (int x = _MINX; x <= _MAXX; x++)
+                {
+                    _tileManager.RenderTile(_spriteBatch, _voxelBounds[x, y], _atlas, _neighbourStates[x, y],
+                        _tiles[x, y], _meta[x, y], _transformColor);
+                }
+            }
+
+            _spriteBatch.End();
+        }
+
+        #endregion
+
+        #region Checks
 
         /// <summary>
         /// Checks if the voxel the given position is solid
@@ -404,57 +616,12 @@ namespace DoodleEmpires.Engine.Terrain
         {
             return x >= 0 & x < _width & y >= 0 & y < _height ? _tiles[x, y] != 0 : false;
         }
-
-        /// <summary>
-        /// Gets the voxel material at the given position
-        /// </summary>
-        /// <param name="x">The x co-ordinate to check (Chunk Coords)</param>
-        /// <param name="y">The y co-ordinate to check (Chunk Coords)</param>
-        /// <returns>The material at [x,y]</returns>
-        protected byte GetMaterial(int x, int y)
-        {
-            return x >= 0 & x < _width & y >= 0 & y < _height ? _tiles[x, y] : (byte)0;
-        }
-
-        /// <summary>
-        /// Checks if two voxel types can connect to each other
-        /// </summary>
-        /// <param name="sourceID">The source ID to check</param>
-        /// <param name="destinationID">The destination ID to check</param>
-        /// <returns>True if they can connect</returns>
-        protected bool CanConnect(byte sourceID, byte destinationID)
-        {
-            return _tileManager.CanConnect(sourceID, destinationID);
-        }
-
-        /// <summary>
-        /// Safely sets the voxel material at the given position, should only be called by tile classes
-        /// </summary>
-        /// <param name="x">The x co-ordinate to check (Chunk Coords)</param>
-        /// <param name="y">The y co-ordinate to check (Chunk Coords)</param>
-        /// <param name="id">The material to set</param>
-        public virtual void SetTile(int x, int y, byte id)
-        {
-            if (x >= 0 & x < _width & y >= 0 & y < _height)
-                this[x, y] = id;
-        }
-
-        /// <summary>
-        /// Safely sets the voxel material at the given position
-        /// </summary>
-        /// <param name="x">The x co-ordinate to check (Chunk Coords)</param>
-        /// <param name="y">The y co-ordinate to check (Chunk Coords)</param>
-        /// <param name="id">The material to set</param>
-        public virtual void SetTileSafe(int x, int y, byte id)
-        {
-            _tileManager[id].AddToWorld(this, x, y);
-        }
-
+        
         /// <summary>
         /// Checks if a rectangle intersects with this voxel map
         /// </summary>
         /// <param name="rect">The rectangle to check</param>
-        /// <returns>True if the rectangle intersects this voxel map</returns>
+        /// <returns>True if the rectangle intersect this voxel map</returns>
         public bool Intersects(Rectangle rect)
         {
             int MinX = rect.Left / TILE_WIDTH;
@@ -487,66 +654,14 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
-        /// Generates a tree at the given x and y
+        /// Checks if two voxel types can connect to each other
         /// </summary>
-        /// <param name="x">The x coordinate of the base of the tree</param>
-        /// <param name="y">The y coordinate of the base of the tree</param>
-        public void GenTree(int x, int y)
+        /// <param name="sourceID">The source ID to check</param>
+        /// <param name="destinationID">The destination ID to check</param>
+        /// <returns>True if they can connect</returns>
+        protected bool CanConnect(byte sourceID, byte destinationID)
         {
-            if (GetMaterial(x, y + 1) == 1)
-            {
-                int height = _random.Next(3, 7);
-                int radius = _random.Next(3, 5);
-
-                SetSphere(x, y - height - radius + 1, radius, 5); //generate leaves
-
-                for (int i = 0; i < 10; i++)
-                {
-                    int xx = _random.Next(x-radius, x + radius + 1);
-                    int yy = _random.Next(y - height - radius, y - height);
-
-                    if (IsInsideOctagon(x, y - height - radius + 1, radius, xx, yy))
-                        SetMeta(xx, yy, 1);
-                }
-
-                for (int yy = y; yy > y - height + 1; yy--)
-                {
-                    SetTile(x, yy, 4);
-                }
-
-                for (int xx = x - radius / 2; xx <= x + radius/2; xx++)
-                    SetTile(xx, y - height + 1, 0);
-                
-                    SetTile(x, y - height + 1, 4);
-
-                if (_random.Next(0, 3) == 1 && IsNotAir(x - 1, y + 1)) //33% chance of left root
-                    SetTile(x - 1, y, 4);
-                if (_random.Next(0, 3) == 1 && IsNotAir(x + 1, y + 1)) //33% chance of right root
-                    SetTile(x + 1, y, 4);
-                if (_random.Next(0, 10) == 1) //10% chance of left branch
-                    SetTile(x - 1, y - height + 1, 4);
-                if (_random.Next(0, 10) == 1) //10% chance of right branch
-                    SetTile(x + 1, y - height + 1, 4);
-            }
-        }
-
-        /// <summary>
-        /// Sets a sphere to one tile ID
-        /// </summary>
-        /// <param name="x">The x coord of the centre of the circle</param>
-        /// <param name="y">The y coord of the centre of the circle</param>
-        /// <param name="radius">The radius of the circle</param>
-        /// <param name="value">The tile ID to set</param>
-        public void SetSphere(int x, int y, int radius, byte value)
-        {            
-            for (int xx = x - radius - 1; xx < x + radius + 1; xx++)
-            {
-                for (int yy = y - radius - 1; yy < y + radius + 1; yy++)
-                {
-                    if (IsInsideOctagon(x, y, radius, xx, yy))
-                        SetTile(xx, yy, value);
-                }
-            }
+            return _tileManager.CanConnect(sourceID, destinationID);
         }
         
         /// <summary>
@@ -586,54 +701,69 @@ namespace DoodleEmpires.Engine.Terrain
             return true; 
         }
 
-        int _MINX, _MINY, _MAXX, _MAXY;
+        #endregion
+
+        #region Get and Set
+
         /// <summary>
-        /// Renders this voxel terrain
+        /// Gets the voxel material at the given position
         /// </summary>
-        /// <param name="camera">The camera to render with</param>
-        public virtual void Render(ICamera2D camera)
+        /// <param name="x">The x co-ordinate to check (Chunk Coords)</param>
+        /// <param name="y">The y co-ordinate to check (Chunk Coords)</param>
+        /// <returns>The material at [x,y]</returns>
+        protected byte GetMaterial(int x, int y)
         {
-            if (BackDrop != null)
+            return x >= 0 & x < _width & y >= 0 & y < _height ? _tiles[x, y] : (byte)0;
+        }
+
+        /// <summary>
+        /// Safely sets the voxel material at the given position, should only be called by tile classes
+        /// </summary>
+        /// <param name="x">The x co-ordinate to check (Chunk Coords)</param>
+        /// <param name="y">The y co-ordinate to check (Chunk Coords)</param>
+        /// <param name="id">The material to set</param>
+        public virtual void SetTile(int x, int y, byte id)
+        {
+            if (x >= 0 & x < _width & y >= 0 & y < _height)
+                this[x, y] = id;
+        }
+
+        /// <summary>
+        /// Safely sets the voxel material at the given position
+        /// </summary>
+        /// <param name="x">The x co-ordinate to check (Chunk Coords)</param>
+        /// <param name="y">The y co-ordinate to check (Chunk Coords)</param>
+        /// <param name="id">The material to set</param>
+        public virtual void SetTileSafe(int x, int y, byte id)
+        {
+            if (id != 0)
+                _tileManager[id].AddToWorld(this, x, y);
+            else
+                _tileManager[GetMaterial(x, y)].RemovedFromWorld(this, x, y);
+        }
+        
+        /// <summary>
+        /// Sets a sphere to one tile ID
+        /// </summary>
+        /// <param name="x">The x coord of the centre of the circle</param>
+        /// <param name="y">The y coord of the centre of the circle</param>
+        /// <param name="radius">The radius of the circle</param>
+        /// <param name="value">The tile ID to set</param>
+        public void SetSphere(int x, int y, int radius, byte value)
+        {            
+            for (int xx = x - radius - 1; xx < x + radius + 1; xx++)
             {
-                _spriteBatch.Begin(SpriteSortMode.Texture, null, SamplerState.LinearWrap, null, null);
-
-                _spriteBatch.Draw(BackDrop, new Rectangle(0, -1, _graphics.Viewport.Width, _graphics.Viewport.Height),
-                    camera.ViewBounds, Color.FromNonPremultiplied(255, 255, 255, 64));
-
-                _spriteBatch.End();
-            }
-            
-            if (_zones.Count > 0)
-            {
-                _basicEffect.CurrentTechnique.Passes[0].Apply();
-                _graphics.RasterizerState = RasterizerState.CullNone;
-                _graphics.DrawUserIndexedPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, _zoneVerts,
-                    0, _zoneVerts.Length, _zoneIndices, 0, _zoneIndices.Length / 3);
-            }
-            
-            _spriteBatch.Begin(SpriteSortMode.Texture, null, SamplerState.PointWrap, null, null, null, camera.Transform);
-                        
-            _MINX = camera.ViewBounds.X / TILE_WIDTH - 1;
-            _MINY = camera.ViewBounds.Y / TILE_HEIGHT - 1;
-            _MAXX = camera.ViewBounds.Right / TILE_WIDTH + 1;
-            _MAXY = camera.ViewBounds.Bottom / TILE_HEIGHT + 1;
-
-            _MINX = _MINX < 0 ? 0 : _MINX;
-            _MINY = _MINY < 0 ? 0 : _MINY;
-            _MAXX = _MAXX > _maxX ? _maxX : _MAXX;
-            _MAXY = _MAXY > _maxY ? _maxY : _MAXY;
-
-            for (int y = _MINY; y <= _MAXY; y++)
-            {
-                for (int x = _MINX; x <= _MAXX; x++)
+                for (int yy = y - radius - 1; yy < y + radius + 1; yy++)
                 {
-                    _tileManager.RenderTile(_spriteBatch, _voxelBounds[x, y], _atlas, _neighbourStates[x, y],
-                        _tiles[x, y], _meta[x, y], _transformColor);
+                    if (IsInsideOctagon(x, y, radius, xx, yy))
+                        SetTile(xx, yy, value);
                 }
             }
-
-            _spriteBatch.End();
         }
+
+        #endregion
+
+        #region Saving & Loading
 
         /// <summary>
         /// Saves this voxel terrain to a stream
@@ -644,7 +774,7 @@ namespace DoodleEmpires.Engine.Terrain
             BinaryWriter writer = new BinaryWriter(stream);
 
             writer.Write("Doodle Empires Voxel Terrain ");
-            writer.Write("0.0.3");
+            writer.Write("0.0.4");
 
             writer.Write(_width);
             writer.Write(_height);
@@ -663,10 +793,7 @@ namespace DoodleEmpires.Engine.Terrain
 
             foreach (Zoning zone in _zones)
             {
-                writer.Write(zone.Bounds.X);
-                writer.Write(zone.Bounds.Y);
-                writer.Write(zone.Bounds.Width);
-                writer.Write(zone.Bounds.Height);
+                zone.WriteToStream(writer);
             }
 
             writer.Dispose();
@@ -695,12 +822,16 @@ namespace DoodleEmpires.Engine.Terrain
                     return LoadVersion_0_0_2(reader, graphics, tileManager, atlas);
                 case "0.0.3":
                     return LoadVersion_0_0_3(reader, graphics, tileManager, atlas);
+                case "0.0.4":
+                    return LoadVersion_0_0_4(reader, graphics, tileManager, atlas);
                 default:
                     reader.Dispose();
                     return null;
             }
 
         }
+
+        #region File Versions
 
         /// <summary>
         /// Reads a voxel terrain from the stream using Terrain Version 0.0.1
@@ -731,7 +862,7 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
-        /// Reads a voxel terrain from the stream using Terrain Version 0.0.1
+        /// Reads a voxel terrain from the stream using Terrain Version 0.0.2
         /// </summary>
         /// <param name="reader">The stream to read from</param>
         /// <param name="graphics">The graphics device to bind to</param>
@@ -760,7 +891,7 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
-        /// Reads a voxel terrain from the stream using Terrain Version 0.0.1
+        /// Reads a voxel terrain from the stream using Terrain Version 0.0.3
         /// </summary>
         /// <param name="reader">The stream to read from</param>
         /// <param name="graphics">The graphics device to bind to</param>
@@ -798,6 +929,54 @@ namespace DoodleEmpires.Engine.Terrain
                 reader.Dispose();
             return terrain;
         }
+
+        /// <summary>
+        /// Reads a voxel terrain from the stream using Terrain Version 0.0.4
+        /// </summary>
+        /// <param name="reader">The stream to read from</param>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="tileManager">The tile manager to use</param>
+        /// <param name="atlas">The texture atlas to use</param>
+        /// <returns>A voxel terrain loaded from the stream</returns>
+        private static VoxelMap LoadVersion_0_0_4(BinaryReader reader, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        {
+            int width = reader.ReadInt32();
+            int height = reader.ReadInt32();
+
+            VoxelMap terrain = new VoxelMap(graphics, tileManager, atlas, width, height);
+
+            try
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        terrain._tiles[x, y] = reader.ReadByte();
+                        terrain._neighbourStates[x, y] = reader.ReadByte();
+                        terrain._meta[x, y] = reader.ReadByte();
+                    }
+                }
+
+                int zoneCount = reader.ReadInt32();
+
+                for (int i = 0; i < zoneCount; i++)
+                {
+                    Zoning zone = Zoning.ReadFromStream(reader);
+                    terrain.AddZone(zone);
+                }
+            }
+            catch (EndOfStreamException)
+            {
+                Debug.WriteLine("[WARNING] File corrupt, attempted to rad past ond of stream. Attempting to bypass...");
+            }
+
+            reader.Dispose();
+            return terrain;
+        }
+
+        #endregion
+
+        #endregion
     }
 
     /// <summary>

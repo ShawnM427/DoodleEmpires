@@ -5,8 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using DoodleEmpires.Engine.Economy;
 using DoodleEmpires.Engine.Terrain;
+using DoodleEmpires.Engine.Entities;
+using System.IO;
 
-namespace DoodleEmpires.Engine.Entities
+namespace DoodleEmpires.Engine.Economy
 {
     /// <summary>
     /// Represents a zone that applies unit buffs and allows new tech options
@@ -95,6 +97,38 @@ namespace DoodleEmpires.Engine.Entities
         public EconomyBuff TotalEconomyBuff
         {
             get { return _totalBuff; }
+        }
+        
+        /// <summary>
+        /// Writes basic zone data to stream (TODO Actually save zone info)
+        /// </summary>
+        /// <param name="stream">The stream to write to</param>
+        public void WriteToStream(BinaryWriter writer)
+        {
+            writer.Write(Bounds.X);
+            writer.Write(Bounds.Y);
+            writer.Write(Bounds.Width);
+            writer.Write(Bounds.Height);
+
+            writer.Write(Color.R);
+            writer.Write(Color.G);
+            writer.Write(Color.B);
+            writer.Write(Color.A);
+        }
+
+        /// <summary>
+        /// Reads basic zone data from stream (TODO Actually load zone info)
+        /// </summary>
+        /// <param name="stream">The stream to read from</param>
+        /// <returns>A basic zone loaded from teh memory stream</returns>
+        public static Zoning ReadFromStream(BinaryReader reader)
+        {
+            Rectangle bounds = 
+                new Rectangle(reader.ReadInt32(),reader.ReadInt32(),reader.ReadInt32(),reader.ReadInt32());
+
+            Color color = new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+            
+            return new Zoning() { Bounds = bounds, Color = color };
         }
     }
 

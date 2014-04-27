@@ -7,7 +7,7 @@ namespace MasterServer
 {
     public static class Encryption
     {
-        public string Encrypt(string input)
+        public static string Encrypt(string input)
         {
             Random _random = new Random(input[0] + input[1]);
 
@@ -26,7 +26,7 @@ namespace MasterServer
             return newString;
         }
 
-        public string Deccrypt(string input)
+        public static string Deccrypt(string input)
         {
             Random _random = new Random(input[0] + input[1]);
 

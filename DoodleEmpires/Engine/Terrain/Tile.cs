@@ -15,6 +15,10 @@ namespace DoodleEmpires.Engine.Terrain
         public RenderType RenderType;
         public bool Solid;
         public Color Color;
+        public virtual bool NeedsUpdate
+        {
+            get { return false; }
+        }
 
         public Tile(byte type, short textureID, RenderType renderType = RenderType.Land, bool solid = false)
         {
@@ -48,6 +52,14 @@ namespace DoodleEmpires.Engine.Terrain
             world.SetTile(x, y, Type);
             world.SetMeta(x, y, 0);
         }
+
+        public void RemovedFromWorld(VoxelMap world, int x, int y)
+        {
+            world.SetTile(x, y, 0);
+            world.SetMeta(x, y, 0);
+        }
+
+        public virtual void OnTick(VoxelMap map, int x, int y) { }
     }
 
     public enum RenderType

@@ -21,6 +21,7 @@ using DoodleEmpires.Engine.Render.Particle;
 using DoodleEmpires.Engine.Sound;
 using Microsoft.Xna.Framework.Audio;
 using System.ComponentModel;
+using DoodleEmpires.Engine.Economy;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -60,6 +61,9 @@ namespace DoodleEmpires.Engine.Net
         byte _editType = 1;
 
         Texture2D[] _blockTexs;
+
+        protected bool _isDefininingZone = false;
+        protected Vector2 _zoneStart = Vector2.Zero;
 
         /// <summary>
         /// Gets or sets a tile at the given chunk coords
@@ -211,7 +215,7 @@ namespace DoodleEmpires.Engine.Net
 
             if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
                 LoadGame(loadDialog.FileName.Replace(".dem",""));
-
+            
             _mouseDown = false;
         }
 
@@ -299,6 +303,30 @@ namespace DoodleEmpires.Engine.Net
             _prevKeyState = keyState;
         }
 
+        protected override void MousePressed(MouseEventArgs args)
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) & args.LeftButton == ButtonState.Pressed)
+            {
+                _isDefininingZone = true;
+                _zoneStart = _view.PointToWorld(args.Location);
+            }
+            else if (args.RightButton == ButtonState.Pressed)
+            {
+                Vector2 worldPos = _view.PointToWorld(args.Location);
+
+                foreach (Zoning z in _voxelTerrain.Zones)
+                {
+                    if (z.Bounds.Contains(worldPos))
+                    {
+                        _voxelTerrain.DeleteZone(z);
+                        break;
+                    }
+                }
+            }
+
+            base.MousePressed(args);
+        }
+
         /// <summary>
         /// Called when a mouse button is down
         /// </summary>
@@ -310,7 +338,7 @@ namespace DoodleEmpires.Engine.Net
                 _mouseWorldPos = _view.PointToWorld(args.Location);
                 _mainControl.MousePressed(args);
 
-                if (!_mainControl.ScreenBounds.Contains(args.Location))
+                if (!_mainControl.ScreenBounds.Contains(args.Location) && !_isDefininingZone)
                 {
                     if (args.LeftButton == ButtonState.Pressed)
                     {
@@ -324,6 +352,20 @@ namespace DoodleEmpires.Engine.Net
 
                 base.MousePressed(args);
             }
+        }
+
+        protected override void MouseReleased(MouseEventArgs args)
+        {
+            if (_isDefininingZone & args.LeftButton == ButtonState.Pressed)
+            {
+                Vector2 zoneEnd = _view.PointToWorld(args.Location);
+
+                _voxelTerrain.DefineZone(_zoneStart, zoneEnd, new StockPileZone());
+
+                _isDefininingZone = false;
+            }
+
+            base.MouseReleased(args);
         }
 
         /// <summary>
@@ -372,6 +414,8 @@ namespace DoodleEmpires.Engine.Net
                 _voxelTerrain = VoxelMap.ReadFromStream(fileStream, GraphicsDevice, _tileManager, _blockAtlas);
                 fileStream.Close();
                 fileStream.Dispose();
+
+                _voxelTerrain.BackDrop = _paperTex;
             }
         }
 

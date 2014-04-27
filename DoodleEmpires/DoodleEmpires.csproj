@@ -38,12 +38,12 @@
     <Compile Include="Engine\Economy\Resources.cs" />
     <Compile Include="Engine\Economy\TechNode.cs" />
     <Compile Include="Engine\Economy\TechTree.cs" />
-    <Compile Include="Engine\Entities\EconomyBuff.cs" />
+    <Compile Include="Engine\Economy\EconomyBuff.cs" />
     <Compile Include="Engine\Entities\IFocusable.cs" />
     <Compile Include="Engine\Entities\Entity.cs" />
     <Compile Include="Engine\Entities\Pathfinding.cs" />
     <Compile Include="Engine\Entities\UnitBuff.cs" />
-    <Compile Include="Engine\Entities\Zoning.cs" />
+    <Compile Include="Engine\Economy\Zoning.cs" />
     <Compile Include="Engine\GUI\GUIButton.cs" />
     <Compile Include="Engine\GUI\GUIScrollPanel.cs" />
     <Compile Include="Engine\GUI\GUITextPane.cs" />

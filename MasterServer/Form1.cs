@@ -179,49 +179,50 @@ namespace MasterServer
             peer.Shutdown("shutting down");
 
         }
-    }
 
-    private class User
-    {
-        string _name;
-        string _password;
-
-        /// <summary>
-        /// Gets a user's name
-        /// </summary>
-        public string Name
+        private class User
         {
-            get { return _name; }
+            string _name;
+            string _password;
+
+            /// <summary>
+            /// Gets a user's name
+            /// </summary>
+            public string Name
+            {
+                get { return _name; }
+            }
+
+            public User(string name, string password)
+            {
+                _name = name;
+                _password = password;
+            }
+
+            /// <summary>
+            /// Checks if the given name and password matches this user profile
+            /// </summary>
+            /// <param name="name">The name of the user</param>
+            /// <param name="encryptedPassword">The encrypted user password</param>
+            /// <returns>True if this is the user</returns>
+            public bool IsUser(string name, string encryptedPassword)
+            {
+                return name == _name ? encryptedPassword == _password : false;
+            }
         }
 
-        public User(string name, string password)
+        public enum MasterServerMessageType : byte
         {
-            _name = name;
-            _password = password;
+            RegisterHost = 0,
+            RequestHostList = 1,
+            RequestIntroduction = 2,
+            RequestRegister = 3,
+            RequestLogin = 4,
+            SuccesfullRegistration = 5,
+            FailedRegistration = 6,
+            SuccesfullLogin = 7,
+            FailedLogin = 8
         }
+    }
 
-        /// <summary>
-        /// Checks if the given name and password matches this user profile
-        /// </summary>
-        /// <param name="name">The name of the user</param>
-        /// <param name="encryptedPassword">The encrypted user password</param>
-        /// <returns>True if this is the user</returns>
-        public bool IsUser(string name, string encryptedPassword)
-        {
-            return name == _name ? encryptedPassword == _password : false;
-        }
-    }
-    
-    public enum MasterServerMessageType : byte
-    {
-        RegisterHost = 0,
-        RequestHostList = 1,
-        RequestIntroduction = 2,
-        RequestRegister = 3,
-        RequestLogin = 4,
-        SuccesfullRegistration = 5,
-        FailedRegistration = 6,
-        SuccesfullLogin = 7,
-        FailedLogin = 8
-    }
 }
