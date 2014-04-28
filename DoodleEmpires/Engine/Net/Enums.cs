@@ -20,7 +20,8 @@ namespace DoodleEmpires.Engine.Net
         RequestJoin,
         AcceptedJoin,
         PlayerJoined,
-        PlayerLeft
+        PlayerLeft,
+        ConnectionFailed
     }
 
     public enum GameState : byte

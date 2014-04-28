@@ -14,4 +14,6 @@ namespace DoodleEmpires.Engine.Net
     public delegate void TerrainIDSetEvent(int x, int y, byte ID);
 
     public delegate void JoinedServerEvent(ServerInfo info);
+
+    public delegate void ServerConnectionFailed(string reason);
 }

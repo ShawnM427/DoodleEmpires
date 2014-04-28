@@ -66,6 +66,8 @@ namespace DoodleEmpires.Engine.Terrain
 
         TileManager _tileManager;
 
+        int _seed;
+
         #endregion
 
         int _maxX;
@@ -126,6 +128,14 @@ namespace DoodleEmpires.Engine.Terrain
             set { _tileManager = value; }
         }
 
+        /// <summary>
+        /// Gets this level's seed
+        /// </summary>
+        public int Seed
+        {
+            get { return _seed; }
+        }
+
         #endregion
 
         #region Events
@@ -142,11 +152,14 @@ namespace DoodleEmpires.Engine.Terrain
         /// </summary>
         /// <param name="width">The width of the map, in tiles</param>
         /// <param name="height">The height of the map, in tiles</param>
-        public ServerMap(TileManager tileManager, int width, int height, float terrainHeightModifier = 25)
+        public ServerMap(TileManager tileManager, int width, int height, int? seed = null, float terrainHeightModifier = 25)
         {
             _tileManager = tileManager;
 
-            _random = new Random();
+            _seed = seed.HasValue ? seed.Value : (int)DateTime.Now.Ticks;
+            Noise.Seed = _seed;
+
+            _random = new Random(_seed);
             _tiles = new byte[width, height];
             _meta = new byte[width, height];
 
@@ -584,7 +597,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
-        public static ServerMap ReadFromStream(Stream stream, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        public static ServerMap ReadFromStream(Stream stream, TileManager tileManager)
         {
             BinaryReader reader = new BinaryReader(stream);
 
@@ -651,14 +664,7 @@ namespace DoodleEmpires.Engine.Terrain
             message.Write((short)_width);
             message.Write((short)_height);
 
-            for (int y = 0; y < _height; y++)
-            {
-                for (int x = 0; x < _width; x++)
-                {
-                    message.Write(_tiles[x, y], 8);
-                    message.Write(_meta[x, y], 8);
-                }
-            }
+            message.Write(_seed);
         }
 
         #endregion

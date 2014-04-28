@@ -182,7 +182,9 @@ namespace DoodleEmpires.Engine.GUI
 
                             if (ID < _items.Count && _items[ID].MousePressed != null)
                             {
-                                _items[_selectedIndex].Selected = false;
+                                if (_selectedIndex >= 0)
+                                    _items[_selectedIndex].Selected = false;
+
                                 _items[ID].Selected = true;
                                 _selectedIndex = ID;
                                 _headerDrawnText = _headerText + " " + _items[ID].Text;

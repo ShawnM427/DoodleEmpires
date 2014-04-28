@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DoodleEmpires.Engine.Net;
 #endregion
 
@@ -17,10 +18,27 @@ namespace DoodleEmpires
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            using (var game = new SPGame())
+            bool singlePlayer = false;
+
+            if (args.Length > 0)
+                bool.TryParse(args[0], out singlePlayer);
+
+            using (var game = new NetGame(singlePlayer))
                 game.Run();
+        }
+
+        public static void RunServer()
+        {
+            Thread thread = new Thread(StartServer);
+            thread.Start();
+        }
+
+        private static void StartServer()
+        {
+            GameServer server = new GameServer();
+            server.Run(new string[0]);
         }
     }
 #endif

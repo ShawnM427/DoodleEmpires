@@ -91,6 +91,8 @@ namespace DoodleEmpires.Engine.Terrain
         VertexPositionColor[] _zoneVerts = new VertexPositionColor[0];
         int[] _zoneIndices = new int[0];
 
+        protected int _seed;
+
         #endregion
 
         int _maxX;
@@ -183,9 +185,12 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="atlas">The texture atlas to use</param>
         /// <param name="width">The width of the map, in tiles</param>
         /// <param name="height">The height of the map, in tiles</param>
-        public SPMap(GraphicsDevice Graphics, TileManager tileManager, TextureAtlas atlas, int width, int height, float terrainHeightModifier = 25)
+        public SPMap(GraphicsDevice Graphics, TileManager tileManager, TextureAtlas atlas, int width, int height, int? seed = null, float terrainHeightModifier = 25)
         {
-            _random = new Random();
+            _seed = seed.HasValue ? seed.Value : (int)DateTime.Now.Ticks;
+            Noise.Seed = _seed;
+
+            _random = new Random(_seed);
             _tiles = new byte[width, height];
             _meta = new byte[width, height];
             _neighbourStates = new byte[width, height];
@@ -286,6 +291,17 @@ namespace DoodleEmpires.Engine.Terrain
                 List<VertexPositionColor> temp = _zoneVerts.ToList();
                 temp.RemoveRange(id * 4, 4);
                 _zoneVerts = temp.ToArray();
+                
+                for (int iID = id * 6 + 6; iID < _zoneIndices.Length; iID += 6)
+                {
+                    _zoneIndices[iID] = _zoneIndices[iID] - 4;
+                    _zoneIndices[iID + 1] = _zoneIndices[iID + 1] - 4;
+                    _zoneIndices[iID + 2] = _zoneIndices[iID + 2] - 4;
+
+                    _zoneIndices[iID + 3] = _zoneIndices[iID + 3] - 4;
+                    _zoneIndices[iID + 4] = _zoneIndices[iID + 4] - 4;
+                    _zoneIndices[iID + 5] = _zoneIndices[iID + 5] - 4;
+                }
 
                 List<int> temp2 = _zoneIndices.ToList();
                 temp2.RemoveRange(id * 6, 6);
@@ -981,39 +997,16 @@ namespace DoodleEmpires.Engine.Terrain
 
         #region Networking
 
-        public void WriteToMessage(NetOutgoingMessage message)
-        {
-            message.Write((short)_width);
-            message.Write((short)_height);
-
-            for (int y = 0; y < _height; y++)
-            {
-                for (int x = 0; x < _width; x++)
-                {
-                    message.Write(_tiles[x, y], 8);
-                    message.Write(_meta[x, y], 8);
-                }
-            }
-        }
-
         public static SPMap ReadFromMessage(NetIncomingMessage message, 
             GraphicsDevice graphics, TileManager tileManager, TextureAtlas textureAtlas)
         {
             int width = message.ReadInt16();
             int height = message.ReadInt16();
 
-            SPMap map = new SPMap(graphics, tileManager, textureAtlas, width, height);
+            int seed = message.ReadInt32();
 
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    map._tiles[x, y] = message.ReadByte(8);
-                    map._meta[x, y] = message.ReadByte(8);
-                    map.UpdateVoxel(x, y);
-                }
-            }
-
+            SPMap map = new SPMap(graphics, tileManager, textureAtlas, width, height, seed);
+            
             return map;
         }
 

@@ -11,15 +11,7 @@ namespace DoodleEmpires.Engine.GUI
     {
         protected string _text;
         protected string _drawnText;
-        protected SpriteFont _font;
-        protected VertexPositionColor[] _cornerVerts = new VertexPositionColor[5]
-        {
-            new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3( 32, 0, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3(32, 32, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3(0, 32, 0.5f), Color.Black),
-            new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black)
-        };
+        protected SpriteFont _font;        
         protected float _margin = 2.0f;
         protected Vector2 _textPos = new Vector2(2.0f, 2.0f);
 

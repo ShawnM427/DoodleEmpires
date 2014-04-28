@@ -13,15 +13,14 @@ using Lidgren.Network;
 using DoodleEmpires.Engine.GUI;
 using System.IO;
 using System.Windows.Forms;
-
-using MouseEventArgs = DoodleEmpires.Engine.Utilities.MouseEventArgs;
-using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
-using DoodleEmpires.Engine.Render.Particle;
 using DoodleEmpires.Engine.Sound;
 using Microsoft.Xna.Framework.Audio;
 using System.ComponentModel;
 using DoodleEmpires.Engine.Economy;
+
+using MouseEventArgs = DoodleEmpires.Engine.Utilities.MouseEventArgs;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -51,6 +50,8 @@ namespace DoodleEmpires.Engine.Net
 
         protected GUIContainer _mainControl;
         protected GUILabel _fpsLabel;
+
+        protected SpriteFont _guiFont;
 
         protected byte _editType = 1;
 
@@ -95,27 +96,7 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected override void Initialize()
         {
-            _tileManager = new TileManager();
-            _tileManager.RegisterTile("Grass", 0, Color.Green, RenderType.Land, true);
-            _tileManager.RegisterTile("Stone", 0, Color.Gray, RenderType.Land, true);
-            _tileManager.RegisterTile("Concrete", 0, Color.LightGray, RenderType.Land, true);
-            _tileManager.RegisterTile("Wood", 20, Color.Brown, RenderType.Land, false);
-            _tileManager.RegisterTile("Leaves", new Leaves(0));
-            _tileManager.RegisterTile("Cobble", 60, Color.Gray, RenderType.Land, true);
-            _tileManager.RegisterTile("Wooden Spikes", new WoodSpike(0));
-            _tileManager.RegisterTile("Ladder", new Ladder(0));
-            _tileManager.RegisterTile("Door", new Door(0));
-
-            _tileManager.RegisterConnect("Grass", "Stone");
-            _tileManager.RegisterConnect("Grass", "Concrete");
-            _tileManager.RegisterConnect("Stone", "Concrete");
-            _tileManager.RegisterConnect("Wood", "Grass");
-            _tileManager.RegisterConnect("Wood", "Leaves");
-
-            _tileManager.RegisterOneWayConnect("Ladder", "Door");
-            _tileManager.RegisterOneWayConnect("Ladder", "Wood");
-            _tileManager.RegisterOneWayConnect("Ladder", "Concrete");
-            _tileManager.RegisterOneWayConnect("Ladder", "Stone");
+            _tileManager = GlobalTileManager.TileManager;
 
             _blockAtlas = new TextureAtlas(Content.Load<Texture2D>("Atlas"), 20, 20);
 
@@ -144,7 +125,7 @@ namespace DoodleEmpires.Engine.Net
             _map.BackDrop = _paperTex;
 
             _debugFont = Content.Load<SpriteFont>("debugFont");
-            SpriteFont _guiFont = Content.Load<SpriteFont>("GUIFont");
+            _guiFont = Content.Load<SpriteFont>("GUIFont");
             _guiFont.FixFont();
 
             _soundEngine = new SoundEngine();

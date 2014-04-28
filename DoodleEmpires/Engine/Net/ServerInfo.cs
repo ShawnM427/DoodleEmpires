@@ -12,7 +12,7 @@ namespace DoodleEmpires.Engine.Net
     /// </summary>
     public struct ServerInfo
     {
-        string _ip;
+        IPAddress _ip;
         IPEndPoint _endPoint;
         string _name;
 
@@ -21,7 +21,7 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         public string IP
         {
-            get { return _ip; }
+            get { return _ip.ToString(); }
         }
         /// <summary>
         /// The network endpoint for this server
@@ -45,9 +45,20 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="endpoint">The server's endpoint</param>
         public ServerInfo(string name, IPEndPoint endpoint)
         {
-            _ip = endpoint.Address.ToString();
+            _ip = endpoint.Address;
             _name = name;
             _endPoint = endpoint;
+        }
+
+        /// <summary>
+        /// Creates a new server info
+        /// </summary>
+        /// <param name="name">The name of the server</param>
+        public ServerInfo(string name)
+        {
+            _ip = NetUtility.Resolve("localhost");
+            _endPoint = new IPEndPoint(_ip, GlobalNetVars.DEFAULT_PORT);
+            _name = name;
         }
 
         /// <summary>

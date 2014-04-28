@@ -34,6 +34,9 @@
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Engine\Economy\Resources.cs" />
     <Compile Include="Engine\Economy\TechNode.cs" />
@@ -56,8 +59,8 @@
     <Compile Include="Engine\GUI\Utils.cs" />
     <Compile Include="Engine\Net\Events.cs" />
     <Compile Include="Engine\Net\GlobalNetVars.cs" />
+    <Compile Include="Engine\Net\GlobalTileManager.cs" />
     <Compile Include="Engine\Net\NetGame.cs" />
-    <Compile Include="Engine\Net\NetGameBackend.cs" />
     <Compile Include="Engine\Net\NetPlayer.cs" />
     <Compile Include="Engine\Net\PlayerInfo.cs" />
     <Compile Include="Engine\Net\Server.cs" />
