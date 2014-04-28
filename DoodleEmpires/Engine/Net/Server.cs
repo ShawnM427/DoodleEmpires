@@ -144,7 +144,7 @@ namespace DoodleEmpires.Engine.Net
 
         public void Save(Stream fileStream)
         {
-            Console.WriteLine("Daving Map");
+            Console.WriteLine("Saving Map");
             _map.SaveToStream(fileStream);
         }
 
@@ -215,6 +215,7 @@ namespace DoodleEmpires.Engine.Net
             if (x > 0 && y > 0 &&
                 x < _map.WorldWidth / ServerMap.TILE_WIDTH && y < _map.WorldWidth / ServerMap.TILE_HEIGHT)
             {
+                _map.SetTileSafe(x, y, newID);
                 SendBlockChanged(x, y, newID);
             }
         }

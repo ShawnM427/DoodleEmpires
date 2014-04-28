@@ -110,6 +110,11 @@ namespace DoodleServer
                 txt_commandIn.Text = _commandStack.ElementAt(_commandPointer);
                 e.Handled = true;
             }
+            if (e.KeyCode == Keys.Enter)
+            {
+                btn_perform_Click(this, EventArgs.Empty);
+                e.Handled = true;
+            }
         }
     }
 
