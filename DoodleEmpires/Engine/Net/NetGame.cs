@@ -217,6 +217,8 @@ namespace DoodleEmpires.Engine.Net
 
                 NetPeerConfiguration config = new NetPeerConfiguration("DoodleEmpires");
                 config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+                config.EnableMessageType(NetIncomingMessageType.StatusChanged);
+                config.EnableMessageType(NetIncomingMessageType.Data);
                 config.ConnectionTimeout = 10F;
                 config.Port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
 
@@ -385,6 +387,7 @@ namespace DoodleEmpires.Engine.Net
                     case NetIncomingMessageType.DiscoveryResponse:
 
                         ServerInfo info = ServerInfo.ReadFromPacket(msg);
+                        info.EndPoint = msg.SenderEndpoint;
 
                         if (!_availableServers.Contains(info))
                             _availableServers.Add(info);
@@ -400,6 +403,10 @@ namespace DoodleEmpires.Engine.Net
                         {
                             Console.WriteLine("Connected to server, joining game");
                             RequestJoin();
+                        }
+                        else if (status == NetConnectionStatus.Disconnected)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Lost Connection \"{0}\"", msg.ReadString());
                         }
                         break;
 

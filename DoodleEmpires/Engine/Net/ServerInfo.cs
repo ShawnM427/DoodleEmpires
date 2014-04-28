@@ -29,6 +29,7 @@ namespace DoodleEmpires.Engine.Net
         public IPEndPoint EndPoint
         {
             get { return _endPoint; }
+            set { _endPoint = value; }
         }
         /// <summary>
         /// The name of this server
