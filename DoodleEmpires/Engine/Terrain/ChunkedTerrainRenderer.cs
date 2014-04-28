@@ -19,7 +19,7 @@ namespace DoodleEmpires.Engine.Terrain
         TileManager _tileManager;
         BasicEffect _effect;
         GraphicsDevice _graphics;
-        VoxelMap _terrain;
+        SPMap _terrain;
 
         public byte this[int x, int y]
         {
@@ -31,7 +31,7 @@ namespace DoodleEmpires.Engine.Terrain
             }
         }
 
-        public ChunkedTerrainRenderer(VoxelMap terrain)
+        public ChunkedTerrainRenderer(SPMap terrain)
         {
             _graphics = terrain.Graphics;
             _effect = new BasicEffect(_graphics);
@@ -64,8 +64,8 @@ namespace DoodleEmpires.Engine.Terrain
                         for (int yy = 0; yy < 2; yy++)
                         {
                             verts[i] = new VertexPositionColorTexture(new Vector3(
-                                    (float)(chunkX * CHUNK_WIDTH + x) * VoxelMap.TILE_WIDTH,
-                                    (float)(chunkY * CHUNK_WIDTH + y) * VoxelMap.TILE_HEIGHT, 0),
+                                    (float)(chunkX * CHUNK_WIDTH + x) * SPMap.TILE_WIDTH,
+                                    (float)(chunkY * CHUNK_WIDTH + y) * SPMap.TILE_HEIGHT, 0),
                                     _tileManager.Tiles[_terrain[chunkX * CHUNK_WIDTH + x, chunkY * CHUNK_WIDTH + y]].Color, 
                                     Vector2.Zero);
                             i ++;
@@ -91,8 +91,8 @@ namespace DoodleEmpires.Engine.Terrain
                         for (int yy = 0; yy < 2; yy++)
                         {
                             verts[i] = new VertexPositionColorTexture(new Vector3(
-                                    (float)(chunkX * CHUNK_WIDTH + x) * VoxelMap.TILE_WIDTH,
-                                    (float)(chunkY * CHUNK_WIDTH + y) * VoxelMap.TILE_HEIGHT, 0),
+                                    (float)(chunkX * CHUNK_WIDTH + x) * SPMap.TILE_WIDTH,
+                                    (float)(chunkY * CHUNK_WIDTH + y) * SPMap.TILE_HEIGHT, 0),
                                     _tileManager.Tiles[_terrain[chunkX * CHUNK_WIDTH + x, chunkY * CHUNK_WIDTH + y]].Color, 
                                     Vector2.Zero);
                             i ++;

@@ -54,8 +54,17 @@
     <Compile Include="Engine\GUI\IGUI.cs" />
     <Compile Include="Engine\GUI\GUIGridView.cs" />
     <Compile Include="Engine\GUI\Utils.cs" />
-    <Compile Include="Engine\Net\GameClient.cs" />
-    <Compile Include="Engine\Net\NetManager.cs" />
+    <Compile Include="Engine\Net\Events.cs" />
+    <Compile Include="Engine\Net\GlobalNetVars.cs" />
+    <Compile Include="Engine\Net\NetGame.cs" />
+    <Compile Include="Engine\Net\NetGameBackend.cs" />
+    <Compile Include="Engine\Net\NetPlayer.cs" />
+    <Compile Include="Engine\Net\PlayerInfo.cs" />
+    <Compile Include="Engine\Net\Server.cs" />
+    <Compile Include="Engine\Net\ServerInfo.cs" />
+    <Compile Include="Engine\Net\SPGame.cs" />
+    <Compile Include="Engine\Net\Enums.cs" />
+    <Compile Include="Engine\Net\ServerMap.cs" />
     <Compile Include="Engine\Render\2DCamera.cs" />
     <Compile Include="Engine\Entities\CameraControl.cs" />
     <Compile Include="Engine\Sound\SoundEngine.cs" />
@@ -72,6 +81,7 @@
     <Compile Include="Engine\Terrain\TileType.cs" />
     <Compile Include="Engine\Terrain\Utils.cs" />
     <Compile Include="Engine\Terrain\VolcanicFormation.cs" />
+    <Compile Include="Engine\Terrain\SPMap.cs" />
     <Compile Include="Engine\Terrain\VoxelMap.cs" />
     <Compile Include="Engine\Utilities\AdvancedGame.cs" />
     <Compile Include="Engine\Utilities\CustomGame.cs" />

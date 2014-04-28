@@ -58,7 +58,7 @@ namespace DoodleEmpires.Engine.Economy
             {
                 _bounds = value;
                 _totalBuff = _economyBuff *
-                ((_bounds.Width / VoxelMap.TILE_WIDTH) * (_bounds.Height / VoxelMap.TILE_HEIGHT));
+                ((_bounds.Width / SPMap.TILE_WIDTH) * (_bounds.Height / SPMap.TILE_HEIGHT));
             }
         }
         /// <summary>
@@ -87,7 +87,7 @@ namespace DoodleEmpires.Engine.Economy
             {
                 _economyBuff = value;
                 _totalBuff = _economyBuff *
-                ((_bounds.Width / VoxelMap.TILE_WIDTH) * (_bounds.Height / VoxelMap.TILE_HEIGHT));
+                ((_bounds.Width / SPMap.TILE_WIDTH) * (_bounds.Height / SPMap.TILE_HEIGHT));
             }
         }
 

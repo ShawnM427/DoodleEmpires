@@ -19,7 +19,7 @@ namespace DoodleEmpires
         [STAThread]
         static void Main()
         {
-            using (var game = new GameClient())
+            using (var game = new SPGame())
                 game.Run();
         }
     }

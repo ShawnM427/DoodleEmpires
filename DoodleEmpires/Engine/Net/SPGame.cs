@@ -28,42 +28,38 @@ namespace DoodleEmpires.Engine.Net
     /// <summary>
     /// The final class for the Doodle Empires game client
     /// </summary>
-    public sealed class GameClient : AdvancedGame
+    public class SPGame : AdvancedGame
     {
         GraphicsDeviceManager graphicsManager;
         SpriteFont _debugFont;
 
-        VoxelMap _voxelTerrain;
-        TileManager _tileManager;
-        TextureAtlas _blockAtlas;
+        protected SPMap _map;
+        protected TileManager _tileManager;
+        protected TextureAtlas _blockAtlas;
 
-        SoundEngine _soundEngine;
+        protected SoundEngine _soundEngine;
 
-        Camera2D _view;
-        CameraControl _cameraController;
-        Texture2D _paperTex;
+        protected Camera2D _view;
+        protected CameraControl _cameraController;
+        protected Texture2D _paperTex;
 
-        KeyboardState _prevKeyState;
-        Vector2 _moveVector;
-        Vector2 _mouseWorldPos;
+        protected KeyboardState _prevKeyState;
+        protected Vector2 _moveVector;
+        protected Vector2 _mouseWorldPos;
 
-        Vector2 _mouseTextPos = new Vector2(5, 5);
-        Vector2 _framerateTextPos = new Vector2(5, 25);
-        Vector2 _updateTickPos = new Vector2(5, 45);
-        Vector2 _drawTickPos = new Vector2(5, 65);
-        Vector2 _otherTickPos = new Vector2(5, 85);
-        
-        Random _rand;
+        protected Random _rand;
 
-        GUIContainer _mainControl;
-        GUILabel _fpsLabel;
+        protected GUIContainer _mainControl;
+        protected GUILabel _fpsLabel;
 
-        byte _editType = 1;
+        protected byte _editType = 1;
 
-        Texture2D[] _blockTexs;
+        protected Texture2D[] _blockTexs;
 
         protected bool _isDefininingZone = false;
         protected Vector2 _zoneStart = Vector2.Zero;
+
+        protected GameState _gameState = GameState.InGame;
 
         /// <summary>
         /// Gets or sets a tile at the given chunk coords
@@ -73,21 +69,14 @@ namespace DoodleEmpires.Engine.Net
         /// <returns>The voxel type at (x, y)</returns>
         public byte this[int x, int y]
         {
-            get { return _voxelTerrain[x, y]; }
+            get { return _map[x, y]; }
             set
             {
-                _voxelTerrain[x, y] = value;
-
-                NetOutgoingMessage message = NetManager.BuildMessage();
-                message.Write((short)PacketTypes.MapSet);
-                message.Write((short)x);
-                message.Write((short)y);
-                message.Write(value);
-                NetManager.SendMessage(message);
+                _map[x, y] = value;
             }
         }
-
-        public GameClient()
+        
+        public SPGame()
             : base()
         {
             graphicsManager = new GraphicsDeviceManager(this);
@@ -130,12 +119,12 @@ namespace DoodleEmpires.Engine.Net
 
             _blockAtlas = new TextureAtlas(Content.Load<Texture2D>("Atlas"), 20, 20);
 
-            _voxelTerrain = new VoxelMap(GraphicsDevice, _tileManager, _blockAtlas, 800, 400);
+            _map = new SPMap(GraphicsDevice, _tileManager, _blockAtlas, 800, 400);
             _view = new Camera2D(GraphicsDevice);
-            _view.ScreenBounds = new Rectangle(0, 0, _voxelTerrain.WorldWidth, _voxelTerrain.WorldHeight);
+            _view.ScreenBounds = new Rectangle(0, 0, _map.WorldWidth, _map.WorldHeight);
 
             _cameraController = new CameraControl(_view);
-            _cameraController.Position = new Vector2(0, 200 * VoxelMap.TILE_HEIGHT);
+            _cameraController.Position = new Vector2(0, 200 * SPMap.TILE_HEIGHT);
 
             _view.Focus = _cameraController;
                         
@@ -152,7 +141,7 @@ namespace DoodleEmpires.Engine.Net
         {
             _paperTex = Content.Load<Texture2D>("Paper");
 
-            _voxelTerrain.BackDrop = _paperTex;
+            _map.BackDrop = _paperTex;
 
             _debugFont = Content.Load<SpriteFont>("debugFont");
             SpriteFont _guiFont = Content.Load<SpriteFont>("GUIFont");
@@ -255,10 +244,7 @@ namespace DoodleEmpires.Engine.Net
         protected override void Update(GameTime gameTime)
         {            
             base.Update(gameTime);
-
-            _cameraController.Update(gameTime);
-            _view.Update(gameTime);
-
+            
             #if PROFILING
             Window.Title = "" + FPSManager.AverageFramesPerSecond;
 
@@ -269,38 +255,38 @@ namespace DoodleEmpires.Engine.Net
                 return;
             #endif
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            KeyboardState keyState = Keyboard.GetState();
-            _moveVector = Vector2.Zero;
-
-            _moveVector.X += keyState.IsKeyDown(Keys.Right) ? 1 : keyState.IsKeyDown(Keys.Left) ? -1 : 0;
-            _moveVector.Y += keyState.IsKeyDown(Keys.Up) ? -1 : keyState.IsKeyDown(Keys.Down) ? 1 : 0;
-
-            _view.Scale *= keyState.IsKeyDown(Keys.OemPlus) ? 1.01F : keyState.IsKeyDown(Keys.OemMinus) ? 0.99F : 1;
-
-            _cameraController.Position += _moveVector * 10;
-
-            _mainControl.Update();
-
-            _soundEngine.ListenerPosition = _cameraController.Position;
-
-            if (keyState.IsKeyDown(Keys.Space) && _prevKeyState.IsKeyUp(Keys.Space))
+            switch (_gameState)
             {
-                _soundEngine.PlaySound("rifle", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
+                case GameState.InGame:
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                        Exit();
 
-                if (_rand.NextDouble() < 0.6)
-                {
-                    if (_rand.NextDouble() < 0.5)
-                        _soundEngine.PlaySound("shell_01", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
-                    else
+                    _cameraController.Update(gameTime);
+                    _view.Update(gameTime);
 
-                        _soundEngine.PlaySound("shell_02", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
+                    KeyboardState keyState = Keyboard.GetState();
+
+                    _mainControl.Update();
+
+                    _soundEngine.ListenerPosition = _cameraController.Position;
+
+                    if (keyState.IsKeyDown(Keys.Space) && _prevKeyState.IsKeyUp(Keys.Space))
+                    {
+                        _soundEngine.PlaySound("rifle", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
+
+                        if (_rand.NextDouble() < 0.6)
+                        {
+                            if (_rand.NextDouble() < 0.5)
+                                _soundEngine.PlaySound("shell_01", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
+                            else
+
+                                _soundEngine.PlaySound("shell_02", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
+                        }
                     }
-            }
 
-            _prevKeyState = keyState;
+                    _prevKeyState = keyState;
+                    break;
+            }
         }
 
         protected override void MousePressed(MouseEventArgs args)
@@ -314,11 +300,11 @@ namespace DoodleEmpires.Engine.Net
             {
                 Vector2 worldPos = _view.PointToWorld(args.Location);
 
-                foreach (Zoning z in _voxelTerrain.Zones)
+                foreach (Zoning z in _map.Zones)
                 {
                     if (z.Bounds.Contains(worldPos))
                     {
-                        _voxelTerrain.DeleteZone(z);
+                        _map.DeleteZone(z);
                         break;
                     }
                 }
@@ -342,11 +328,11 @@ namespace DoodleEmpires.Engine.Net
                 {
                     if (args.LeftButton == ButtonState.Pressed)
                     {
-                        _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelMap.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelMap.TILE_HEIGHT, _editType);
+                        _map.SetTileSafe((int)_mouseWorldPos.X / SPMap.TILE_WIDTH, (int)_mouseWorldPos.Y / SPMap.TILE_HEIGHT, _editType);
                     }
                     else if (args.RightButton == ButtonState.Pressed)
                     {
-                        _voxelTerrain.SetTileSafe((int)_mouseWorldPos.X / VoxelMap.TILE_WIDTH, (int)_mouseWorldPos.Y / VoxelMap.TILE_HEIGHT, 0);
+                        _map.SetTileSafe((int)_mouseWorldPos.X / SPMap.TILE_WIDTH, (int)_mouseWorldPos.Y / SPMap.TILE_HEIGHT, 0);
                     }
                 }
 
@@ -360,7 +346,7 @@ namespace DoodleEmpires.Engine.Net
             {
                 Vector2 zoneEnd = _view.PointToWorld(args.Location);
 
-                _voxelTerrain.DefineZone(_zoneStart, zoneEnd, new StockPileZone());
+                _map.DefineZone(_zoneStart, zoneEnd, new StockPileZone());
 
                 _isDefininingZone = false;
             }
@@ -378,14 +364,19 @@ namespace DoodleEmpires.Engine.Net
 
             GraphicsDevice.Clear(Color.White);
                         
-            GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
             FPSManager.OnDraw(gameTime);
-            
-            _voxelTerrain.Render(_view);
 
-            //_fpsLabel.Text = " FPS: " + Math.Round(FPSManager.AverageFramesPerSecond, 1);
-            _mainControl.Draw();
+            switch (_gameState)
+            {
+                case GameState.InGame:
+                    GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
 
+                    _map.Render(_view);
+
+                    //_fpsLabel.Text = " FPS: " + Math.Round(FPSManager.AverageFramesPerSecond, 1);
+                    _mainControl.Draw();
+                    break;
+            }
 
             base.Draw(gameTime);
         }
@@ -397,7 +388,7 @@ namespace DoodleEmpires.Engine.Net
         private void SaveGame(string fName)
         {
             Stream fileStream = File.OpenWrite(fName.Replace(".dem", "") + ".dem");
-            _voxelTerrain.SaveToStream(fileStream);
+            _map.SaveToStream(fileStream);
             fileStream.Close();
             fileStream.Dispose();
         }
@@ -411,11 +402,11 @@ namespace DoodleEmpires.Engine.Net
             if (File.Exists(fName + ".dem"))
             {
                 Stream fileStream = File.OpenRead(fName + ".dem");
-                _voxelTerrain = VoxelMap.ReadFromStream(fileStream, GraphicsDevice, _tileManager, _blockAtlas);
+                _map = SPMap.ReadFromStream(fileStream, GraphicsDevice, _tileManager, _blockAtlas);
                 fileStream.Close();
                 fileStream.Dispose();
 
-                _voxelTerrain.BackDrop = _paperTex;
+                _map.BackDrop = _paperTex;
             }
         }
 
@@ -427,18 +418,6 @@ namespace DoodleEmpires.Engine.Net
         private void OnItemChanged(object sender, GridViewItem item)
         {
             _editType = (byte)item.Tag;
-        }
-
-        public void HandleNetMassage(NetIncomingMessage message)
-        {
-            PacketTypes MID = (PacketTypes)message.ReadInt16();
-
-            switch (MID)
-            {
-                case PacketTypes.MapSet:
-                    this[message.ReadInt16(), message.ReadInt16()] = message.ReadByte();
-                    break;
-            }
         }
     }
 }

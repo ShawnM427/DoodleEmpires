@@ -34,6 +34,7 @@ namespace DoodleEmpires.Engine.Sound
         public void PlaySound(string name, Vector2 position) 
         {
             SoundEffectInstance instance = _sounds[name].CreateInstance();
+
             if (SetSoundForCamera(instance, position, 0.5f))
                 instance.Play();
         }
