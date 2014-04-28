@@ -1006,7 +1006,15 @@ namespace DoodleEmpires.Engine.Terrain
             int seed = message.ReadInt32();
 
             SPMap map = new SPMap(graphics, tileManager, textureAtlas, width, height, seed);
-            
+
+            int changeCount = message.ReadInt32();
+
+            for (int i = 0; i < changeCount; i++)
+            {
+                DeltaMapChange m = new DeltaMapChange(message.ReadInt16(), message.ReadInt16(), message.ReadByte());
+                map.SetTileSafe(m.X, m.Y, m.NewID);
+            }
+
             return map;
         }
 

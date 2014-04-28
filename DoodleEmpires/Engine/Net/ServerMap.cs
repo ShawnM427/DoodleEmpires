@@ -67,6 +67,7 @@ namespace DoodleEmpires.Engine.Terrain
         TileManager _tileManager;
 
         int _seed;
+        List<DeltaMapChange> _mapChanges = new List<DeltaMapChange>();
 
         #endregion
 
@@ -531,6 +532,8 @@ namespace DoodleEmpires.Engine.Terrain
                 _tileManager[id].AddToWorld(this, x, y);
             else
                 _tileManager[GetMaterial(x, y)].RemovedFromWorld(this, x, y);
+            
+            _mapChanges.Add(new DeltaMapChange(x, y, id));
         }
         
         /// <summary>
@@ -564,19 +567,21 @@ namespace DoodleEmpires.Engine.Terrain
         {
             BinaryWriter writer = new BinaryWriter(stream);
 
-            writer.Write("Doodle Empires Voxel Terrain ");
-            writer.Write("0.0.1");
+            writer.Write("Doodle Empires Voxel Server Terrain ");
+            writer.Write("0.0.2");
 
             writer.Write(_width);
             writer.Write(_height);
 
-            for (int y = 0; y < _height; y++)
+            writer.Write(_seed);
+
+            writer.Write(_mapChanges.Count);
+
+            foreach (DeltaMapChange mapChange in _mapChanges)
             {
-                for (int x = 0; x < _width; x++)
-                {
-                    writer.Write(_tiles[x, y]);
-                    writer.Write(_meta[x, y]);
-                }
+                writer.Write((short)mapChange.X);
+                writer.Write((short)mapChange.Y);
+                writer.Write(mapChange.NewID);
             }
 
             writer.Write(_zones.Count);
@@ -608,6 +613,8 @@ namespace DoodleEmpires.Engine.Terrain
             {
                 case "0.0.1":
                     return LoadVersion_0_0_1(reader, tileManager);
+                case "0.0.2":
+                    return LoadVersion_0_0_2(reader, tileManager);
                 default:
                     reader.Dispose();
                     return null;
@@ -653,6 +660,41 @@ namespace DoodleEmpires.Engine.Terrain
             return terrain;
         }
 
+        /// <summary>
+        /// Reads a voxel terrain from the stream using Terrain Version 0.0.1
+        /// </summary>
+        /// <param name="reader">The stream to read from</param>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="tileManager">The tile manager to use</param>
+        /// <param name="atlas">The texture atlas to use</param>
+        /// <returns>A voxel terrain loaded from the stream</returns>
+        private static ServerMap LoadVersion_0_0_2(BinaryReader reader, TileManager tileManager)
+        {
+            int width = reader.ReadInt32();
+            int height = reader.ReadInt32();
+
+            ServerMap terrain = new ServerMap(tileManager, width, height);
+
+            int changeCount = reader.ReadInt32();
+
+            for (int i = 0; i < changeCount; i++)
+            {
+                DeltaMapChange m = new DeltaMapChange(reader.ReadInt16(), reader.ReadInt16(), reader.ReadByte());
+                terrain._mapChanges.Add(m);
+            }
+
+            int zoneCount = reader.ReadInt32();
+
+            for (int i = 0; i < zoneCount; i++)
+            {
+                Zoning zone = Zoning.ReadFromStream(reader);
+                terrain.AddZone(zone);
+            }
+
+            reader.Dispose();
+            return terrain;
+        }
+
         #endregion
 
         #endregion
@@ -665,8 +707,44 @@ namespace DoodleEmpires.Engine.Terrain
             message.Write((short)_height);
 
             message.Write(_seed);
+
+            message.Write(_mapChanges.Count);
+
+            foreach (DeltaMapChange mapChange in _mapChanges)
+            {
+                message.Write((short)mapChange.X);
+                message.Write((short)mapChange.Y);
+                message.Write(mapChange.NewID);
+            }
         }
 
         #endregion
+    }
+
+    public class DeltaMapChange
+    {
+        int _x;
+        int _y;
+        byte _newID;
+
+        public int X
+        {
+            get { return _x; }
+        }
+        public int Y
+        {
+            get { return _y; }
+        }
+        public byte NewID
+        {
+            get { return _newID; }
+        }
+
+        public DeltaMapChange(int x, int y, byte newID)
+        {
+            _x = x;
+            _y = y;
+            _newID = newID;
+        }
     }
 }

@@ -45,6 +45,9 @@ namespace DoodleServer
                 return;
             }
             rtb_output.Text += value;
+
+            rtb_output.SelectionStart = rtb_output.Text.Length;
+            rtb_output.ScrollToCaret();
         }
 
         private void btn_launch_Click(object sender, EventArgs e)
