@@ -407,6 +407,8 @@ namespace DoodleEmpires.Engine.Net
                         else if (status == NetConnectionStatus.Disconnected)
                         {
                             System.Diagnostics.Debug.WriteLine("Lost Connection \"{0}\"", msg.ReadString());
+                            _gameState = GameState.MainMenu;
+                            _serverRefreshTimer.Start();
                         }
                         break;
 
