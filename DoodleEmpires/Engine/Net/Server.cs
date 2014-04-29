@@ -48,6 +48,7 @@ namespace DoodleEmpires.Engine.Net
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.Port = port;
             config.EnableUPnP = true;
+            config.LocalAddress = IPAddress.Parse("25.11.245.37");
             Console.WriteLine("Net configuration complete");
 
             try
@@ -229,13 +230,7 @@ namespace DoodleEmpires.Engine.Net
             message.Write((byte)NetPacketType.PlayerJoined, 8);
             newPlayer.WriteToPacket(message);
 
-            foreach (NetPlayer p in _players)
-            {
-                if (p != null && p.PlayerIndex != newPlayer.PlayerIndex)
-                {
-                    _server.SendMessage(message, p.NetConnection, NetDeliveryMethod.ReliableUnordered);
-                }
-            }
+            _server.SendMessage(message, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
         }
 
         private void SendPlayerLeft(PlayerInfo player)

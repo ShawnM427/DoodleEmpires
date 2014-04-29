@@ -20,6 +20,7 @@ using MouseEventArgs = DoodleEmpires.Engine.Utilities.MouseEventArgs;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 using System.Threading;
+using System.Net;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -220,6 +221,7 @@ namespace DoodleEmpires.Engine.Net
                 config.EnableMessageType(NetIncomingMessageType.StatusChanged);
                 config.EnableMessageType(NetIncomingMessageType.Data);
                 config.ConnectionTimeout = 10F;
+                config.LocalAddress = IPAddress.Parse("25.11.245.37");
                 config.Port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
 
                 _client = new NetClient(config);
@@ -253,7 +255,7 @@ namespace DoodleEmpires.Engine.Net
             else
                 _client.Connect(_ip, _port.Value);
 
-            _client.DiscoverKnownPeer("192.0.247.228", 14245);
+            _client.DiscoverKnownPeer("25.11.245.37", 14245);
         }
 
         /// <summary>

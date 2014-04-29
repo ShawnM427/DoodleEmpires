@@ -517,7 +517,10 @@ namespace DoodleEmpires.Engine.Terrain
         public override void SetTile(int x, int y, byte id)
         {
             if (x >= 0 & x < _width & y >= 0 & y < _height)
+            {
                 this[x, y] = id;
+                _mapChanges.Add(new DeltaMapChange(x, y, id));
+            }
         }
 
         /// <summary>
@@ -532,8 +535,6 @@ namespace DoodleEmpires.Engine.Terrain
                 _tileManager[id].AddToWorld(this, x, y);
             else
                 _tileManager[GetMaterial(x, y)].RemovedFromWorld(this, x, y);
-            
-            _mapChanges.Add(new DeltaMapChange(x, y, id));
         }
         
         /// <summary>
