@@ -41,9 +41,9 @@
             // 
             // rtb_output
             // 
-            this.rtb_output.Enabled = false;
             this.rtb_output.Location = new System.Drawing.Point(13, 40);
             this.rtb_output.Name = "rtb_output";
+            this.rtb_output.ReadOnly = true;
             this.rtb_output.Size = new System.Drawing.Size(538, 376);
             this.rtb_output.TabIndex = 0;
             this.rtb_output.Text = "";
