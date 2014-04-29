@@ -673,7 +673,8 @@ namespace DoodleEmpires.Engine.Terrain
             int width = reader.ReadInt32();
             int height = reader.ReadInt32();
 
-            ServerMap terrain = new ServerMap(tileManager, width, height);
+            int seed = reader.ReadInt32();
+            ServerMap terrain = new ServerMap(tileManager, width, height, seed);
 
             int changeCount = reader.ReadInt32();
 

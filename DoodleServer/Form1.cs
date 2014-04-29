@@ -37,6 +37,12 @@ namespace DoodleServer
             _saveDialog.Filter = "Doodle Empires Map|*.dem";
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            _serverThread.Abort();
+            base.OnClosed(e);
+        }
+
         public void AppendTextBox(string value)
         {
             if (InvokeRequired)

@@ -252,6 +252,8 @@ namespace DoodleEmpires.Engine.Net
             }
             else
                 _client.Connect(_ip, _port.Value);
+
+            _client.DiscoverKnownPeer("192.0.247.228", 14245);
         }
 
         /// <summary>

@@ -47,6 +47,7 @@ namespace DoodleEmpires.Engine.Net
             NetPeerConfiguration config = new NetPeerConfiguration("DoodleEmpires");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.Port = port;
+            config.EnableUPnP = true;
             Console.WriteLine("Net configuration complete");
 
             try
@@ -55,6 +56,8 @@ namespace DoodleEmpires.Engine.Net
 
                 _server = new NetServer(config);
                 _server.Start();
+
+                _server.UPnP.ForwardPort(config.Port, "DoodleEmpires");
 
                 Console.WriteLine("Server started at {0}:{1}", _server.Configuration.BroadcastAddress, _server.Port);
             }
