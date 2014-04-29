@@ -399,6 +399,12 @@ namespace DoodleEmpires.Engine.Net
 
                         break;
 
+                    case NetIncomingMessageType.DiscoveryRequest:
+                        NetOutgoingMessage outMsg = _client.CreateMessage();
+                        outMsg.Write("Hello");
+                        _client.SendDiscoveryResponse(outMsg, msg.SenderEndpoint);
+                        break;
+
                     case NetIncomingMessageType.StatusChanged:
                         NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
                         if (status == NetConnectionStatus.Connected)
