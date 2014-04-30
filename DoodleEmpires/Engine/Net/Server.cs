@@ -12,6 +12,7 @@ using System.Threading;
 using System.Net;
 using DoodleEmpires.Engine.Terrain;
 using System.IO;
+using DoodleEmpires.Engine.Economy;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -48,7 +49,7 @@ namespace DoodleEmpires.Engine.Net
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.Port = port;
             config.EnableUPnP = true;
-            config.LocalAddress = IPAddress.Parse("25.11.245.37");
+            //config.LocalAddress = IPAddress.Parse("25.11.245.37");
             Console.WriteLine("Net configuration complete");
 
             try
@@ -70,6 +71,8 @@ namespace DoodleEmpires.Engine.Net
             }
 
             _map = new ServerMap(GlobalTileManager.TileManager, 800, 400);
+            _map.OnTerrainSet += SendBlockChanged;
+            _map.OnZoneAdded += SendZoneAdded;
             
             // schedule initial sending of position updates
             double nextSendUpdates = NetTime.Now;
@@ -130,6 +133,9 @@ namespace DoodleEmpires.Engine.Net
                                 case NetPacketType.RequestBlockChanged:
                                     HandleBlockReqChange(msg);
                                     break;
+                                case NetPacketType.ReqZoneadded:
+                                    HandleReqZone(msg);
+                                    break;
                                 default:
 
                                     break;
@@ -155,7 +161,12 @@ namespace DoodleEmpires.Engine.Net
         public void Load(Stream fileStream)
         {
             Console.WriteLine("Loading Map");
+            _map = null;
             _map = ServerMap.ReadFromStream(fileStream, GlobalTileManager.TileManager);
+            _map.OnTerrainSet += SendBlockChanged;
+            _map.OnZoneAdded += SendZoneAdded;
+
+            SendMapChanged();
         }
 
         private void HandlePlayerWantJoin(NetIncomingMessage msg)
@@ -217,13 +228,41 @@ namespace DoodleEmpires.Engine.Net
             byte newID = msg.ReadByte(8);
 
             if (x > 0 && y > 0 &&
-                x < _map.WorldWidth / ServerMap.TILE_WIDTH && y < _map.WorldWidth / ServerMap.TILE_HEIGHT)
+                x < _map.WorldWidth / ServerMap.TILE_WIDTH && y < _map.WorldHeight / ServerMap.TILE_HEIGHT)
             {
                 _map.SetTileSafe(x, y, newID);
-                SendBlockChanged(x, y, newID);
             }
         }
+        
+        private void HandleReqZone(NetIncomingMessage msg)
+        {
+            Zoning zone = Zoning.ReadFromPacket(msg);
 
+            _map.DefineZone(zone);
+        }
+
+        private void SendMapChanged()
+        {
+            NetOutgoingMessage msg = _server.CreateMessage();
+
+            msg.Write((byte)NetPacketType.MapChanged, 8);
+
+            _map.WriteToMessage(msg);
+
+            _server.SendMessage(msg, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
+        }
+
+        private void SendZoneAdded(Zoning newZone)
+        {
+            NetOutgoingMessage msg = _server.CreateMessage();
+
+            msg.Write((byte)NetPacketType.ZoneAdded, 8);
+
+            newZone.WriteToPacket(msg);
+
+            _server.SendMessage(msg, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
+        }
+        
         private void SendPlayerJoined(PlayerInfo newPlayer)
         {
             NetOutgoingMessage message = _server.CreateMessage();
@@ -239,13 +278,7 @@ namespace DoodleEmpires.Engine.Net
             message.Write((byte)NetPacketType.PlayerLeft, 8);
             player.WriteToPacket(message);
 
-            foreach (NetPlayer p in _players)
-            {
-                if (p != null && p.PlayerIndex != player.PlayerIndex)
-                {
-                    _server.SendMessage(message, p.NetConnection, NetDeliveryMethod.ReliableUnordered);
-                }
-            }
+            _server.SendMessage(message, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
         }
 
         private void SendBlockChanged(int x, int y, byte newID)

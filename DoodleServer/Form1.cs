@@ -39,7 +39,10 @@ namespace DoodleServer
 
         protected override void OnClosed(EventArgs e)
         {
-            _serverThread.Abort();
+            if (_server != null)
+            {
+                _server.Exiting = true;
+            }
             base.OnClosed(e);
         }
 
@@ -127,7 +130,7 @@ namespace DoodleServer
     public class TextBoxWriter : TextWriter
     {
         frm_main _output;
-
+        
         public TextBoxWriter(frm_main form)
         {
             _output = form;

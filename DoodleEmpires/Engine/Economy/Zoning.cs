@@ -7,6 +7,7 @@ using DoodleEmpires.Engine.Economy;
 using DoodleEmpires.Engine.Terrain;
 using DoodleEmpires.Engine.Entities;
 using System.IO;
+using Lidgren.Network;
 
 namespace DoodleEmpires.Engine.Economy
 {
@@ -16,38 +17,6 @@ namespace DoodleEmpires.Engine.Economy
     public class Zoning
     {
         Rectangle _bounds;
-        UnitBuff _freindlyBuff = UnitBuff.Empty;
-        UnitBuff _enemyBuff = UnitBuff.Empty;
-        Color _drawColor = Color.Red;
-        TechNode _requiredtechNode;
-        List<TechNode> _techUnlocks;
-        EconomyBuff _economyBuff = EconomyBuff.Empty;
-        EconomyBuff _totalBuff = EconomyBuff.Empty;
-
-        /// <summary>
-        /// Gets the color for this zone
-        /// </summary>
-        public Color Color
-        {
-            get { return _drawColor; }
-            protected set { _drawColor = value; }
-        }
-        /// <summary>
-        /// Gets the buff for freindly units in this zone
-        /// </summary>
-        public UnitBuff FreindlyBuff
-        {
-            get { return _freindlyBuff; }
-            protected set { _freindlyBuff = value; }
-        }
-        /// <summary>
-        /// Gets the buff for enemy units in this zone
-        /// </summary>
-        public UnitBuff EnemyBuff
-        {
-            get { return _enemyBuff; }
-            protected set { _enemyBuff = value; }
-        }
         /// <summary>
         /// Gets or sets the bounds for this zone
         /// </summary>
@@ -57,40 +26,12 @@ namespace DoodleEmpires.Engine.Economy
             set
             {
                 _bounds = value;
-                _totalBuff = _economyBuff *
-                ((_bounds.Width / SPMap.TILE_WIDTH) * (_bounds.Height / SPMap.TILE_HEIGHT));
-            }
-        }
-        /// <summary>
-        /// Gets or sets the tech node required to create this zone
-        /// </summary>
-        public TechNode RequiredTechNode
-        {
-            get { return _requiredtechNode; }
-            protected set { _requiredtechNode = value; }
-        }
-        /// <summary>
-        /// Gets a list of tech unlocks that placing this zone grants
-        /// </summary>
-        public List<TechNode> TechUnlocks
-        {
-            get { return _techUnlocks; }
-            protected set { _techUnlocks = value; }
-        }
-        /// <summary>
-        /// Gets the per-tile economy buff for this zone
-        /// </summary>
-        public EconomyBuff EconomyBuff
-        {
-            get { return _economyBuff; }
-            protected set
-            {
-                _economyBuff = value;
-                _totalBuff = _economyBuff *
+                _totalBuff = Info.EconomyBuff *
                 ((_bounds.Width / SPMap.TILE_WIDTH) * (_bounds.Height / SPMap.TILE_HEIGHT));
             }
         }
 
+        EconomyBuff _totalBuff = EconomyBuff.Empty;
         /// <summary>
         /// Gets the total economy buff for this zone
         /// </summary>
@@ -98,7 +39,27 @@ namespace DoodleEmpires.Engine.Economy
         {
             get { return _totalBuff; }
         }
-        
+
+        ZoneInfo _info;
+        /// <summary>
+        /// Gets the zoning information about this zone
+        /// </summary>
+        public ZoneInfo Info
+        {
+            get { return _info; }
+        }
+
+        /// <summary>
+        /// Creates a new zone
+        /// </summary>
+        /// <param name="bounds">The bounds of the zone</param>
+        /// <param name="info">The zone info to use</param>
+        public Zoning(Rectangle bounds, ZoneInfo info)
+        {
+            _bounds = bounds;
+            _info = info;
+        }
+                
         /// <summary>
         /// Writes basic zone data to stream (TODO Actually save zone info)
         /// </summary>
@@ -110,10 +71,7 @@ namespace DoodleEmpires.Engine.Economy
             writer.Write(Bounds.Width);
             writer.Write(Bounds.Height);
 
-            writer.Write(Color.R);
-            writer.Write(Color.G);
-            writer.Write(Color.B);
-            writer.Write(Color.A);
+            writer.Write(_info.ZoneID);
         }
 
         /// <summary>
@@ -126,25 +84,122 @@ namespace DoodleEmpires.Engine.Economy
             Rectangle bounds = 
                 new Rectangle(reader.ReadInt32(),reader.ReadInt32(),reader.ReadInt32(),reader.ReadInt32());
 
-            Color color = new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+            short zoneID = reader.ReadInt16();
             
-            return new Zoning() { Bounds = bounds, Color = color };
+            return new Zoning(bounds, GlobalZoneManager.Manager.Get(zoneID));
+        }
+
+        public void WriteToPacket(NetOutgoingMessage msg)
+        {
+            msg.Write(_bounds.X);
+            msg.Write(_bounds.Y);
+            msg.Write(_bounds.Width);
+            msg.Write(_bounds.Height);
+
+            msg.Write(_info.ZoneID);
+        }
+
+        public static Zoning ReadFromPacket(NetIncomingMessage msg)
+        {
+            int x = msg.ReadInt32();
+            int y = msg.ReadInt32();
+            int width = msg.ReadInt32();
+            int height = msg.ReadInt32();
+
+            short id = msg.ReadInt16();
+
+            return new Zoning(new Rectangle(x, y, width, height), GlobalZoneManager.Manager.Get(id));
         }
     }
 
     /// <summary>
-    /// Represents a stockpile zone
+    /// Represents information about a zone
     /// </summary>
-    public class StockPileZone : Zoning
+    public struct ZoneInfo
     {
-        public StockPileZone()
-            : base()
+        UnitBuff _freindlyBuff;
+        UnitBuff _enemyBuff;
+        Color _drawColor;
+        TechNode _requiredtechNode;
+        List<TechNode> _techUnlocks;
+        EconomyBuff _economyBuff;
+        short _zoneID;
+        string _name;
+
+        /// <summary>
+        /// Gets the color for this zone
+        /// </summary>
+        public Color Color
         {
-            Color = Color.FromNonPremultiplied(128,128,128,255);
-            EconomyBuff = new EconomyBuff()
+            get { return _drawColor; }
+            set { _drawColor = value; }
+        }
+        /// <summary>
+        /// Gets the buff for freindly units in this zone
+        /// </summary>
+        public UnitBuff FreindlyBuff
+        {
+            get { return _freindlyBuff; }
+            set { _freindlyBuff = value; }
+        }
+        /// <summary>
+        /// Gets the buff for enemy units in this zone
+        /// </summary>
+        public UnitBuff EnemyBuff
+        {
+            get { return _enemyBuff; }
+            set { _enemyBuff = value; }
+        }
+        /// <summary>
+        /// Gets or sets the tech node required to create this zone
+        /// </summary>
+        public TechNode RequiredTechNode
+        {
+            get { return _requiredtechNode; }
+            set { _requiredtechNode = value; }
+        }
+        /// <summary>
+        /// Gets a list of tech unlocks that placing this zone grants
+        /// </summary>
+        public List<TechNode> TechUnlocks
+        {
+            get { return _techUnlocks; }
+            set { _techUnlocks = value; }
+        }
+        /// <summary>
+        /// Gets the per-tile economy buff for this zone
+        /// </summary>
+        public EconomyBuff EconomyBuff
+        {
+            get { return _economyBuff; }
+            set
             {
-                StockpileRelative = 5.0f
-            };
+                _economyBuff = value;
+            }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public short ZoneID
+        {
+            get { return _zoneID; }
+            set { _zoneID = value; }
+        }
+
+        public ZoneInfo(Color color, string name)
+        {
+            _name = name;
+            _drawColor = color;
+
+            _freindlyBuff = UnitBuff.Empty;
+            _enemyBuff = UnitBuff.Empty;
+            _requiredtechNode = TechNode.None;
+            _techUnlocks = new List<TechNode>();
+            _economyBuff = EconomyBuff.Empty;
+            _zoneID = 0;
         }
     }
 }

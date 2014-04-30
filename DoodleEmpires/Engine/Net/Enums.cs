@@ -15,13 +15,18 @@ namespace DoodleEmpires.Engine.Net
 
     public enum NetPacketType : byte
     {
-        BlockUpdate,
-        RequestBlockChanged,
-        RequestJoin,
-        AcceptedJoin,
-        PlayerJoined,
-        PlayerLeft,
-        ConnectionFailed
+        RequestJoin = 0,
+        AcceptedJoin = 1,
+        ConnectionFailed = 2,
+        PlayerJoined = 3,
+        PlayerLeft = 4,
+        RequestBlockChanged = 5,
+        BlockUpdate = 6,
+        MetaChanged = 7,
+        ReqZoneadded = 8,
+        ZoneAdded = 9,
+        ZoneRemoved = 10,
+        MapChanged = 11
     }
 
     public enum GameState : byte

@@ -115,7 +115,7 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// Called when the server sent a tile set message
         /// </summary>
-        public event TerrainIDSetEvent OnTerrainSet;
+        public event TerrainSetEvent OnTerrainSet;
         /// <summary>
         /// Called when a server connection was unsucessful
         /// </summary>
@@ -154,6 +154,7 @@ namespace DoodleEmpires.Engine.Net
         protected SpriteFont _guiFont;
 
         protected byte _editType = 1;
+        protected byte _zoneTpye = 1;
 
         protected Texture2D[] _blockTexs;
 
@@ -194,9 +195,12 @@ namespace DoodleEmpires.Engine.Net
 
             _blockAtlas = new TextureAtlas(Content.Load<Texture2D>("Atlas"), 20, 20);
             
+            _guiFont = Content.Load<SpriteFont>("GUIFont");
+            _guiFont.FixFont();
+            
             if (_singlePlayer)
             {
-                _map = new SPMap(GraphicsDevice, _tileManager, _blockAtlas, 400, 800);
+                _map = new SPMap(GraphicsDevice, _guiFont, _tileManager, _blockAtlas, 400, 800);
 
                 _view = new Camera2D(GraphicsDevice);
                 _view.ScreenBounds = new Rectangle(0, 0, _map.WorldWidth, _map.WorldHeight);
@@ -221,8 +225,8 @@ namespace DoodleEmpires.Engine.Net
                 config.EnableMessageType(NetIncomingMessageType.StatusChanged);
                 config.EnableMessageType(NetIncomingMessageType.Data);
                 config.ConnectionTimeout = 10F;
-                config.LocalAddress = IPAddress.Parse("");
-                config.Port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
+                //config.LocalAddress = IPAddress.Parse("");
+                //config.Port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
 
                 _client = new NetClient(config);
                 _client.Start();
@@ -234,7 +238,7 @@ namespace DoodleEmpires.Engine.Net
             }
             else
             {
-                _map = new SPMap(GraphicsDevice, _tileManager, _blockAtlas, 800, 400);
+                _map = new SPMap(GraphicsDevice, _guiFont, _tileManager, _blockAtlas, 800, 400);
             }
 
             base.Initialize();
@@ -266,8 +270,6 @@ namespace DoodleEmpires.Engine.Net
             _paperTex = Content.Load<Texture2D>("Paper");
             
             _debugFont = Content.Load<SpriteFont>("debugFont");
-            _guiFont = Content.Load<SpriteFont>("GUIFont");
-            _guiFont.FixFont();
 
             _soundEngine = new SoundEngine();
 
@@ -439,6 +441,12 @@ namespace DoodleEmpires.Engine.Net
 
                             case NetPacketType.ConnectionFailed: //the connection attempt has failed
                                 HandleConnectionFailed(msg);
+                                break;
+                            case NetPacketType.ZoneAdded:
+                                HandleZoneAdded(msg);
+                                break;
+                            case NetPacketType.MapChanged:
+                                HandleMapChanged(msg);
                                 break;
                             default:
                                 Console.WriteLine("Unknown packet type {0} received!", packetType);
@@ -623,7 +631,22 @@ namespace DoodleEmpires.Engine.Net
                     {
                         Vector2 zoneEnd = _view.PointToWorld(args.Location);
 
-                        _map.DefineZone(_zoneStart, zoneEnd, new StockPileZone());
+                        int x = (int)Math.Min(_zoneStart.X, zoneEnd.X);
+                        int y = (int)Math.Min(_zoneStart.Y, zoneEnd.Y);
+                        int width = (int)Math.Abs(zoneEnd.X - _zoneStart.X);
+                        int height = (int)Math.Abs(zoneEnd.Y - _zoneStart.Y);
+
+                        Rectangle bounds =
+                            new Rectangle(x, y, width, height);
+                        
+                        if (_singlePlayer)
+                        {
+                            _map.DefineZone(new Zoning(bounds, GlobalZoneManager.Manager.Get(_zoneTpye)));
+                        }
+                        else
+                        {
+                            RequestNewZone(new Zoning(bounds, GlobalZoneManager.Manager.Get(_zoneTpye)));
+                        }
 
                         _isDefininingZone = false;
                     }
@@ -686,7 +709,7 @@ namespace DoodleEmpires.Engine.Net
             if (File.Exists(fName + ".dem"))
             {
                 Stream fileStream = File.OpenRead(fName + ".dem");
-                _map = SPMap.ReadFromStream(fileStream, GraphicsDevice, _tileManager, _blockAtlas);
+                _map = SPMap.ReadFromStream(fileStream, GraphicsDevice, _guiFont, _tileManager, _blockAtlas);
                 fileStream.Close();
                 fileStream.Dispose();
 
@@ -771,6 +794,25 @@ namespace DoodleEmpires.Engine.Net
         }
 
         /// <summary>
+        /// Called when this client is requesting a block update
+        /// </summary>
+        /// <param name="zone">The zone to add</param>
+        public void RequestNewZone(Zoning zone)
+        {
+            NetOutgoingMessage msg = _client.CreateMessage();
+
+            msg.Write((byte)NetPacketType.ReqZoneadded, 8);
+
+            zone.WriteToPacket(msg);
+
+            _client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
+
+#if DEBUG
+            AccountedUpload += msg.LengthBytes;
+#endif
+        }
+
+        /// <summary>
         /// Called when we should leave the game
         /// </summary>
         /// <param name="reason"></param>
@@ -782,6 +824,16 @@ namespace DoodleEmpires.Engine.Net
         #endregion
 
         #region Incoming
+
+        /// <summary>
+        /// Called when the server has changed maps
+        /// </summary>
+        /// <param name="m">The message to handle</param>
+        private void HandleMapChanged(NetIncomingMessage m)
+        {
+            _map = null;
+            _map = SPMap.ReadFromMessage(m, GraphicsDevice, _guiFont, _tileManager, _blockAtlas);
+        }
 
         /// <summary>
         /// Called when the client receives a connection failed message
@@ -808,7 +860,7 @@ namespace DoodleEmpires.Engine.Net
 
             _myPlayer.PlayerIndex = m.ReadByte();
 
-            _map = SPMap.ReadFromMessage(m, GraphicsDevice, _tileManager, _blockAtlas);
+            _map = SPMap.ReadFromMessage(m, GraphicsDevice, _guiFont, _tileManager, _blockAtlas);
 
             byte playerCount = m.ReadByte();
 
@@ -856,6 +908,21 @@ namespace DoodleEmpires.Engine.Net
 #if DEBUG
             AccountedDownload += m.LengthBytes;
 #endif
+        }
+
+        /// <summary>
+        /// Called when the server says a zone has been added
+        /// </summary>
+        /// <param name="m">The message to parse</param>
+        private void HandleZoneAdded(NetIncomingMessage m)
+        {
+            Zoning zone = Zoning.ReadFromPacket(m);
+
+            _map.AddPrebuiltZone(zone);
+
+            #if DEBUG
+            AccountedDownload += m.LengthBytes;
+            #endif
         }
 
         /// <summary>
