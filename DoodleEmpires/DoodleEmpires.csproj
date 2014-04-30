@@ -42,6 +42,7 @@
     <Compile Include="Engine\Economy\TechNode.cs" />
     <Compile Include="Engine\Economy\TechTree.cs" />
     <Compile Include="Engine\Economy\EconomyBuff.cs" />
+    <Compile Include="Engine\Economy\ZoneManager.cs" />
     <Compile Include="Engine\Entities\IFocusable.cs" />
     <Compile Include="Engine\Entities\Entity.cs" />
     <Compile Include="Engine\Entities\Pathfinding.cs" />
@@ -65,7 +66,6 @@
     <Compile Include="Engine\Net\PlayerInfo.cs" />
     <Compile Include="Engine\Net\Server.cs" />
     <Compile Include="Engine\Net\ServerInfo.cs" />
-    <Compile Include="Engine\Net\SPGame.cs" />
     <Compile Include="Engine\Net\Enums.cs" />
     <Compile Include="Engine\Net\ServerMap.cs" />
     <Compile Include="Engine\Render\2DCamera.cs" />
@@ -90,6 +90,7 @@
     <Compile Include="Engine\Utilities\CustomGame.cs" />
     <Compile Include="Engine\Utilities\FPSManager.cs" />
     <Compile Include="Engine\Utilities\Noise.cs" />
+    <Compile Include="Engine\Utilities\ObjectManager.cs" />
     <Compile Include="Engine\Utilities\RectangleF.cs" />
     <Compile Include="Engine\Utilities\TextureAtlas.cs" />
     <Compile Include="Program.cs" />

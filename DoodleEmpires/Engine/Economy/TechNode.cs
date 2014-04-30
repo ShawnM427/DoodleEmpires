@@ -11,10 +11,12 @@ namespace DoodleEmpires.Engine.Economy
     /// </summary>
     public class TechNode
     {
+        public static TechNode None = new TechNode("None", "", null);
+
         string _name;
         string _description;
         Texture2D _icon;
-
+        
         /// <summary>
         /// Gets the name of this tech node
         /// </summary>

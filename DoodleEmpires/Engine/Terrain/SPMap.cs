@@ -72,6 +72,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// </summary>
         protected SpriteBatch _spriteBatch;
         protected BasicEffect _basicEffect;
+        protected SpriteFont _zoneFont;
 
         protected TextureAtlas _atlas;
         protected TileManager _tileManager;
@@ -185,7 +186,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="atlas">The texture atlas to use</param>
         /// <param name="width">The width of the map, in tiles</param>
         /// <param name="height">The height of the map, in tiles</param>
-        public SPMap(GraphicsDevice Graphics, TileManager tileManager, TextureAtlas atlas, int width, int height, int? seed = null, float terrainHeightModifier = 25)
+        public SPMap(GraphicsDevice Graphics, SpriteFont zoneFont, TileManager tileManager, TextureAtlas atlas, int width, int height, int? seed = null, bool isMPMap = false, float terrainHeightModifier = 25)
         {
             _seed = seed.HasValue ? seed.Value : (int)DateTime.Now.Ticks;
             Noise.Seed = _seed;
@@ -205,6 +206,8 @@ namespace DoodleEmpires.Engine.Terrain
 
             _spriteBatch = new SpriteBatch(Graphics);
 
+            _zoneFont = zoneFont;
+
             _basicEffect = new BasicEffect(_graphics);
             _basicEffect.VertexColorEnabled = true;
             _basicEffect.Projection =
@@ -217,9 +220,12 @@ namespace DoodleEmpires.Engine.Terrain
 
             GenTerrain();
 
-            _updateThread = new BackgroundWorker();
-            _updateThread.DoWork += BeginUpdateLoop;
-            _updateThread.RunWorkerAsync();
+            if (!isMPMap)
+            {
+                _updateThread = new BackgroundWorker();
+                _updateThread.DoWork += BeginUpdateLoop;
+                _updateThread.RunWorkerAsync();
+            }
         }
 
         private void BeginUpdateLoop(object sender, DoWorkEventArgs e)
@@ -279,6 +285,21 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
+        /// Defines a zone
+        /// </summary>
+        /// <param name="zone">The zone to add</param>
+        public void DefineZone(Zoning zone)
+        {
+            int minX = (int)Math.Floor((float)zone.Bounds.X / SPMap.TILE_WIDTH);
+            int minY = (int)Math.Floor((float)zone.Bounds.Y / SPMap.TILE_HEIGHT);
+
+            int maxX = (int)Math.Ceiling((float)zone.Bounds.Right / SPMap.TILE_WIDTH);
+            int maxY = (int)Math.Ceiling((float)zone.Bounds.Bottom / SPMap.TILE_HEIGHT);
+            
+            DefineZone(minX, minY, maxX, maxY, zone);
+        }
+
+        /// <summary>
         /// Deletes a specific zone
         /// </summary>
         /// <param name="zone">The zone to delete</param>
@@ -315,16 +336,25 @@ namespace DoodleEmpires.Engine.Terrain
         /// Handles adding a pre-snapped zone to the zone list
         /// </summary>
         /// <param name="zone">The zone to add</param>
+        public void AddPrebuiltZone(Zoning zone)
+        {
+            AddZone(zone);
+        }
+
+        /// <summary>
+        /// Handles adding a pre-snapped zone to the zone list
+        /// </summary>
+        /// <param name="zone">The zone to add</param>
         protected void AddZone(Zoning zone)
         {
             _zones.Add(zone);
 
             int vID = _zoneVerts.Length;
             Array.Resize(ref _zoneVerts, _zoneVerts.Length + 4);
-            _zoneVerts[vID] = new VertexPositionColor(new Vector3(zone.Bounds.Left, zone.Bounds.Top, 0f), zone.Color);
-            _zoneVerts[vID + 1] = new VertexPositionColor(new Vector3(zone.Bounds.Right, zone.Bounds.Top, 0f), zone.Color);
-            _zoneVerts[vID + 2] = new VertexPositionColor(new Vector3(zone.Bounds.Left, zone.Bounds.Bottom, 0f), zone.Color);
-            _zoneVerts[vID + 3] = new VertexPositionColor(new Vector3(zone.Bounds.Right, zone.Bounds.Bottom, 0f), zone.Color);
+            _zoneVerts[vID] = new VertexPositionColor(new Vector3(zone.Bounds.Left, zone.Bounds.Top, 0f), zone.Info.Color);
+            _zoneVerts[vID + 1] = new VertexPositionColor(new Vector3(zone.Bounds.Right, zone.Bounds.Top, 0f), zone.Info.Color);
+            _zoneVerts[vID + 2] = new VertexPositionColor(new Vector3(zone.Bounds.Left, zone.Bounds.Bottom, 0f), zone.Info.Color);
+            _zoneVerts[vID + 3] = new VertexPositionColor(new Vector3(zone.Bounds.Right, zone.Bounds.Bottom, 0f), zone.Info.Color);
 
             int iID = _zoneIndices.Length;
             Array.Resize(ref _zoneIndices, _zoneIndices.Length + 6);
@@ -585,7 +615,13 @@ namespace DoodleEmpires.Engine.Terrain
             }
 
             _spriteBatch.Begin(SpriteSortMode.Texture, null, SamplerState.PointWrap, null, null, null, camera.Transform);
-
+            
+            foreach (Zoning zone in _zones)
+                _spriteBatch.DrawString(_zoneFont, zone.Info.Name,
+                    new Vector2(zone.Bounds.Center.X - _zoneFont.MeasureString(zone.Info.Name).X / 2,
+                        zone.Bounds.Center.Y - _zoneFont.MeasureString(zone.Info.Name).Y / 2), 
+                        Color.Black * ZONE_ALPHA);
+            
             _MINX = camera.ViewBounds.X / TILE_WIDTH - 1;
             _MINY = camera.ViewBounds.Y / TILE_HEIGHT - 1;
             _MAXX = camera.ViewBounds.Right / TILE_WIDTH + 1;
@@ -824,7 +860,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
-        public static SPMap ReadFromStream(Stream stream, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        public static SPMap ReadFromStream(Stream stream, GraphicsDevice graphics, SpriteFont labelFont, TileManager tileManager, TextureAtlas atlas)
         {
             BinaryReader reader = new BinaryReader(stream);
 
@@ -834,13 +870,13 @@ namespace DoodleEmpires.Engine.Terrain
             switch (version)
             {
                 case "0.0.1":
-                    return LoadVersion_0_0_1(reader, graphics, tileManager, atlas);
+                    return LoadVersion_0_0_1(reader, labelFont, graphics, tileManager, atlas);
                 case "0.0.2":
-                    return LoadVersion_0_0_2(reader, graphics, tileManager, atlas);
+                    return LoadVersion_0_0_2(reader, labelFont, graphics, tileManager, atlas);
                 case "0.0.3":
-                    return LoadVersion_0_0_3(reader, graphics, tileManager, atlas);
+                    return LoadVersion_0_0_3(reader, labelFont, graphics, tileManager, atlas);
                 case "0.0.4":
-                    return LoadVersion_0_0_4(reader, graphics, tileManager, atlas);
+                    return LoadVersion_0_0_4(reader, labelFont, graphics, tileManager, atlas);
                 default:
                     reader.Dispose();
                     return null;
@@ -858,12 +894,12 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
-        private static SPMap LoadVersion_0_0_1(BinaryReader reader, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        private static SPMap LoadVersion_0_0_1(BinaryReader reader, SpriteFont labelFont, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
         {
             int width = reader.ReadInt32();
             int height = reader.ReadInt32();
 
-            SPMap terrain = new SPMap(graphics, tileManager, atlas, width, height);
+            SPMap terrain = new SPMap(graphics, labelFont, tileManager, atlas, width, height);
 
             for (int y = 0; y < height; y++)
             {
@@ -886,12 +922,12 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
-        private static SPMap LoadVersion_0_0_2(BinaryReader reader, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        private static SPMap LoadVersion_0_0_2(BinaryReader reader, SpriteFont labelFont, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
         {
             int width = reader.ReadInt32();
             int height = reader.ReadInt32();
 
-            SPMap terrain = new SPMap(graphics, tileManager, atlas, width, height);
+            SPMap terrain = new SPMap(graphics, labelFont, tileManager, atlas, width, height);
 
             for (int y = 0; y < height; y++)
             {
@@ -915,12 +951,12 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
-        private static SPMap LoadVersion_0_0_3(BinaryReader reader, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        private static SPMap LoadVersion_0_0_3(BinaryReader reader, SpriteFont labelFont, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
         {
             int width = reader.ReadInt32();
             int height = reader.ReadInt32();
 
-            SPMap terrain = new SPMap(graphics, tileManager, atlas, width, height);
+            SPMap terrain = new SPMap(graphics, labelFont, tileManager, atlas, width, height);
 
             for (int y = 0; y < height; y++)
             {
@@ -932,18 +968,7 @@ namespace DoodleEmpires.Engine.Terrain
                 }
             }
 
-            int zoneCount = reader.ReadInt32();
-
-            for (int i = 0; i < zoneCount; i++)
-            {
-                Rectangle bounds = new Rectangle(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
-
-                Zoning zone = new Zoning();
-                zone.Bounds = bounds;
-                terrain.AddZone(zone);
-            }
-
-                reader.Dispose();
+            reader.Dispose();
             return terrain;
         }
 
@@ -955,12 +980,63 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
-        private static SPMap LoadVersion_0_0_4(BinaryReader reader, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        private static SPMap LoadVersion_0_0_4(BinaryReader reader, SpriteFont labelFont, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
         {
             int width = reader.ReadInt32();
             int height = reader.ReadInt32();
 
-            SPMap terrain = new SPMap(graphics, tileManager, atlas, width, height);
+            SPMap terrain = new SPMap(graphics, labelFont, tileManager, atlas, width, height);
+
+            try
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        terrain._tiles[x, y] = reader.ReadByte();
+                        terrain._neighbourStates[x, y] = reader.ReadByte();
+                        terrain._meta[x, y] = reader.ReadByte();
+                    }
+                }
+
+                int zoneCount = reader.ReadInt32();
+
+                for (int i = 0; i < zoneCount; i++)
+                {
+                    Rectangle bounds = new Rectangle(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+
+                    byte R = reader.ReadByte();
+                    byte G = reader.ReadByte();
+                    byte B = reader.ReadByte();
+                    byte A = reader.ReadByte();
+
+                    Zoning zone = new Zoning(bounds, new ZoneInfo(Color.FromNonPremultiplied(R, G, B, A), "<unknown>"));
+                    terrain.AddZone(zone);
+                }
+            }
+            catch (EndOfStreamException)
+            {
+                Debug.WriteLine("[WARNING] File corrupt, attempted to rad past ond of stream. Attempting to bypass...");
+            }
+
+            reader.Dispose();
+            return terrain;
+        }
+        
+        /// <summary>
+        /// Reads a voxel terrain from the stream using Terrain Version 0.0.4
+        /// </summary>
+        /// <param name="reader">The stream to read from</param>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="tileManager">The tile manager to use</param>
+        /// <param name="atlas">The texture atlas to use</param>
+        /// <returns>A voxel terrain loaded from the stream</returns>
+        private static SPMap LoadVersion_0_0_5(BinaryReader reader, SpriteFont labelFont, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        {
+            int width = reader.ReadInt32();
+            int height = reader.ReadInt32();
+
+            SPMap terrain = new SPMap(graphics, labelFont, tileManager, atlas, width, height);
 
             try
             {
@@ -997,15 +1073,15 @@ namespace DoodleEmpires.Engine.Terrain
 
         #region Networking
 
-        public static SPMap ReadFromMessage(NetIncomingMessage message, 
-            GraphicsDevice graphics, TileManager tileManager, TextureAtlas textureAtlas)
+        public static SPMap ReadFromMessage(NetIncomingMessage message,
+            GraphicsDevice graphics, SpriteFont labelFont, TileManager tileManager, TextureAtlas textureAtlas)
         {
             int width = message.ReadInt16();
             int height = message.ReadInt16();
 
             int seed = message.ReadInt32();
 
-            SPMap map = new SPMap(graphics, tileManager, textureAtlas, width, height, seed);
+            SPMap map = new SPMap(graphics, labelFont, tileManager, textureAtlas, width, height, seed, true);
 
             int changeCount = message.ReadInt32();
 
@@ -1013,6 +1089,13 @@ namespace DoodleEmpires.Engine.Terrain
             {
                 DeltaMapChange m = new DeltaMapChange(message.ReadInt16(), message.ReadInt16(), message.ReadByte());
                 map.SetTileSafe(m.X, m.Y, m.NewID);
+            }
+
+            int zoneCount = message.ReadInt32();
+
+            for (int i = 0; i < zoneCount; i++)
+            {
+                map.AddPrebuiltZone(Zoning.ReadFromPacket(message));
             }
 
             return map;

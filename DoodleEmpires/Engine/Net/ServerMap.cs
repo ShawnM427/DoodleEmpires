@@ -90,6 +90,13 @@ namespace DoodleEmpires.Engine.Terrain
             {
                 _tiles[x, y] = value;
 
+                DeltaMapChange change = _mapChanges.Find(X => X.X == x && X.Y == y);
+
+                if (change == null)
+                    _mapChanges.Add(new DeltaMapChange(x, y, value));
+                else
+                    change.NewID = value;
+
                 if (OnTerrainSet != null)
                     OnTerrainSet.Invoke(x, y, value);
             }
@@ -144,7 +151,19 @@ namespace DoodleEmpires.Engine.Terrain
         /// <summary>
         /// Invoked when a tile ID changes
         /// </summary>
-        public event TerrainIDSetEvent OnTerrainSet;
+        public event TerrainSetEvent OnTerrainSet;
+        /// <summary>
+        /// Invoked when a tile meta changes
+        /// </summary>
+        public event TerrainSetEvent OnMetaChanged;
+        /// <summary>
+        /// Invoked when a zone is added
+        /// </summary>
+        public event ZoneAddedEvent OnZoneAdded;
+        /// <summary>
+        /// Invoked when a zone is removed
+        /// </summary>
+        public event ZoneRemovedEvent OnZoneRemoved;
 
         #endregion
 
@@ -237,6 +256,21 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
+        /// Defines a zone
+        /// </summary>
+        /// <param name="zone">The zone to add</param>
+        public void DefineZone(Zoning zone)
+        {
+            int minX = (int)Math.Floor((float)zone.Bounds.X / SPMap.TILE_WIDTH);
+            int minY = (int)Math.Floor((float)zone.Bounds.Y / SPMap.TILE_HEIGHT);
+
+            int maxX = (int)Math.Ceiling((float)zone.Bounds.Right / SPMap.TILE_WIDTH);
+            int maxY = (int)Math.Ceiling((float)zone.Bounds.Bottom / SPMap.TILE_HEIGHT);
+
+            DefineZone(minX, minY, maxX, maxY, zone);
+        }
+
+        /// <summary>
         /// Deletes a specific zone
         /// </summary>
         /// <param name="zone">The zone to delete</param>
@@ -247,6 +281,9 @@ namespace DoodleEmpires.Engine.Terrain
                 int id = _zones.IndexOf(zone);
 
                 _zones.RemoveAt(id);
+
+                if (OnZoneRemoved != null)
+                    OnZoneRemoved.Invoke(zone);
             }
         }
 
@@ -257,6 +294,9 @@ namespace DoodleEmpires.Engine.Terrain
         protected void AddZone(Zoning zone)
         {
             _zones.Add(zone);
+
+            if (OnZoneAdded != null)
+                OnZoneAdded.Invoke(zone);
         }
 
         #endregion
@@ -274,6 +314,9 @@ namespace DoodleEmpires.Engine.Terrain
             if (x >= 0 & x < _width & y >= 0 & y < _height)
             {
                 _meta[x, y] = meta;
+
+                if (OnMetaChanged != null)
+                    OnMetaChanged.Invoke(x, y, meta);
             }
         }
 
@@ -519,7 +562,6 @@ namespace DoodleEmpires.Engine.Terrain
             if (x >= 0 & x < _width & y >= 0 & y < _height)
             {
                 this[x, y] = id;
-                _mapChanges.Add(new DeltaMapChange(x, y, id));
             }
         }
 
@@ -718,6 +760,14 @@ namespace DoodleEmpires.Engine.Terrain
                 message.Write((short)mapChange.Y);
                 message.Write(mapChange.NewID);
             }
+
+            message.Write(_zones.Count);
+
+            foreach (Zoning zone in _zones)
+            {
+                zone.WriteToPacket(message);
+            }
+
         }
 
         #endregion
@@ -740,6 +790,7 @@ namespace DoodleEmpires.Engine.Terrain
         public byte NewID
         {
             get { return _newID; }
+            set { _newID = value; }
         }
 
         public DeltaMapChange(int x, int y, byte newID)
