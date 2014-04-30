@@ -15,7 +15,7 @@ namespace DoodleEmpires.Engine.Economy
     {
         public override void Add(string name, ZoneInfo item)
         {
-            item.ZoneID = (short)_zones.Count;
+            item.ZoneID = (short)_items.Count;
             base.Add(name, item);
         }
     }

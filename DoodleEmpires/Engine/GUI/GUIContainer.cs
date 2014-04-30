@@ -15,6 +15,7 @@ namespace DoodleEmpires.Engine.GUI
     public abstract class GUIContainer : IGUI
     {
         protected List<IGUI> _controls;
+        protected int _margin = 5;
 
         /// <summary>
         /// Gets or sets the color of the border
@@ -35,6 +36,14 @@ namespace DoodleEmpires.Engine.GUI
         {
             get { return _backColor; }
             set { _backColor = value; }
+        }
+        /// <summary>
+        /// Gets or sets the margin
+        /// </summary>
+        public int Margin
+        {
+            get { return _margin; }
+            set { _margin = value; }
         }
 
         public GUIContainer(GraphicsDevice graphics) : this(graphics, null)

@@ -623,7 +623,7 @@ namespace DoodleEmpires.Engine.Terrain
                     0, _zoneVerts.Length, _zoneIndices, 0, _zoneIndices.Length / 3);
             }
 
-            _spriteBatch.Begin(SpriteSortMode.Texture, null, SamplerState.PointWrap, null, null, null, camera.Transform);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.Transform);
             
             foreach (Zoning zone in _zones)
                 _spriteBatch.DrawString(_zoneFont, zone.Info.Name,

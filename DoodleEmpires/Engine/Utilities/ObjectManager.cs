@@ -11,8 +11,13 @@ namespace DoodleEmpires.Engine.Utilities
     /// <typeparam name="T">The type of objects to handle</typeparam>
     public class ObjectManager<T>
     {
-        protected List<T> _zones = new List<T>();
+        protected List<T> _items = new List<T>();
         protected Dictionary<string, short> _zookUp = new Dictionary<string, short>();
+
+        public List<T> Items
+        {
+            get { return _items; }
+        }
 
         /// <summary>
         /// Gets the object with the given ID
@@ -21,9 +26,9 @@ namespace DoodleEmpires.Engine.Utilities
         /// <param name="item">The item to add</param>
         public virtual void Add(string name, T item)
         {
-            if (_zones.Count < short.MaxValue)
+            if (_items.Count < short.MaxValue)
             {
-                _zones.Add(item);
+                _items.Add(item);
             }
         }
 
@@ -36,7 +41,7 @@ namespace DoodleEmpires.Engine.Utilities
         {
             if (_zookUp.ContainsKey(name))
             {
-                return _zones[_zookUp[name]];
+                return _items[_zookUp[name]];
             }
             else
                 return default(T);
@@ -49,9 +54,9 @@ namespace DoodleEmpires.Engine.Utilities
         /// <returns>The item with the given ID, or the default object for the type</returns>
         public virtual T Get(int id)
         {
-            if (id < _zones.Count)
+            if (id < _items.Count)
             {
-                return _zones[id];
+                return _items[id];
             }
             else
                 return default(T);

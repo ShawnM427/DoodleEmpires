@@ -130,14 +130,17 @@ namespace DoodleEmpires.Engine.GUI
             }
 
             if (_font != null)
+            {
                 _spriteBatch.DrawString(_font, _headerDrawnText, Vector2.Zero, _foreColor);
 
-            _spriteBatch.End();
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null);
+                for (int x = 0; x < _items.Count; x++)
+                {
+                    Vector2 tPos = - _font.MeasureString(_items[x].Text) / 2;
+                    tPos.X += _itemBounds[x].Center.X ;
+                    tPos.Y += _itemBounds[x].Center.Y;
 
-            for (int x = 0; x < _items.Count; x++)
-            {
-                _spriteBatch.DrawString(_font, _items[x].Text, new Vector2(0, _headerSize + x * _itemSize.Height), _items[x].ColorModifier);
+                    _spriteBatch.DrawString(_font, _items[x].Text, tPos, _items[x].ColorModifier);
+                }
             }
         }
 
@@ -175,7 +178,7 @@ namespace DoodleEmpires.Engine.GUI
                 }
             }
 
-            return true;
+            return false;
         }
     }
 

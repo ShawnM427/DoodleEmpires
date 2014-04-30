@@ -123,7 +123,7 @@ namespace DoodleEmpires.Engine.GUI
 
         protected override void Invalidate()
         {
-            if (_selectedIndex == -1)
+            if (_selectedIndex == -1 && _items.Count > 0)
             {
                 _selectedIndex = 0;
                 _headerDrawnText = _headerText + " " + _items[_selectedIndex].Text;
@@ -131,7 +131,7 @@ namespace DoodleEmpires.Engine.GUI
             }
 
             if (_font != null)
-                _spriteBatch.DrawString(_font, _headerDrawnText, Vector2.Zero, _foreColor);
+                _spriteBatch.DrawString(_font, _headerDrawnText, new Vector2(5.0f, 0.0f), _foreColor);
 
             _spriteBatch.End();
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null);
@@ -170,36 +170,32 @@ namespace DoodleEmpires.Engine.GUI
         {
             Vector2 sMousePos = e.Location - new Vector2(_screenBounds.X, _screenBounds.Y);
 
-            //if (_internalItemBounds.Contains(sMousePos))
+            for (int x = 0; x < _xItems; x++)
             {
-                for (int x = 0; x < _xItems; x++)
+                for (int y = 0; y < _yItems; y++)
                 {
-                    for (int y = 0; y < _yItems; y++)
+                    if (_itemBounds[x, y].Contains(sMousePos))
                     {
-                        if (_itemBounds[x, y].Contains(sMousePos))
+                        int ID = x * _yItems + y;
+
+                        if (ID < _items.Count && _items[ID].MousePressed != null)
                         {
-                            int ID = x * _yItems + y;
+                            if (_selectedIndex >= 0)
+                                _items[_selectedIndex].Selected = false;
 
-                            if (ID < _items.Count && _items[ID].MousePressed != null)
-                            {
-                                if (_selectedIndex >= 0)
-                                    _items[_selectedIndex].Selected = false;
-
-                                _items[ID].Selected = true;
-                                _selectedIndex = ID;
-                                _headerDrawnText = _headerText + " " + _items[ID].Text;
-                                _items[ID].MousePressed.Invoke(this, _items[ID]);
-                                Invalidating = true;
-                            }
-
-                            return true;
+                            _items[ID].Selected = true;
+                            _selectedIndex = ID;
+                            _headerDrawnText = _headerText + " " + _items[ID].Text;
+                            _items[ID].MousePressed.Invoke(this, _items[ID]);
+                            Invalidating = true;
                         }
+
+                        return true;
                     }
                 }
-
-                return true;
             }
-            //return false;
+
+            return false;
         }
     }
 

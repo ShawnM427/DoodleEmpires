@@ -155,11 +155,12 @@ namespace DoodleEmpires.Engine.Net
         GUIButton _saveButton;
         GUIButton _loadButton;
         GUIListView _serverList;
+        GUIGridView _zoneView;
 
         protected SpriteFont _guiFont;
 
         protected byte _editType = 1;
-        protected byte _zoneTpye = 1;
+        protected short _zoneTpye = 1;
 
         protected Texture2D[] _blockTexs;
 
@@ -200,10 +201,11 @@ namespace DoodleEmpires.Engine.Net
 
                     _saveButton.Visible = true;
                     _saveButton.Enabled = true;
+
+                    _zoneView.Y = _loadButton.Bounds.Bottom + 5;
                 }
                 else
                 {
-                    _serverRefreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(_serverRefreshTimer_Elapsed);
                     _serverRefreshTimer.Start();
 
                     _port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
@@ -222,6 +224,8 @@ namespace DoodleEmpires.Engine.Net
                     OnJoinedServer += _OnJoinedServer;
 
                     PollForServers();
+                    
+                    _zoneView.Y = _loadButton.Y;
                 }
             }
         }
@@ -243,28 +247,7 @@ namespace DoodleEmpires.Engine.Net
 
             OnFoundServer += new FoundServerEvent(NetGame_OnFoundServer);
         }
-
-        void NetGame_OnFoundServer(ServerInfo serverInfo)
-        {
-            GUI.ListViewItem item = new GUI.ListViewItem();
-            item.Tag = serverInfo;
-            item.Text = serverInfo.Name;
-            item.MousePressed += new EventHandler<GUI.ListViewItem>(item_MousePressed);
-
-            _serverList.AddItem(item);
-        }
-
-        void item_MousePressed(object sender, GUI.ListViewItem e)
-        {
-            ServerInfo sInfo = (ServerInfo)e.Tag;
-
-            _gameState = GameState.Lobby;
-            _serverRefreshTimer.Stop();
-            ConnectToServer(sInfo);
-            return;
-
-        }
-
+        
         /// <summary>
         /// Initializes the game
         /// </summary>
@@ -276,7 +259,9 @@ namespace DoodleEmpires.Engine.Net
             
             _guiFont = Content.Load<SpriteFont>("GUIFont");
             _guiFont.FixFont();
-            
+
+            _serverRefreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(_serverRefreshTimer_Elapsed);
+                        
             if (_singlePlayer)
             {
                 _map = new SPMap(GraphicsDevice, _guiFont, _tileManager, _blockAtlas, 400, 800);
@@ -336,7 +321,7 @@ namespace DoodleEmpires.Engine.Net
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
 
             _mainControl = new GUIPanel(GraphicsDevice, null);
-            _mainControl.Bounds = new Rectangle(0, 0, 120, 165);
+            _mainControl.Bounds = new Rectangle(0, 0, 120, 285);
 
             _menuControl = new GUIPanel(GraphicsDevice, null);
             _menuControl.Bounds = new Rectangle(0, 0, 120, 165);
@@ -351,7 +336,13 @@ namespace DoodleEmpires.Engine.Net
             _serverList = new GUIListView(GraphicsDevice, _serverListControl);
             _serverList.Bounds = new Rectangle(0, 0, 120, 140);
             _serverList.Font = _guiFont;
+            _serverList.HeaderText = "Host: ";
 
+            GUIButton serverListBack = new GUIButton(GraphicsDevice, _guiFont, _serverListControl);
+            serverListBack.Text = "Back";
+            serverListBack.Bounds = new Rectangle(40, _serverList.Bounds.Bottom + 5, 40, 15);
+            serverListBack.OnMousePressed += ExitToMenu;
+            
             GUIButton singlePlayerButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
             singlePlayerButton.Bounds = new Rectangle(20, 20, 80, 20);
             singlePlayerButton.Text = "Singleplayer";
@@ -383,6 +374,23 @@ namespace DoodleEmpires.Engine.Net
             gridView.Bounds = new Rectangle(0, 12, 121, 121);
             gridView.Font = _guiFont;
             gridView.HeaderText = "Block:";
+
+            _zoneView = new GUIGridView(GraphicsDevice, _mainControl);
+            _zoneView.Bounds = new Rectangle(0, gridView.Bounds.Bottom + 5, 121, 120);
+            _zoneView.Font = _guiFont;
+            _zoneView.HeaderText = "Zone:";
+
+            foreach (ZoneInfo zone in GlobalZoneManager.Manager.Items)
+            {
+                _zoneView.AddItem(new GridViewItem()
+                {
+                    Texture = _blockTexs[0],
+                    MousePressed = OnZoneChanged,
+                    Tag = zone.ZoneID,
+                    Text = zone.Name,
+                    ColorModifier = zone.Color
+                });
+            }
 
             foreach (Tile t in _tileManager.Tiles)
             {
@@ -623,6 +631,7 @@ namespace DoodleEmpires.Engine.Net
         protected virtual void ExitToMenu()
         {
             _gameState = GameState.MainMenu;
+            _serverRefreshTimer.Stop();
 
             if (_client != null)
             {
@@ -783,6 +792,53 @@ namespace DoodleEmpires.Engine.Net
             _gameState = GameState.ServerList;
         }
 
+        void NetGame_OnFoundServer(ServerInfo serverInfo)
+        {
+            GUI.ListViewItem item = new GUI.ListViewItem();
+            item.Tag = serverInfo;
+            item.Text = serverInfo.Name;
+            item.MousePressed += new EventHandler<GUI.ListViewItem>(OnServerInfoMousePressed);
+            item.ColorModifier = Color.Black;
+
+            _serverList.AddItem(item);
+        }
+
+        /// <summary>
+        /// Called when the a server is selected from the server list
+        /// </summary>
+        /// <param name="sender">The object that raised the event, should be the server list control</param>
+        /// <param name="e">The selected list view item</param>
+        private void OnServerInfoMousePressed(object sender, GUI.ListViewItem e)
+        {
+            ServerInfo sInfo = (ServerInfo)e.Tag;
+
+            _gameState = GameState.Lobby;
+            _serverRefreshTimer.Stop();
+            ConnectToServer(sInfo);
+            return;
+
+        }
+
+        /// <summary>
+        /// Called when an item in the block list is selected
+        /// </summary>
+        /// <param name="sender">The object to raise the event</param>
+        /// <param name="item">The newly selected item</param>
+        private void OnItemChanged(object sender, GridViewItem item)
+        {
+            _editType = (byte)item.Tag;
+        }
+
+        /// <summary>
+        /// Called when an item in the zone list is selected
+        /// </summary>
+        /// <param name="sender">The object to raise the event</param>
+        /// <param name="item">The newly selected item</param>
+        private void OnZoneChanged(object send, GridViewItem item)
+        {
+            _zoneTpye = (short)item.Tag;
+        }
+
         #endregion
 
         #region SP Side
@@ -842,16 +898,6 @@ namespace DoodleEmpires.Engine.Net
 
                 _map.BackDrop = _paperTex;
             }
-        }
-
-        /// <summary>
-        /// Called when an item in the block list is selected
-        /// </summary>
-        /// <param name="sender">The object to raise the event</param>
-        /// <param name="item">The newly selected item</param>
-        private void OnItemChanged(object sender, GridViewItem item)
-        {
-            _editType = (byte)item.Tag;
         }
 
         #endregion
