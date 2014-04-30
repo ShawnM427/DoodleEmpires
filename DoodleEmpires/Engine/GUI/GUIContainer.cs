@@ -78,7 +78,7 @@ namespace DoodleEmpires.Engine.GUI
         {
             foreach (IGUI control in _controls)
             {
-                if (control != null && control.Image != null)
+                if (control != null && control.Visible && control.Image != null)
                     _spriteBatch.Draw(control.Image, control.Bounds, Color.White);
             }
 
@@ -104,7 +104,7 @@ namespace DoodleEmpires.Engine.GUI
         public override bool MousePressed(MouseEventArgs e)
         {
             foreach (IGUI control in _controls)
-                if (control.MousePressed(e))
+                if (control.Enabled && control.MousePressed(e))
                     return true;
 
             return false;

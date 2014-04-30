@@ -25,7 +25,7 @@ namespace DoodleEmpires
             if (args.Length > 0)
                 bool.TryParse(args[0], out singlePlayer);
 
-            using (var game = new NetGame(singlePlayer))
+            using (var game = new NetGame())
                 game.Run();
         }
 

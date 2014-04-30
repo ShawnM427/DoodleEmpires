@@ -48,6 +48,7 @@
     <Compile Include="Engine\Entities\Pathfinding.cs" />
     <Compile Include="Engine\Entities\UnitBuff.cs" />
     <Compile Include="Engine\Economy\Zoning.cs" />
+    <Compile Include="Engine\GUI\GUIListView.cs" />
     <Compile Include="Engine\GUI\GUIButton.cs" />
     <Compile Include="Engine\GUI\GUIScrollPanel.cs" />
     <Compile Include="Engine\GUI\GUITextPane.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Engine\Terrain\VoxelMap.cs" />
     <Compile Include="Engine\Utilities\AdvancedGame.cs" />
     <Compile Include="Engine\Utilities\CustomGame.cs" />
+    <Compile Include="Engine\Utilities\EventExtensions.cs" />
     <Compile Include="Engine\Utilities\FPSManager.cs" />
     <Compile Include="Engine\Utilities\Noise.cs" />
     <Compile Include="Engine\Utilities\ObjectManager.cs" />

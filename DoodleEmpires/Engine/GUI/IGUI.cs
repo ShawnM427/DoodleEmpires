@@ -22,6 +22,8 @@ namespace DoodleEmpires.Engine.GUI
         protected Color _colorMultiplier = Color.White;
         protected Color _backColor = Color.LightGray;
         protected GUIContainer _parent;
+        protected bool _visible = true;
+        protected bool _enabled = true;
 
         protected VertexPositionColor[] _cornerVerts = new VertexPositionColor[5]
         {
@@ -102,6 +104,69 @@ namespace DoodleEmpires.Engine.GUI
                     _parent.Invalidating = true;
             }
         }
+        /// <summary>
+        /// Gets or sets whether this control is visible
+        /// </summary>
+        public bool Visible
+        {
+            get { return _visible; }
+            set
+            {
+                _visible = value;
+                _enabled = !_visible ? false : _enabled;
+                Invalidating = true;
+            }
+        }
+        /// <summary>
+        /// Gets or sets whether this control is visible
+        /// </summary>
+        public bool Enabled
+        {
+            get { return _enabled; }
+            set
+            {
+                _enabled = value;
+                Invalidating = true;
+            }
+        }
+
+        public int X
+        {
+            get { return _bounds.X; }
+            set
+            {
+                _bounds.X = value;
+                Bounds = _bounds;
+            }
+        }
+        public int Y
+        {
+            get { return _bounds.Y; }
+            set
+            {
+                _bounds.Y = value;
+                Bounds = _bounds;
+            }
+        }
+        public int Width
+        {
+            get { return _bounds.Width; }
+            set
+            {
+                _bounds.Width = value;
+                Bounds = _bounds;
+            }
+        }
+        public int Height
+        {
+            get { return _bounds.Height; }
+            set
+            {
+                _bounds.Height = value;
+                Bounds = _bounds;
+            }
+        }
+
 
         public IGUI(GraphicsDevice graphics, GUIContainer parent)
         {
@@ -124,7 +189,7 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         protected virtual bool BeginInvalidate()
         {
-            if (_screenBounds.Width > 0 && _screenBounds.Height > 0)
+            if (_screenBounds.Width > 0 && _screenBounds.Height > 0 && _visible)
             {
                 if (_renderTarget == null)
                     _renderTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);

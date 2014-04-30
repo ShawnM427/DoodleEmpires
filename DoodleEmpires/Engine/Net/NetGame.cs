@@ -149,7 +149,12 @@ namespace DoodleEmpires.Engine.Net
         protected Random _rand;
 
         protected GUIContainer _mainControl;
+        protected GUIContainer _menuControl;
+        protected GUIContainer _serverListControl;
         protected GUILabel _fpsLabel;
+        GUIButton _saveButton;
+        GUIButton _loadButton;
+        GUIListView _serverList;
 
         protected SpriteFont _guiFont;
 
@@ -161,21 +166,72 @@ namespace DoodleEmpires.Engine.Net
         protected bool _isDefininingZone = false;
         protected Vector2 _zoneStart = Vector2.Zero;
 
-        protected GameState _gameState = GameState.InGame;
+        protected GameState _gameState = GameState.MainMenu;
 
         #endregion
 
         bool _singlePlayer = true;
+        protected bool SinglePlayer
+        {
+            get { return _singlePlayer; }
+            set
+            {
+                _singlePlayer = value;
+
+                if (_singlePlayer)
+                {
+                    if (_map == null || !_map.SinglePlayerMap)
+                    {
+                        _map = new SPMap(GraphicsDevice, _guiFont, _tileManager, _blockAtlas, 400, 800);
+                        _map.BackDrop = _paperTex;
+
+                        _view = new Camera2D(GraphicsDevice);
+                        _view.ScreenBounds = new Rectangle(0, 0, _map.WorldWidth, _map.WorldHeight);
+
+                        _cameraController = new CameraControl(_view);
+                        _cameraController.Position = new Vector2(0, 200 * SPMap.TILE_HEIGHT);
+
+                        _view.Focus = _cameraController;
+
+                    }
+
+                    _loadButton.Visible = true;
+                    _loadButton.Enabled = true;
+
+                    _saveButton.Visible = true;
+                    _saveButton.Enabled = true;
+                }
+                else
+                {
+                    _serverRefreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(_serverRefreshTimer_Elapsed);
+                    _serverRefreshTimer.Start();
+
+                    _port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
+
+                    NetPeerConfiguration config = new NetPeerConfiguration("DoodleEmpires");
+                    config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+                    config.EnableMessageType(NetIncomingMessageType.StatusChanged);
+                    config.EnableMessageType(NetIncomingMessageType.Data);
+                    config.ConnectionTimeout = 10F;
+                    //config.LocalAddress = IPAddress.Parse("");
+                    //config.Port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
+
+                    _client = new NetClient(config);
+                    _client.Start();
+
+                    OnJoinedServer += _OnJoinedServer;
+
+                    PollForServers();
+                }
+            }
+        }
 
         /// <summary>
         /// Creates a new instance of a networked game
         /// </summary>
-        public NetGame(bool singlePlayer, string userName = "unknown")
+        public NetGame(string userName = "unknown")
             : base()
         {
-            _singlePlayer = singlePlayer;
-            _gameState = _singlePlayer ? GameState.InGame : GameState.MainMenu;
-
             graphicsManager = new GraphicsDeviceManager(this);
             graphicsManager.PreferMultiSampling = false;
             graphicsManager.SynchronizeWithVerticalRetrace = false;
@@ -184,6 +240,29 @@ namespace DoodleEmpires.Engine.Net
             IsFixedTimeStep = false;
 
             _myPlayer = new PlayerInfo(userName);
+
+            OnFoundServer += new FoundServerEvent(NetGame_OnFoundServer);
+        }
+
+        void NetGame_OnFoundServer(ServerInfo serverInfo)
+        {
+            GUI.ListViewItem item = new GUI.ListViewItem();
+            item.Tag = serverInfo;
+            item.Text = serverInfo.Name;
+            item.MousePressed += new EventHandler<GUI.ListViewItem>(item_MousePressed);
+
+            _serverList.AddItem(item);
+        }
+
+        void item_MousePressed(object sender, GUI.ListViewItem e)
+        {
+            ServerInfo sInfo = (ServerInfo)e.Tag;
+
+            _gameState = GameState.Lobby;
+            _serverRefreshTimer.Stop();
+            ConnectToServer(sInfo);
+            return;
+
         }
 
         /// <summary>
@@ -212,35 +291,7 @@ namespace DoodleEmpires.Engine.Net
             }
 
             _rand = new Random();
-
-            if (!_singlePlayer)
-            {
-                _serverRefreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(_serverRefreshTimer_Elapsed);
-                _serverRefreshTimer.Start();
-
-                _port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
-
-                NetPeerConfiguration config = new NetPeerConfiguration("DoodleEmpires");
-                config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
-                config.EnableMessageType(NetIncomingMessageType.StatusChanged);
-                config.EnableMessageType(NetIncomingMessageType.Data);
-                config.ConnectionTimeout = 10F;
-                //config.LocalAddress = IPAddress.Parse("");
-                //config.Port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
-
-                _client = new NetClient(config);
-                _client.Start();
-
-                OnJoinedServer += _OnJoinedServer;
-
-
-                PollForServers();
-            }
-            else
-            {
-                _map = new SPMap(GraphicsDevice, _guiFont, _tileManager, _blockAtlas, 800, 400);
-            }
-
+            
             base.Initialize();
         }
 
@@ -249,6 +300,9 @@ namespace DoodleEmpires.Engine.Net
             PollForServers();
         }
 
+        /// <summary>
+        /// Checks for local servers. Later, this will poll the central server for servers
+        /// </summary>
         private void PollForServers()
         {
             if (_ip == null)
@@ -268,7 +322,7 @@ namespace DoodleEmpires.Engine.Net
         protected override void LoadContent()
         {
             _paperTex = Content.Load<Texture2D>("Paper");
-            
+
             _debugFont = Content.Load<SpriteFont>("debugFont");
 
             _soundEngine = new SoundEngine();
@@ -284,22 +338,46 @@ namespace DoodleEmpires.Engine.Net
             _mainControl = new GUIPanel(GraphicsDevice, null);
             _mainControl.Bounds = new Rectangle(0, 0, 120, 165);
 
+            _menuControl = new GUIPanel(GraphicsDevice, null);
+            _menuControl.Bounds = new Rectangle(0, 0, 120, 165);
+            _menuControl.X = GraphicsDevice.Viewport.Width / 2 - _menuControl.Bounds.Width / 2;
+            _menuControl.Y = GraphicsDevice.Viewport.Height / 2 - _menuControl.Bounds.Height / 2;
+
+            _serverListControl = new GUIPanel(GraphicsDevice, null);
+            _serverListControl.Bounds = new Rectangle(0, 0, 120, 165);
+            _serverListControl.X = GraphicsDevice.Viewport.Width / 2 - _serverListControl.Bounds.Width / 2;
+            _serverListControl.Y = GraphicsDevice.Viewport.Height / 2 - _serverListControl.Bounds.Height / 2;
+
+            _serverList = new GUIListView(GraphicsDevice, _serverListControl);
+            _serverList.Bounds = new Rectangle(0, 0, 120, 140);
+            _serverList.Font = _guiFont;
+
+            GUIButton singlePlayerButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
+            singlePlayerButton.Bounds = new Rectangle(20, 20, 80, 20);
+            singlePlayerButton.Text = "Singleplayer";
+            singlePlayerButton.OnMousePressed += singlePlayerButton_OnPressed;
+
+            GUIButton LANButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
+            LANButton.Bounds = new Rectangle(20, singlePlayerButton.Bounds.Bottom + 5, 80, 20);
+            LANButton.Text = "LAN";
+            LANButton.OnMousePressed += LANButton_OnPressed;
+
+            singlePlayerButton.Invalidating = true;
+
             _fpsLabel = new GUILabel(GraphicsDevice, _guiFont, _mainControl);
             _fpsLabel.Text = "";
 
-            if (_singlePlayer)
-            {
-                _map.BackDrop = _paperTex;
-                GUIButton saveButton = new GUIButton(GraphicsDevice, _guiFont, _mainControl);
-                saveButton.Text = "Save";
-                saveButton.Bounds = new Rectangle(5, 140, 40, 20);
-                saveButton.OnMousePressed += new Action(saveButton_OnMousePressed);
+            _saveButton = new GUIButton(GraphicsDevice, _guiFont, _mainControl);
+            _saveButton.Text = "Save";
+            _saveButton.Bounds = new Rectangle(5, 140, 40, 20);
+            _saveButton.OnMousePressed += new Action(saveButton_OnMousePressed);
+            _saveButton.Visible = false;
 
-                GUIButton loadButton = new GUIButton(GraphicsDevice, _guiFont, _mainControl);
-                loadButton.Text = "Load";
-                loadButton.Bounds = new Rectangle(50, 140, 40, 20);
-                loadButton.OnMousePressed += new Action(loadButton_OnMousePressed);
-            }
+            _loadButton = new GUIButton(GraphicsDevice, _guiFont, _mainControl);
+            _loadButton.Text = "Load";
+            _loadButton.Bounds = new Rectangle(50, 140, 40, 20);
+            _loadButton.OnMousePressed += new Action(loadButton_OnMousePressed);
+            _loadButton.Visible = false;
 
             GUIGridView gridView = new GUIGridView(GraphicsDevice, _mainControl);
             gridView.Bounds = new Rectangle(0, 12, 121, 121);
@@ -342,9 +420,15 @@ namespace DoodleEmpires.Engine.Net
 
             switch (_gameState)
             {
+                case GameState.MainMenu:
+                    _menuControl.Update();
+                    break;
+                case GameState.ServerList:
+                    _serverListControl.Update();
+                    break;
                 case GameState.InGame:
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                        Exit();
+                        ExitToMenu();
 
                     _cameraController.Update(gameTime);
                     _view.Update(gameTime);
@@ -396,10 +480,12 @@ namespace DoodleEmpires.Engine.Net
                         info.EndPoint = msg.SenderEndpoint;
 
                         if (!_availableServers.Contains(info))
+                        {
                             _availableServers.Add(info);
 
-                        if (OnFoundServer != null)
-                            OnFoundServer(info);
+                            if (OnFoundServer != null)
+                                OnFoundServer(info);
+                        }
 
                         break;
 
@@ -420,7 +506,6 @@ namespace DoodleEmpires.Engine.Net
                         {
                             System.Diagnostics.Debug.WriteLine("Lost Connection \"{0}\"", msg.ReadString());
                             _gameState = GameState.MainMenu;
-                            _serverRefreshTimer.Start();
                         }
                         break;
 
@@ -483,23 +568,33 @@ namespace DoodleEmpires.Engine.Net
         {
             GraphicsDevice.SetRenderTarget(null);
 
-            GraphicsDevice.Clear(Color.White);
-
             FPSManager.OnDraw(gameTime);
 
             switch (_gameState)
             {
+                case GameState.ServerList:
+                    DrawServerList();
+                    break;
                 case GameState.MainMenu:
                     DrawMenu();
                     break;
                 case GameState.InGame:
-                    GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
-
-                    _map.Render(_view);
-
-                    _mainControl.Draw();
+                    DrawMainGame();
                     break;
             }
+        }
+
+        /// <summary>
+        /// Draws the main game
+        /// </summary>
+        protected virtual void DrawMainGame()
+        {
+            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
+
+            _map.Render(_view);
+
+            _mainControl.Draw();
         }
 
         /// <summary>
@@ -507,17 +602,32 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected virtual void DrawMenu()
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
-            SpriteBatch.Begin();
-            SpriteBatch.DrawString(_guiFont, "FPS:" + FPSManager.AverageFramesPerSecond, new Vector2(10, 10), Color.Black);
+            _menuControl.Draw();
+        }
 
-            for (int i = 0; i < _availableServers.Count; i++)
+        /// <summary>
+        /// Draws the server list
+        /// </summary>
+        protected virtual void DrawServerList()
+        {
+            GraphicsDevice.Clear(Color.White);
+
+            _serverListControl.Draw();
+        }
+
+        /// <summary>
+        /// Exits this game to the main menu
+        /// </summary>
+        protected virtual void ExitToMenu()
+        {
+            _gameState = GameState.MainMenu;
+
+            if (_client != null)
             {
-                ServerInfo inf = _availableServers[i];
-                SpriteBatch.DrawString(_guiFont, inf.Name, new Vector2(10, 30 + i * 20), Color.Black);
+                _client.Disconnect("Disconnecting");
             }
-            SpriteBatch.End();
         }
 
         /// <summary>
@@ -528,20 +638,7 @@ namespace DoodleEmpires.Engine.Net
         {
             switch (_gameState)
             {
-                case GameState.MainMenu:
-                    for (int i = 0; i < _availableServers.Count; i++)
-                    {
-                        if (new Rectangle(10, 30 + i * 20, (int)_guiFont.MeasureString(_availableServers[i].Name).X, 20).Contains(args.Location))
-                        {
-                            ConnectToServer(_availableServers[i]);
-                            _gameState = GameState.Lobby;
-                            _serverRefreshTimer.Stop();
-                            return;
-                        }
-                    }
-                    break;
                 case GameState.InGame:
-
                     if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) & args.LeftButton == ButtonState.Pressed)
                     {
                         _isDefininingZone = true;
@@ -574,6 +671,12 @@ namespace DoodleEmpires.Engine.Net
         {
             switch (_gameState)
             {
+                case GameState.MainMenu:
+                    _menuControl.MousePressed(args);
+                    break;
+                case GameState.ServerList:
+                    _serverListControl.MousePressed(args);
+                    break;
                 case GameState.InGame:
                     if (!_mainControl.ScreenBounds.Contains(args.Location))
                     {
@@ -660,6 +763,24 @@ namespace DoodleEmpires.Engine.Net
             }
 
             base.MouseReleased(args);
+        }
+
+        /// <summary>
+        /// Called when the single player button in the main menu is pressed
+        /// </summary>
+        void singlePlayerButton_OnPressed()
+        {
+            SinglePlayer = true;
+            _gameState = GameState.InGame;
+        }
+
+        /// <summary>
+        /// Called when the LAN button in the main menu is pressed
+        /// </summary>
+        void LANButton_OnPressed()
+        {
+            SinglePlayer = false;
+            _gameState = GameState.ServerList;
         }
 
         #endregion
@@ -839,6 +960,7 @@ namespace DoodleEmpires.Engine.Net
         {
             _map = null;
             _map = SPMap.ReadFromMessage(m, GraphicsDevice, _guiFont, _tileManager, _blockAtlas);
+            _map.BackDrop = _paperTex;
         }
 
         /// <summary>
@@ -867,6 +989,7 @@ namespace DoodleEmpires.Engine.Net
             _myPlayer.PlayerIndex = m.ReadByte();
 
             _map = SPMap.ReadFromMessage(m, GraphicsDevice, _guiFont, _tileManager, _blockAtlas);
+            _map.BackDrop = _paperTex;
 
             byte playerCount = m.ReadByte();
 

@@ -94,6 +94,8 @@ namespace DoodleEmpires.Engine.Terrain
 
         protected int _seed;
 
+        protected bool _isSinglePlayer;
+
         #endregion
 
         int _maxX;
@@ -176,6 +178,11 @@ namespace DoodleEmpires.Engine.Terrain
             set;
         }
 
+        public bool SinglePlayerMap
+        {
+            get { return _isSinglePlayer; }
+        }
+
         #endregion
 
         /// <summary>
@@ -190,6 +197,8 @@ namespace DoodleEmpires.Engine.Terrain
         {
             _seed = seed.HasValue ? seed.Value : (int)DateTime.Now.Ticks;
             Noise.Seed = _seed;
+
+            _isSinglePlayer = !isMPMap;
 
             _random = new Random(_seed);
             _tiles = new byte[width, height];
