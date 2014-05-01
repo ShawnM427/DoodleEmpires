@@ -24,9 +24,10 @@ namespace DoodleEmpires.Engine.Net
         BlockUpdate = 6,
         MetaChanged = 7,
         ReqZoneadded = 8,
-        ZoneAdded = 9,
-        ZoneRemoved = 10,
-        MapChanged = 11
+        ReqZoneRemoved = 9,
+        ZoneAdded = 10,
+        ZoneRemoved = 11,
+        MapChanged = 12
     }
 
     public enum GameState : byte

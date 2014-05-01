@@ -1,4 +1,10 @@
-﻿using System;
+﻿/// TODO note:
+/// There's currently a pretty sever bug on (probably) serverside
+/// that's causing issues with changed states not properly synching when
+/// saving and loading maps. Client synchronization is still good. Most likely
+/// an issue in saving/loading the delta map changes.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -541,12 +547,19 @@ namespace DoodleEmpires.Engine.Net
                             case NetPacketType.ConnectionFailed: //the connection attempt has failed
                                 HandleConnectionFailed(msg);
                                 break;
+
                             case NetPacketType.ZoneAdded:
                                 HandleZoneAdded(msg);
                                 break;
+
+                            case NetPacketType.ZoneRemoved:
+                                HandleZoneDel(msg);
+                                break;
+
                             case NetPacketType.MapChanged:
                                 HandleMapChanged(msg);
                                 break;
+
                             default:
                                 Console.WriteLine("Unknown packet type {0} received!", packetType);
                                 _client.Disconnect("You sent shitty data!");
@@ -657,13 +670,20 @@ namespace DoodleEmpires.Engine.Net
                     {
                         Vector2 worldPos = _view.PointToWorld(args.Location);
 
-                        foreach (Zoning z in _map.Zones)
+                        if (_singlePlayer)
                         {
-                            if (z.Bounds.Contains(worldPos))
+                            foreach (Zoning z in _map.Zones)
                             {
-                                _map.DeleteZone(z);
-                                break;
+                                if (z.Bounds.Contains(worldPos))
+                                {
+                                    _map.DeleteZone(z);
+                                    break;
+                                }
                             }
+                        }
+                        else
+                        {
+                            RequestDelZone((int)worldPos.X, (int)worldPos.Y);
                         }
                     }
                     break;
@@ -745,6 +765,11 @@ namespace DoodleEmpires.Engine.Net
             switch (_gameState)
             {
                 case GameState.InGame:
+                    _prevReqX = -1;
+                    _prevReqY = -1;
+                    _prevReqDelX = -1;
+                    _prevReqDelY = -1;
+
                     if (_isDefininingZone & args.LeftButton == ButtonState.Pressed)
                     {
                         Vector2 zoneEnd = _view.PointToWorld(args.Location);
@@ -986,6 +1011,27 @@ namespace DoodleEmpires.Engine.Net
         }
 
         /// <summary>
+        /// Called when this client is requesting a zone to be deleted
+        /// </summary>
+        /// <param name="x">The x coord to delete at</param>
+        /// <param name="y">The y coord to delete at</param>
+        public void RequestDelZone(int x, int y)
+        {
+            NetOutgoingMessage msg = _client.CreateMessage();
+
+            msg.Write((byte)NetPacketType.ReqZoneRemoved, 8);
+
+            msg.Write((short)x);
+            msg.Write((short)y);
+
+            _client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
+
+#if DEBUG
+            AccountedUpload += msg.LengthBytes;
+#endif
+        }
+
+        /// <summary>
         /// Called when we should leave the game
         /// </summary>
         /// <param name="reason"></param>
@@ -1094,6 +1140,22 @@ namespace DoodleEmpires.Engine.Net
             Zoning zone = Zoning.ReadFromPacket(m);
 
             _map.AddPrebuiltZone(zone);
+
+            #if DEBUG
+            AccountedDownload += m.LengthBytes;
+            #endif
+        }
+
+        /// <summary>
+        /// Called when the server says a zone has been removed
+        /// </summary>
+        /// <param name="m">The message to parse</param>
+        private void HandleZoneDel(NetIncomingMessage m)
+        {
+            int x = m.ReadInt16();
+            int y = m.ReadInt16();
+
+            _map.DeleteZone(x, y);
 
             #if DEBUG
             AccountedDownload += m.LengthBytes;

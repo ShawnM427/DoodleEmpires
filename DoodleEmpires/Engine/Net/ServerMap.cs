@@ -90,7 +90,7 @@ namespace DoodleEmpires.Engine.Terrain
             {
                 _tiles[x, y] = value;
 
-                DeltaMapChange change = _mapChanges.Find(X => X.X == x && X.Y == y);
+                DeltaMapChange change = _mapChanges.Find(X => X.X == x & X.Y == y);
 
                 if (change == null)
                     _mapChanges.Add(new DeltaMapChange(x, y, value));

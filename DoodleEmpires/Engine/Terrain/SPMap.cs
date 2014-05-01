@@ -342,6 +342,41 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
+        /// Deletes a specific zone
+        /// </summary>
+        /// <param name="zone">The zone to delete</param>
+        public void DeleteZone(int x, int y)
+        {
+            Zoning zone = _zones.Find(Zone => Zone.Bounds.Contains(x, y));
+
+            if (zone != null)
+            {
+                int id = _zones.IndexOf(zone);
+
+                List<VertexPositionColor> temp = _zoneVerts.ToList();
+                temp.RemoveRange(id * 4, 4);
+                _zoneVerts = temp.ToArray();
+
+                for (int iID = id * 6 + 6; iID < _zoneIndices.Length; iID += 6)
+                {
+                    _zoneIndices[iID] = _zoneIndices[iID] - 4;
+                    _zoneIndices[iID + 1] = _zoneIndices[iID + 1] - 4;
+                    _zoneIndices[iID + 2] = _zoneIndices[iID + 2] - 4;
+
+                    _zoneIndices[iID + 3] = _zoneIndices[iID + 3] - 4;
+                    _zoneIndices[iID + 4] = _zoneIndices[iID + 4] - 4;
+                    _zoneIndices[iID + 5] = _zoneIndices[iID + 5] - 4;
+                }
+
+                List<int> temp2 = _zoneIndices.ToList();
+                temp2.RemoveRange(id * 6, 6);
+                _zoneIndices = temp2.ToArray();
+
+                _zones.RemoveAt(id);
+            }
+        }
+
+        /// <summary>
         /// Handles adding a pre-snapped zone to the zone list
         /// </summary>
         /// <param name="zone">The zone to add</param>

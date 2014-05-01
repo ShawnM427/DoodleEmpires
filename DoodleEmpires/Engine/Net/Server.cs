@@ -137,6 +137,9 @@ namespace DoodleEmpires.Engine.Net
                                     HandleReqZone(msg);
                                     break;
                                 default:
+                                case NetPacketType.ReqZoneRemoved:
+                                    HandleReqDelZone(msg);
+                                    break;
 
                                     break;
                             }
@@ -227,7 +230,7 @@ namespace DoodleEmpires.Engine.Net
             int y = msg.ReadInt16();
             byte newID = msg.ReadByte(8);
 
-            if (x > 0 && y > 0 &&
+            if (x >= 0 && y >= 0 &&
                 x < _map.WorldWidth / ServerMap.TILE_WIDTH && y < _map.WorldHeight / ServerMap.TILE_HEIGHT)
             {
                 _map.SetTileSafe(x, y, newID);
@@ -241,6 +244,22 @@ namespace DoodleEmpires.Engine.Net
             _map.DefineZone(zone);
         }
 
+        private void HandleReqDelZone(NetIncomingMessage msg)
+        {
+            short x = msg.ReadInt16();
+            short y = msg.ReadInt16();
+
+            foreach (Zoning zone in _map.Zones)
+            {
+                if (zone.Bounds.Contains(x, y))
+                {
+                    _map.DeleteZone(zone);
+                    SendZoneRemoved(x, y);
+                    return;
+                }
+            }
+        }
+
         private void SendMapChanged()
         {
             NetOutgoingMessage msg = _server.CreateMessage();
@@ -249,7 +268,8 @@ namespace DoodleEmpires.Engine.Net
 
             _map.WriteToMessage(msg);
 
-            _server.SendMessage(msg, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
+            if (_playerConnections.Keys.Count > 0)
+                _server.SendMessage(msg, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
         }
 
         private void SendZoneAdded(Zoning newZone)
@@ -259,6 +279,18 @@ namespace DoodleEmpires.Engine.Net
             msg.Write((byte)NetPacketType.ZoneAdded, 8);
 
             newZone.WriteToPacket(msg);
+
+            _server.SendMessage(msg, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
+        }
+
+        private void SendZoneRemoved(short x, short y)
+        {
+            NetOutgoingMessage msg = _server.CreateMessage();
+
+            msg.Write((byte)NetPacketType.ZoneRemoved, 8);
+
+            msg.Write(x);
+            msg.Write(y);
 
             _server.SendMessage(msg, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
         }

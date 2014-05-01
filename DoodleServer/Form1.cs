@@ -88,6 +88,7 @@ namespace DoodleServer
 
                     if (dResult == DialogResult.OK)
                     {
+                        File.Delete(_saveDialog.FileName);
                         _server.Save(_saveDialog.OpenFile());
                     }
                     break;
