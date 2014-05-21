@@ -8,6 +8,7 @@ using DoodleEmpires.Engine.Terrain;
 using DoodleEmpires.Engine.Entities;
 using System.IO;
 using Lidgren.Network;
+using DoodleEmpires.Engine.Net;
 
 namespace DoodleEmpires.Engine.Economy
 {

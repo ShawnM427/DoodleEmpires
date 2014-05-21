@@ -42,6 +42,7 @@ namespace DoodleEmpires.Engine.Net
             _tileManager.RegisterOneWayConnect("Ladder", "Wood");
             _tileManager.RegisterOneWayConnect("Ladder", "Concrete");
             _tileManager.RegisterOneWayConnect("Ladder", "Stone");
+            _tileManager.RegisterOneWayConnect("Ladder", "Cobble");
         }
     }
 }

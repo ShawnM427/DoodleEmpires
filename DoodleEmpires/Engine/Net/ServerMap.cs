@@ -13,8 +13,9 @@ using System.ComponentModel;
 using DoodleEmpires.Engine.Economy;
 using Lidgren.Network;
 using DoodleEmpires.Engine.Net;
+using DoodleEmpires.Engine.Terrain;
 
-namespace DoodleEmpires.Engine.Terrain
+namespace DoodleEmpires.Engine.Net
 {
     /// <summary>
     /// The server's version of the voxel terrain
@@ -89,14 +90,7 @@ namespace DoodleEmpires.Engine.Terrain
             set
             {
                 _tiles[x, y] = value;
-
-                DeltaMapChange change = _mapChanges.Find(X => X.X == x & X.Y == y);
-
-                if (change == null)
-                    _mapChanges.Add(new DeltaMapChange(x, y, value));
-                else
-                    change.NewID = value;
-
+                
                 if (OnTerrainSet != null)
                     OnTerrainSet.Invoke(x, y, value);
             }
@@ -219,6 +213,16 @@ namespace DoodleEmpires.Engine.Terrain
                         //_tileManager[tID].OnTick(this, x, y);
                 }
             }
+        }
+
+        private void UpdateDeltaState(int x, int y, byte value)
+        {
+            DeltaMapChange change = _mapChanges.Find(Change => Change.X == x && Change.Y == y);
+
+            if (change == null)
+                _mapChanges.Add(new DeltaMapChange(x, y, value));
+            else
+                _mapChanges[_mapChanges.IndexOf(change)].NewID = value;
         }
 
         #region Zoning
@@ -407,22 +411,22 @@ namespace DoodleEmpires.Engine.Terrain
 
                 for (int yy = y; yy > y - height + 1; yy--)
                 {
-                    SetTile(x, yy, 4);
+                    SetTileCore(x, yy, 4);
                 }
 
                 for (int xx = x - radius / 2; xx <= x + radius / 2; xx++)
-                    SetTile(xx, y - height + 1, 0);
+                    SetTileCore(xx, y - height + 1, 0);
 
-                SetTile(x, y - height + 1, 4);
+                SetTileCore(x, y - height + 1, 4);
 
                 if (_random.Next(0, 3) == 1 && IsNotAir(x - 1, y + 1)) //33% chance of left root
-                    SetTile(x - 1, y, 4);
+                    SetTileCore(x - 1, y, 4);
                 if (_random.Next(0, 3) == 1 && IsNotAir(x + 1, y + 1)) //33% chance of right root
-                    SetTile(x + 1, y, 4);
+                    SetTileCore(x + 1, y, 4);
                 if (_random.Next(0, 10) == 1) //10% chance of left branch
-                    SetTile(x - 1, y - height + 1, 4);
+                    SetTileCore(x - 1, y - height + 1, 4);
                 if (_random.Next(0, 10) == 1) //10% chance of right branch
-                    SetTile(x + 1, y - height + 1, 4);
+                    SetTileCore(x + 1, y - height + 1, 4);
             }
         }
 
@@ -557,12 +561,25 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="x">The x co-ordinate to check (Chunk Coords)</param>
         /// <param name="y">The y co-ordinate to check (Chunk Coords)</param>
         /// <param name="id">The material to set</param>
-        public override void SetTile(int x, int y, byte id)
+        private void SetTileCore(int x, int y, byte id)
         {
             if (x >= 0 & x < _width & y >= 0 & y < _height)
             {
                 this[x, y] = id;
             }
+        }
+
+        /// <summary>
+        /// Safely sets the voxel material at the given position, should only be called by tile classes
+        /// </summary>
+        /// <param name="x">The x co-ordinate to check (Chunk Coords)</param>
+        /// <param name="y">The y co-ordinate to check (Chunk Coords)</param>
+        /// <param name="id">The material to set</param>
+        public override void SetTile(int x, int y, byte id)
+        {
+            SetTileCore(x, y, id);
+
+            UpdateDeltaState(x, y, id);
         }
 
         /// <summary>
@@ -593,7 +610,7 @@ namespace DoodleEmpires.Engine.Terrain
                 for (int yy = y - radius - 1; yy < y + radius + 1; yy++)
                 {
                     if (IsInsideOctagon(x, y, radius, xx, yy))
-                        SetTile(xx, yy, value);
+                        SetTileCore(xx, yy, value);
                 }
             }
         }

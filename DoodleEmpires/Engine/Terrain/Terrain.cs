@@ -11,6 +11,7 @@ namespace DoodleEmpires.Engine.Terrain
     /// <summary>
     /// Represents the basic terrain
     /// </summary>
+    [Obsolete("Vector terrain is deprecated, please use voxel terrain instead.", true)]
     public class Terrain
     {
         public const int CHUNKSIZE = 512;

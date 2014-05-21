@@ -19,6 +19,10 @@ namespace DoodleEmpires.Engine.Terrain
         {
             get { return false; }
         }
+        public virtual bool Climable
+        {
+            get { return false; }
+        }
 
         public Tile(byte type, short textureID, RenderType renderType = RenderType.Land, bool solid = false)
         {

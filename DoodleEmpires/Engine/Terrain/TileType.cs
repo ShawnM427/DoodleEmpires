@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using DoodleEmpires.Engine.Utilities;
 using Microsoft.Xna.Framework;
+using DoodleEmpires.Engine.Net;
 
 namespace DoodleEmpires.Engine.Terrain
 {
@@ -83,6 +84,14 @@ namespace DoodleEmpires.Engine.Terrain
 
     public class Ladder : Tile
     {
+        public override bool Climable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public Ladder(byte type)
             : base(type, 102, RenderType.Prop, false)
         {

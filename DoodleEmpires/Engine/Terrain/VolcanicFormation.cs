@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DoodleEmpires.Engine.Terrain
 {
+    [Obsolete("Volcanic formation cannot be used on the new voxel terrain system.")]
     public class VolcanicFormation
     {
         static int VolcanoPerChunk = 4;
@@ -21,7 +22,7 @@ namespace DoodleEmpires.Engine.Terrain
             {
                 vSize /= 2;
 
-                for (int i = 0; i < (length) / Terrain.CHUNKSIZE * VolcanoPerChunk; i++)
+                for (int i = 0; i < (length) / 16 * VolcanoPerChunk; i++)
                 {
                     int height = Random.Next(vSize);
 

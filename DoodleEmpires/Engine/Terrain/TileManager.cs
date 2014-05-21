@@ -24,6 +24,11 @@ namespace DoodleEmpires.Engine.Terrain
             get { return _tileTypes[ID]; }
         }
 
+        public byte this[string name]
+        {
+            get { return _tiles[name.ToLower()]; }
+        }
+
         public TileManager()
         {
             RegisterTile("Air",0, Color.Transparent, RenderType.None, false); //adds the air tile type
@@ -43,7 +48,7 @@ namespace DoodleEmpires.Engine.Terrain
             tile.Type = (byte)_tileTypes.Count;
             _tileTypes.Add(tile);
             RegisterConnect(tile.Type, tile.Type);
-            _tiles.Add(name, tile.Type);
+            _tiles.Add((name).ToLower(), tile.Type);
             return tile.Type;
         }
 
@@ -63,7 +68,7 @@ namespace DoodleEmpires.Engine.Terrain
                 tile.Type = (byte)_tileTypes.Count;
                 _tileTypes.Add(tile);
                 RegisterConnect(tile.Type, tile.Type);
-                _tiles.Add(name != null ? name : GenName(), tile.Type);
+                _tiles.Add((name != null ? name : GenName()).ToLower(), tile.Type);
                 return tile.Type;
             }
             else
@@ -87,7 +92,7 @@ namespace DoodleEmpires.Engine.Terrain
                 tile.Type = (byte)_tileTypes.Count;
                 _tileTypes.Add(tile);
                 RegisterConnect(tile.Type, tile.Type);
-                _tiles.Add(name != null ? name : GenName(), tile.Type);
+                _tiles.Add((name != null ? name : GenName()).ToLower(), tile.Type);
                 return tile.Type;
             }
             else
@@ -106,7 +111,7 @@ namespace DoodleEmpires.Engine.Terrain
                 tile.Type = (byte)_tileTypes.Count;
                 _tileTypes.Add(tile);
                 RegisterConnect(tile.Type, tile.Type);
-                _tiles.Add(name != null ? name : GenName(), tile.Type);
+                _tiles.Add((name != null ? name : GenName()).ToLower(), tile.Type);
                 return tile.Type;
             }
             else
@@ -116,6 +121,11 @@ namespace DoodleEmpires.Engine.Terrain
         public string NameOf(byte ID)
         {
             return _tiles.First( x => x.Value == ID).Key;
+        }
+
+        public byte IndexOf(string name)
+        {
+            return _tiles.First(x => x.Key == name).Value;
         }
 
         /// <summary>
@@ -156,6 +166,16 @@ namespace DoodleEmpires.Engine.Terrain
         }
 
         /// <summary>
+        /// Checks if a given tile ID is climable
+        /// </summary>
+        /// <param name="tileID">The tile ID to check</param>
+        /// <returns>True if the tile type is climable</returns>
+        public bool IsClimable(byte tileID)
+        {
+            return _tileTypes[tileID].Climable;
+        }
+
+        /// <summary>
         /// Checks if two tiles can connect
         /// </summary>
         /// <param name="sourceID">The source tile ID to check from</param>
@@ -189,6 +209,9 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="canConnect">Whether or not these tiles can connect</param>
         public void RegisterConnect(string tile1, string tile2, bool canConnect = true)
         {
+            tile1 = tile1.ToLower();
+            tile2 = tile2.ToLower();
+
             if (_tiles.ContainsKey(tile1) && _tiles.ContainsKey(tile2))
             {
                 _connections[_tiles[tile1], _tiles[tile2]] = canConnect;
@@ -217,6 +240,9 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="canConnect">Whether or not these tiles can connect</param>
         public void RegisterOneWayConnect(string tile1, string tile2, bool canConnect = true)
         {
+            tile1 = tile1.ToLower();
+            tile2 = tile2.ToLower();
+
             if (_tiles.ContainsKey(tile1) && _tiles.ContainsKey(tile2))
             {
                 _connections[_tiles[tile1], _tiles[tile2]] = canConnect;

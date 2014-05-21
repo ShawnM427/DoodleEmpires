@@ -1,8 +1,16 @@
 ﻿/// TODO note:
-/// There's currently a pretty sever bug on (probably) serverside
-/// that's causing issues with changed states not properly synching when
-/// saving and loading maps. Client synchronization is still good. Most likely
-/// an issue in saving/loading the delta map changes.
+/// 
+/// There's currently a pretty severe bug on (probably) serverside
+/// that's causing issues with changed tile states not properly synching when
+/// saving and loading maps. Client synchronization is still good. 
+/// May be an issue with the saving/loading of the delta map changes. 
+/// May also be the setting of ID's if the change already exists.
+/// May also look into keeping a non-static noise instance in server, and check
+/// the requested ID's against the noise ID's, add delta change where needed
+///  foo
+///  Sidenote: Need to look more into the delta states. Currently, they're generated even
+///  during TG. MUST fix to be only on TileSet, but the tree gen currently uses TileSet,
+///  maybe add a CoreTileSet that doesn't update the delta changes?
 
 using System;
 using System.Collections.Generic;

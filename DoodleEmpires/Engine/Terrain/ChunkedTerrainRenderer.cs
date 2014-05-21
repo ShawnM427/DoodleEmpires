@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using DoodleEmpires.Engine.Render;
 using Microsoft.Xna.Framework;
 using DoodleEmpires.Engine.Utilities;
+using DoodleEmpires.Engine.Net;
 
 namespace DoodleEmpires.Engine.Terrain
 {

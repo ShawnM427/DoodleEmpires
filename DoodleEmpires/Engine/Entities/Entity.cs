@@ -12,6 +12,12 @@ namespace DoodleEmpires.Engine.Entities
         Vector2 _position;
         int _textureID;
 
+        public Vector2 Position
+        {
+            get { return _position; }
+            set { _position = value; }
+        }
+
         public Entity()
         {
         }

@@ -12,8 +12,10 @@ using System.Diagnostics;
 using System.ComponentModel;
 using DoodleEmpires.Engine.Economy;
 using Lidgren.Network;
+using DoodleEmpires.Engine.Terrain;
+using DoodleEmpires.Engine.Entities.Pathfinding;
 
-namespace DoodleEmpires.Engine.Terrain
+namespace DoodleEmpires.Engine.Net
 {
     /// <summary>
     /// A terrain that is made up of small cubes, each having it's own texture and properties
@@ -101,6 +103,8 @@ namespace DoodleEmpires.Engine.Terrain
         int _maxX;
         int _maxY;
 
+        NodeMap _nodeMap;
+
         /// <summary>
         /// Gets or sets the voxel material at the given x and y
         /// </summary>
@@ -117,6 +121,7 @@ namespace DoodleEmpires.Engine.Terrain
             {
                 _tiles[x, y] = value;
                 UpdateVoxel(x, y);
+                UpdatePathFinding(x, y);
             }
         }
 
@@ -210,6 +215,8 @@ namespace DoodleEmpires.Engine.Terrain
 
             _maxX = width - 1;
             _maxY = height - 1;
+
+            _nodeMap = new NodeMap(_width, _height, TILE_WIDTH);
 
             _graphics = Graphics;
 
@@ -459,13 +466,16 @@ namespace DoodleEmpires.Engine.Terrain
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    tHeight = Noise.PerlinNoise_1D(x / 16.0f) * _terrainHeightModifier;
+                    tHeight = (float)Math.Round(Noise.PerlinNoise_1D(x / 16.0f) * _terrainHeightModifier);
+
+                    if (y == 200 + (int)tHeight)
+                        _nodeMap.ActivateNode(x, y);
                     if (y > 200 + tHeight)
                     {
                         if (y > 200 + tHeight + 4)
-                            _tiles[x, y] = 2;
+                            _tiles[x, y] = _tileManager["stone"];
                         else
-                            _tiles[x, y] = 1;
+                            _tiles[x, y] = _tileManager["grass"];
 
                         _neighbourStates[x, y] = (byte)MooreNeighbours.All;
                     }
@@ -569,14 +579,16 @@ namespace DoodleEmpires.Engine.Terrain
 
             if (doNeighbours)
             {
-                UpdateVoxel(x - 1, y - 1, false);
+                //UpdateVoxel(x - 1, y - 1, false);
                 UpdateVoxel(x, y - 1, false);
-                UpdateVoxel(x + 1, y - 1, false);
-                UpdateVoxel(x - 1, y + 1, false);
-                UpdateVoxel(x, y + 1, false);
-                UpdateVoxel(x + 1, y + 1, false);
+                //UpdateVoxel(x + 1, y - 1, false);
+
                 UpdateVoxel(x - 1, y, false);
                 UpdateVoxel(x + 1, y, false);
+
+                //UpdateVoxel(x - 1, y + 1, false);
+                UpdateVoxel(x, y + 1, false);
+                //UpdateVoxel(x + 1, y + 1, false);
             }
         }
 
@@ -684,6 +696,10 @@ namespace DoodleEmpires.Engine.Terrain
                         _tiles[x, y], _meta[x, y], _transformColor);
                 }
             }
+
+            #if DEBUG && HARD_DEBUG
+            _nodeMap.Draw(_spriteBatch, _atlas.Texture, camera.ScreenBounds);
+            #endif
 
             _spriteBatch.End();
         }
@@ -822,7 +838,45 @@ namespace DoodleEmpires.Engine.Terrain
         public override void SetTile(int x, int y, byte id)
         {
             if (x >= 0 & x < _width & y >= 0 & y < _height)
+            {
                 this[x, y] = id;
+            }
+        }
+
+        protected void UpdatePathFinding(int x, int y)
+        {
+            byte id = GetMaterial(x, y);
+            byte aboveID = GetMaterial(x, y - 1);
+            byte headID = GetMaterial(x, y - 2);
+            byte belowID = GetMaterial(x, y + 1);
+            byte below2ID = GetMaterial(x, y + 2);
+
+            if (id == 0)
+            {
+                if (aboveID == 0)
+                    _nodeMap.DeactivateNode(x, y - 1);
+                if (belowID == 0)
+                    _nodeMap.DeactivateNode(x, y);
+
+                if (_tileManager.IsSolid(belowID) && aboveID == 0)
+                    _nodeMap.ActivateNode(x, y);
+
+                if (belowID == 0 && _tileManager.IsSolid(below2ID))
+                    _nodeMap.ActivateNode(x, y + 1);
+            }
+            else
+            {
+                if (_tileManager.IsClimable(id))
+                    _nodeMap.ActivateNode(x, y);
+
+                else if (_tileManager.IsSolid(id))
+                {
+                    _nodeMap.DeactivateNode(x, y);
+
+                    if (aboveID == 0 && headID == 0)
+                        _nodeMap.ActivateNode(x, y - 1);
+                }
+            }
         }
 
         /// <summary>
@@ -871,7 +925,7 @@ namespace DoodleEmpires.Engine.Terrain
             BinaryWriter writer = new BinaryWriter(stream);
 
             writer.Write("Doodle Empires Voxel Terrain ");
-            writer.Write("0.0.4");
+            writer.Write("0.0.5");
 
             writer.Write(_width);
             writer.Write(_height);
@@ -921,6 +975,8 @@ namespace DoodleEmpires.Engine.Terrain
                     return LoadVersion_0_0_3(reader, labelFont, graphics, tileManager, atlas);
                 case "0.0.4":
                     return LoadVersion_0_0_4(reader, labelFont, graphics, tileManager, atlas);
+                case "0.0.5":
+                    return LoadVersion_0_0_5(reader, labelFont, graphics, tileManager, atlas);
                 default:
                     reader.Dispose();
                     return null;
@@ -1061,6 +1117,7 @@ namespace DoodleEmpires.Engine.Terrain
             catch (EndOfStreamException)
             {
                 Debug.WriteLine("[WARNING] File corrupt, attempted to rad past ond of stream. Attempting to bypass...");
+                return new SPMap(graphics, labelFont, tileManager, atlas, 800, 400);
             }
 
             reader.Dispose();
@@ -1104,7 +1161,8 @@ namespace DoodleEmpires.Engine.Terrain
             }
             catch (EndOfStreamException)
             {
-                Debug.WriteLine("[WARNING] File corrupt, attempted to rad past ond of stream. Attempting to bypass...");
+                Debug.WriteLine("[WARNING] File corrupt, attempted to read past end of stream. Returning random map.");
+                terrain = new SPMap(graphics, labelFont, tileManager, atlas, 800, 400);
             }
 
             reader.Dispose();
