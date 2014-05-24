@@ -62,7 +62,7 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// The underlying network connection
         /// </summary>
-        NetConnection _myConnection;
+        //NetConnection _myConnection;
         /// <summary>
         /// The current port
         /// </summary>
@@ -473,6 +473,11 @@ namespace DoodleEmpires.Engine.Net
 
                                 _soundEngine.PlaySound("shell_02", _view.PointToWorld(new Vector2(Mouse.GetState().X, Mouse.GetState().Y)));
                         }
+                    }
+
+                    if (keyState.IsKeyDown(Keys.F3) && _prevKeyState.IsKeyUp(Keys.F3))
+                    {
+                        _map.Debugging = !_map.Debugging;
                     }
 
                     _prevKeyState = keyState;

@@ -13,7 +13,7 @@ using System.ComponentModel;
 using DoodleEmpires.Engine.Economy;
 using Lidgren.Network;
 using DoodleEmpires.Engine.Terrain;
-using DoodleEmpires.Engine.Entities.Pathfinding;
+using DoodleEmpires.Engine.Entities.PathFinder;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -40,6 +40,7 @@ namespace DoodleEmpires.Engine.Net
         public const float ZONE_ALPHA = 0.5f;
         
         #region Protected Vars
+
         /// <summary>
         /// An array holding all of the bounding rectangles to draw voxels in
         /// </summary>
@@ -75,6 +76,7 @@ namespace DoodleEmpires.Engine.Net
         protected SpriteBatch _spriteBatch;
         protected BasicEffect _basicEffect;
         protected SpriteFont _zoneFont;
+        protected Texture2D _pixelTex;
 
         protected TextureAtlas _atlas;
         protected TileManager _tileManager;
@@ -98,13 +100,17 @@ namespace DoodleEmpires.Engine.Net
 
         protected bool _isSinglePlayer;
 
+        protected bool _debugging;
+
+        BaseGrid _aiGrid;
+        JumpPointParam _aiParam;
+        JumpPointFinder _jpFinder;
+
         #endregion
 
         int _maxX;
         int _maxY;
-
-        NodeMap _nodeMap;
-
+        
         /// <summary>
         /// Gets or sets the voxel material at the given x and y
         /// </summary>
@@ -183,9 +189,21 @@ namespace DoodleEmpires.Engine.Net
             set;
         }
 
+        /// <summary>
+        /// Gets whether this map is a singleplayer map
+        /// </summary>
         public bool SinglePlayerMap
         {
             get { return _isSinglePlayer; }
+        }
+
+        /// <summary>
+        /// Gets or sets whether this map is in debugging mode
+        /// </summary>
+        public bool Debugging
+        {
+            get { return _debugging; }
+            set { _debugging = value; }
         }
 
         #endregion
@@ -215,12 +233,13 @@ namespace DoodleEmpires.Engine.Net
 
             _maxX = width - 1;
             _maxY = height - 1;
-
-            _nodeMap = new NodeMap(_width, _height, TILE_WIDTH);
-
+            
             _graphics = Graphics;
 
             _spriteBatch = new SpriteBatch(Graphics);
+
+            _pixelTex = new Texture2D(_graphics, 1, 1);
+            _pixelTex.SetData<Color>(new Color[] { Color.White });
 
             _zoneFont = zoneFont;
 
@@ -234,6 +253,10 @@ namespace DoodleEmpires.Engine.Net
             _tileManager = tileManager;
             BuildVoxelBouds();
 
+            _aiGrid = new DynamicGridWPool(new NodePool());
+            _aiParam = new JumpPointParam(_aiGrid, true, true, true, HeuristicMode.EUCLIDEAN);
+            _jpFinder = new JumpPointFinder();
+            
             GenTerrain();
 
             if (!isMPMap)
@@ -469,7 +492,8 @@ namespace DoodleEmpires.Engine.Net
                     tHeight = (float)Math.Round(Noise.PerlinNoise_1D(x / 16.0f) * _terrainHeightModifier);
 
                     if (y == 200 + (int)tHeight)
-                        _nodeMap.ActivateNode(x, y);
+                        _aiGrid.SetWalkableAt(x, y, true);
+
                     if (y > 200 + tHeight)
                     {
                         if (y > 200 + tHeight + 4)
@@ -694,12 +718,14 @@ namespace DoodleEmpires.Engine.Net
                 {
                     _tileManager.RenderTile(_spriteBatch, _voxelBounds[x, y], _atlas, _neighbourStates[x, y],
                         _tiles[x, y], _meta[x, y], _transformColor);
+
+                    if (_debugging)
+                    {
+                        if (!_aiGrid.IsWalkableAt(x, y))
+                            _spriteBatch.Draw(_pixelTex, _voxelBounds[x, y], Color.Black * 0.25f);
+                    }
                 }
             }
-
-            #if DEBUG && HARD_DEBUG
-            _nodeMap.Draw(_spriteBatch, _atlas.Texture, camera.ScreenBounds);
-            #endif
 
             _spriteBatch.End();
         }
@@ -816,6 +842,83 @@ namespace DoodleEmpires.Engine.Net
 
         #endregion
 
+        #region Pathfinding
+
+        /// <summary>
+        /// Attempts to find a path between 2 points
+        /// </summary>
+        /// <param name="start">The start position</param>
+        /// <param name="end">The end position</param>
+        /// <returns>A list of grid positions. Note that these need to be translated to world space</returns>
+        public List<GridPos> GetPath(Vector2 start, Vector2 end)
+        {
+            //_aiParam.Reset()
+            return JumpPointFinder.FindPath(_aiParam);
+        }
+        
+        /// <summary>
+        /// Updates the pathfinding at the given coords
+        /// </summary>
+        /// <param name="x">The x coord (chunk)</param>
+        /// <param name="y">The y coord (chunk)</param>
+        /// <param name="doTopBottom">True if this node is the first level</param>
+        protected void UpdatePathFinding(int x, int y, bool doTopBottom = true)
+        {
+            byte id = GetMaterial(x, y);
+            byte aboveID = GetMaterial(x, y - 1);
+            byte headID = GetMaterial(x, y - 2);
+            byte belowID = GetMaterial(x, y + 1);
+
+            if (id == 0)
+            {
+                if ((_tileManager.IsSolid(belowID) || _tileManager.IsClimable(belowID)) && !_tileManager.IsSolid(aboveID))
+                    _aiGrid.SetWalkableAt(x, y, true);
+                else
+                    _aiGrid.SetWalkableAt(x, y, false);
+            }
+            else
+            {
+                if (_tileManager.IsClimable(id))
+                    _aiGrid.SetWalkableAt(x, y, true);
+                else if (_tileManager.IsSolid(id))
+                {
+                    _aiGrid.SetWalkableAt(x, y, false);
+
+                    if (aboveID == 0 && headID == 0)
+                        _aiGrid.SetWalkableAt(x, y - 1, true);
+                }
+            }
+
+            if (doTopBottom)
+            {
+                UpdatePathFinding(x, y - 1, false);
+                UpdatePathFinding(x, y + 1, false);
+            }
+        }
+
+        /// <summary>
+        /// Checks if a given tile may be passable
+        /// </summary>
+        /// <param name="x">The x coord (chunk)</param>
+        /// <param name="y">The y coord (chunk)</param>
+        /// <returns>True if the tile should be passable</returns>
+        private bool IsPassable(int x, int y)
+        {
+            return !_tileManager.IsSolid(GetMaterial(x, y)) || _tileManager.IsClimable(GetMaterial(x, y));
+        }
+
+        /// <summary>
+        /// Checks if a given tile may be passable
+        /// </summary>
+        /// <param name="id">The ID of the tile</param>
+        /// <returns>True if the tile should be passable</returns>
+        private bool IsPassable(byte id)
+        {
+            return !_tileManager.IsSolid(id) || _tileManager.IsClimable(id);
+        }
+
+        #endregion
+
         #region Get and Set
 
         /// <summary>
@@ -842,43 +945,7 @@ namespace DoodleEmpires.Engine.Net
                 this[x, y] = id;
             }
         }
-
-        protected void UpdatePathFinding(int x, int y)
-        {
-            byte id = GetMaterial(x, y);
-            byte aboveID = GetMaterial(x, y - 1);
-            byte headID = GetMaterial(x, y - 2);
-            byte belowID = GetMaterial(x, y + 1);
-            byte below2ID = GetMaterial(x, y + 2);
-
-            if (id == 0)
-            {
-                if (aboveID == 0)
-                    _nodeMap.DeactivateNode(x, y - 1);
-                if (belowID == 0)
-                    _nodeMap.DeactivateNode(x, y);
-
-                if (_tileManager.IsSolid(belowID) && aboveID == 0)
-                    _nodeMap.ActivateNode(x, y);
-
-                if (belowID == 0 && _tileManager.IsSolid(below2ID))
-                    _nodeMap.ActivateNode(x, y + 1);
-            }
-            else
-            {
-                if (_tileManager.IsClimable(id))
-                    _nodeMap.ActivateNode(x, y);
-
-                else if (_tileManager.IsSolid(id))
-                {
-                    _nodeMap.DeactivateNode(x, y);
-
-                    if (aboveID == 0 && headID == 0)
-                        _nodeMap.ActivateNode(x, y - 1);
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Safely sets the voxel material at the given position
         /// </summary>
@@ -925,7 +992,7 @@ namespace DoodleEmpires.Engine.Net
             BinaryWriter writer = new BinaryWriter(stream);
 
             writer.Write("Doodle Empires Voxel Terrain ");
-            writer.Write("0.0.5");
+            writer.Write("0.0.6");
 
             writer.Write(_width);
             writer.Write(_height);
@@ -937,6 +1004,7 @@ namespace DoodleEmpires.Engine.Net
                     writer.Write(_tiles[x, y]);
                     writer.Write(_neighbourStates[x, y]);
                     writer.Write(_meta[x, y]);
+                    writer.Write(_aiGrid.IsWalkableAt(x, y));
                 }
             }
 
@@ -977,6 +1045,8 @@ namespace DoodleEmpires.Engine.Net
                     return LoadVersion_0_0_4(reader, labelFont, graphics, tileManager, atlas);
                 case "0.0.5":
                     return LoadVersion_0_0_5(reader, labelFont, graphics, tileManager, atlas);
+                case "0.0.6":
+                    return LoadVersion_0_0_6(reader, labelFont, graphics, tileManager, atlas);
                 default:
                     reader.Dispose();
                     return null;
@@ -1145,9 +1215,55 @@ namespace DoodleEmpires.Engine.Net
                 {
                     for (int x = 0; x < width; x++)
                     {
+                        terrain[x, y] = reader.ReadByte();
+                        terrain._neighbourStates[x, y] = reader.ReadByte();
+                        terrain._meta[x, y] = reader.ReadByte();
+                    }
+                }
+
+                int zoneCount = reader.ReadInt32();
+
+                for (int i = 0; i < zoneCount; i++)
+                {
+                    Zoning zone = Zoning.ReadFromStream(reader);
+                    terrain.AddZone(zone);
+                }
+            }
+            catch (EndOfStreamException)
+            {
+                Debug.WriteLine("[WARNING] File corrupt, attempted to read past end of stream. Returning random map.");
+                terrain = new SPMap(graphics, labelFont, tileManager, atlas, 800, 400);
+            }
+
+            reader.Dispose();
+            return terrain;
+        }
+        
+        /// <summary>
+        /// Reads a voxel terrain from the stream using Terrain Version 0.0.4
+        /// </summary>
+        /// <param name="reader">The stream to read from</param>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="tileManager">The tile manager to use</param>
+        /// <param name="atlas">The texture atlas to use</param>
+        /// <returns>A voxel terrain loaded from the stream</returns>
+        private static SPMap LoadVersion_0_0_6(BinaryReader reader, SpriteFont labelFont, GraphicsDevice graphics, TileManager tileManager, TextureAtlas atlas)
+        {
+            int width = reader.ReadInt32();
+            int height = reader.ReadInt32();
+
+            SPMap terrain = new SPMap(graphics, labelFont, tileManager, atlas, width, height);
+
+            try
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
                         terrain._tiles[x, y] = reader.ReadByte();
                         terrain._neighbourStates[x, y] = reader.ReadByte();
                         terrain._meta[x, y] = reader.ReadByte();
+                        terrain._aiGrid.SetWalkableAt(x, y, reader.ReadBoolean());
                     }
                 }
 
