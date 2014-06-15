@@ -74,17 +74,41 @@ namespace DoodleEmpires.Engine.Net
         /// The spritebatch this terrain uses for drawing
         /// </summary>
         protected SpriteBatch _spriteBatch;
+        /// <summary>
+        /// The basic effect for drawing complex geometry
+        /// </summary>
         protected BasicEffect _basicEffect;
+        /// <summary>
+        /// The font used to render zone tags
+        /// </summary>
         protected SpriteFont _zoneFont;
+        /// <summary>
+        /// A 1x1 blank texture
+        /// </summary>
         protected Texture2D _pixelTex;
 
+        /// <summary>
+        /// The texture atlas to use
+        /// </summary>
         protected TextureAtlas _atlas;
+        /// <summary>
+        /// The tile manager to use
+        /// </summary>
         protected TileManager _tileManager;
 
+        /// <summary>
+        /// A random number generator used for random events
+        /// </summary>
         protected Random _random;
 
+        /// <summary>
+        /// How far down to shift the terrain
+        /// </summary>
         protected float _terrainHeightModifier;
 
+        /// <summary>
+        /// The thread handling tile updating
+        /// </summary>
         protected BackgroundWorker _updateThread;
 
         /// <summary>
@@ -96,10 +120,19 @@ namespace DoodleEmpires.Engine.Net
         VertexPositionColor[] _zoneVerts = new VertexPositionColor[0];
         int[] _zoneIndices = new int[0];
 
+        /// <summary>
+        /// This level's seed
+        /// </summary>
         protected int _seed;
 
+        /// <summary>
+        /// True if this is a singleplayer map
+        /// </summary>
         protected bool _isSinglePlayer;
 
+        /// <summary>
+        /// True if this map is in debug mode
+        /// </summary>
         protected bool _debugging;
 
         BaseGrid _aiGrid;
@@ -212,11 +245,15 @@ namespace DoodleEmpires.Engine.Net
         /// Creates a new voxel based terrain
         /// </summary>
         /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="zoneFont">The font to use for rendering zone tags</param>
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
         /// <param name="width">The width of the map, in tiles</param>
         /// <param name="height">The height of the map, in tiles</param>
-        public SPMap(GraphicsDevice Graphics, SpriteFont zoneFont, TileManager tileManager, TextureAtlas atlas, int width, int height, int? seed = null, bool isMPMap = false, float terrainHeightModifier = 25)
+        /// <param name="seed">The seed to generate the map from, if null will pick a random seed</param>
+        /// <param name="isMPMap">True if this map is bound to an online map</param>
+        /// <param name="terrainHeightModifier">How many blocks to shift the terrain down</param>
+        public SPMap(GraphicsDevice graphics, SpriteFont zoneFont, TileManager tileManager, TextureAtlas atlas, int width, int height, int? seed = null, bool isMPMap = false, float terrainHeightModifier = 25)
         {
             _seed = seed.HasValue ? seed.Value : (int)DateTime.Now.Ticks;
             Noise.Seed = _seed;
@@ -234,9 +271,9 @@ namespace DoodleEmpires.Engine.Net
             _maxX = width - 1;
             _maxY = height - 1;
             
-            _graphics = Graphics;
+            _graphics = graphics;
 
-            _spriteBatch = new SpriteBatch(Graphics);
+            _spriteBatch = new SpriteBatch(graphics);
 
             _pixelTex = new Texture2D(_graphics, 1, 1);
             _pixelTex.SetData<Color>(new Color[] { Color.White });
@@ -374,7 +411,8 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// Deletes a specific zone
         /// </summary>
-        /// <param name="zone">The zone to delete</param>
+        /// <param name="x">The X-Coord to delete at</param>
+        /// <param name="y">The Y-Coord to delete at</param>
         public void DeleteZone(int x, int y)
         {
             Zoning zone = _zones.Find(Zone => Zone.Bounds.Contains(x, y));
@@ -721,8 +759,8 @@ namespace DoodleEmpires.Engine.Net
 
                     if (_debugging)
                     {
-                        if (!_aiGrid.IsWalkableAt(x, y))
-                            _spriteBatch.Draw(_pixelTex, _voxelBounds[x, y], Color.Black * 0.25f);
+                        if (_aiGrid.IsWalkableAt(x, y))
+                            _spriteBatch.Draw(_pixelTex, _voxelBounds[x, y], Color.Green * 0.25f);
                     }
                 }
             }
@@ -887,6 +925,13 @@ namespace DoodleEmpires.Engine.Net
                     if (aboveID == 0 && headID == 0)
                         _aiGrid.SetWalkableAt(x, y - 1, true);
                 }
+                else
+                {
+                    if ((_tileManager.IsSolid(belowID) || _tileManager.IsClimable(belowID)) && !_tileManager.IsSolid(aboveID))
+                        _aiGrid.SetWalkableAt(x, y, true);
+                    else
+                        _aiGrid.SetWalkableAt(x, y, false);
+                }
             }
 
             if (doTopBottom)
@@ -1023,6 +1068,7 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         /// <param name="stream">The stream to read from</param>
         /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="labelFont">The font to use for rendering labels such as zone tags</param>
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
@@ -1060,6 +1106,7 @@ namespace DoodleEmpires.Engine.Net
         /// Reads a voxel terrain from the stream using Terrain Version 0.0.1
         /// </summary>
         /// <param name="reader">The stream to read from</param>
+        /// <param name="labelFont">The font to use for rendering labels such as zone tags</param>
         /// <param name="graphics">The graphics device to bind to</param>
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
@@ -1088,6 +1135,7 @@ namespace DoodleEmpires.Engine.Net
         /// Reads a voxel terrain from the stream using Terrain Version 0.0.2
         /// </summary>
         /// <param name="reader">The stream to read from</param>
+        /// <param name="labelFont">The font to use for rendering labels such as zone tags</param>
         /// <param name="graphics">The graphics device to bind to</param>
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
@@ -1117,6 +1165,7 @@ namespace DoodleEmpires.Engine.Net
         /// Reads a voxel terrain from the stream using Terrain Version 0.0.3
         /// </summary>
         /// <param name="reader">The stream to read from</param>
+        /// <param name="labelFont">The font to use for rendering labels such as zone tags</param>
         /// <param name="graphics">The graphics device to bind to</param>
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
@@ -1146,6 +1195,7 @@ namespace DoodleEmpires.Engine.Net
         /// Reads a voxel terrain from the stream using Terrain Version 0.0.4
         /// </summary>
         /// <param name="reader">The stream to read from</param>
+        /// <param name="labelFont">The font to use for rendering labels such as zone tags</param>
         /// <param name="graphics">The graphics device to bind to</param>
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
@@ -1198,6 +1248,7 @@ namespace DoodleEmpires.Engine.Net
         /// Reads a voxel terrain from the stream using Terrain Version 0.0.4
         /// </summary>
         /// <param name="reader">The stream to read from</param>
+        /// <param name="labelFont">The font to use for rendering labels such as zone tags</param>
         /// <param name="graphics">The graphics device to bind to</param>
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
@@ -1243,6 +1294,7 @@ namespace DoodleEmpires.Engine.Net
         /// Reads a voxel terrain from the stream using Terrain Version 0.0.4
         /// </summary>
         /// <param name="reader">The stream to read from</param>
+        /// <param name="labelFont">The font to use for rendering labels such as zone tags</param>
         /// <param name="graphics">The graphics device to bind to</param>
         /// <param name="tileManager">The tile manager to use</param>
         /// <param name="atlas">The texture atlas to use</param>
@@ -1291,6 +1343,15 @@ namespace DoodleEmpires.Engine.Net
 
         #region Networking
 
+        /// <summary>
+        /// Reads a map out of a network message
+        /// </summary>
+        /// <param name="message">The message to read from</param>
+        /// <param name="graphics">The graphics device to bind the level to</param>
+        /// <param name="labelFont">The font to use for drawing labels</param>
+        /// <param name="tileManager">The tile manager to use</param>
+        /// <param name="textureAtlas">The texture atlas to use</param>
+        /// <returns>A map loaded from the message</returns>
         public static SPMap ReadFromMessage(NetIncomingMessage message,
             GraphicsDevice graphics, SpriteFont labelFont, TileManager tileManager, TextureAtlas textureAtlas)
         {

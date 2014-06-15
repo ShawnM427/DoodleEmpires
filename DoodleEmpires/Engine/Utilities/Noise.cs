@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework;
 namespace DoodleEmpires.Engine.Utilities
 {
+    /// <summary>
+    /// A class for handling simplex noise
+    /// </summary>
     public class SimplexNoise
     {
         #region Gradient Maps
@@ -71,7 +74,13 @@ namespace DoodleEmpires.Engine.Utilities
         {
             return g[0] * x + g[1] * y + g[2] * z + g[3] * w;
         }
-        // 2D simplex noise
+
+        /// <summary>
+        /// Performs 2-Dimensional simplex noise
+        /// </summary>
+        /// <param name="xin">The x-coord to sample</param>
+        /// <param name="yin">The y-coord to sample</param>
+        /// <returns>A vlaue between -1 and 1</returns>
         public static double Noise(double xin, double yin)
         {
             double n0, n1, n2;
@@ -140,7 +149,14 @@ namespace DoodleEmpires.Engine.Utilities
             // The result is scaled to return values in the interval [-1,1].
             return 70.0 * (n0 + n1 + n2);
         }
-        // 3D simplex noise
+
+        /// <summary>
+        /// Performs 3-Dimensional simplex noise
+        /// </summary>
+        /// <param name="xin">The x-coord to sample</param>
+        /// <param name="yin">The y-coord to sample</param>
+        /// <param name="zin">The z-coord to sample</param>
+        /// <returns>A value between -1 and 1</returns>
         public static double Noise(double xin, double yin, double zin)
         {
             double n0, n1, n2, n3;
@@ -246,7 +262,15 @@ namespace DoodleEmpires.Engine.Utilities
             // The result is scaled to stay just inside [-1,1]
             return 32.0 * (n0 + n1 + n2 + n3);
         }
-        // 4D simplex noise
+
+        /// <summary>
+        /// Performs 4-Dimensional simplex noise
+        /// </summary>
+        /// <param name="x">The x-coord to sample</param>
+        /// <param name="y">The y-coord to sample</param>
+        /// <param name="z">The z-coord to sample</param>
+        /// <param name="w">The w-coord to sample</param>
+        /// <returns>A value between -1 and 1</returns>
         public static double Noise(double x, double y, double z, double w)
         {
             // The skewing and unskewing factors are hairy again for the 4D case
@@ -385,11 +409,23 @@ namespace DoodleEmpires.Engine.Utilities
         }
     }
 
+    /// <summary>
+    /// A class for generating 1D perlin noise
+    /// </summary>
     public static class Noise
     {
+        /// <summary>
+        /// The persistance of the noise
+        /// </summary>
         public static float Persistence = 0.1F;
+        /// <summary>
+        /// The number of octaves to use, increase for finer/rougher detail
+        /// </summary>
         public static int Octaves = 4;
         private static int _seed = 0;
+        /// <summary>
+        /// Gets or sets the seed to use
+        /// </summary>
         public static int Seed
         {
             set { _seed = value; }
@@ -422,9 +458,13 @@ namespace DoodleEmpires.Engine.Utilities
             return MathHelper.Lerp(v1, v2, fractional_X);
         }
 
+        /// <summary>
+        /// Performs perlin noise on a 1D plane
+        /// </summary>
+        /// <param name="x">The x-coord to sample</param>
+        /// <returns>A perlin noise sample</returns>
         public static float PerlinNoise_1D(float x)
         {
-
             float total = 0;
             float p = Persistence;
             int n = Octaves - 1;

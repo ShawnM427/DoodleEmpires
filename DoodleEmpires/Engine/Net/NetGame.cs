@@ -1,16 +1,18 @@
-﻿/// TODO note:
-/// 
-/// There's currently a pretty severe bug on (probably) serverside
-/// that's causing issues with changed tile states not properly synching when
-/// saving and loading maps. Client synchronization is still good. 
-/// May be an issue with the saving/loading of the delta map changes. 
-/// May also be the setting of ID's if the change already exists.
-/// May also look into keeping a non-static noise instance in server, and check
-/// the requested ID's against the noise ID's, add delta change where needed
-///  foo
-///  Sidenote: Need to look more into the delta states. Currently, they're generated even
-///  during TG. MUST fix to be only on TileSet, but the tree gen currently uses TileSet,
-///  maybe add a CoreTileSet that doesn't update the delta changes?
+﻿/*
+ TODO note:
+ 
+ There's currently a pretty severe bug on (probably) serverside
+ that's causing issues with changed tile states not properly synching when
+ saving and loading maps. Client synchronization is still good. 
+ May be an issue with the saving/loading of the delta map changes. 
+ May also be the setting of ID's if the change already exists.
+ May also look into keeping a non-static noise instance in server, and check
+ the requested ID's against the noise ID's, add delta change where needed
+
+  Sidenote: Need to look more into the delta states. Currently, they're generated even
+  during TG. MUST fix to be only on TileSet, but the tree gen currently uses TileSet,
+  maybe add a CoreTileSet that doesn't update the delta changes?
+*/
 
 using System;
 using System.Collections.Generic;
@@ -38,6 +40,9 @@ using System.Net;
 
 namespace DoodleEmpires.Engine.Net
 {
+    /// <summary>
+    /// Represents a networked game
+    /// </summary>
     public class NetGame : AdvancedGame
     {
         #region Networking Vars
@@ -60,14 +65,9 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         NetClient _client;
         /// <summary>
-        /// The underlying network connection
-        /// </summary>
-        //NetConnection _myConnection;
-        /// <summary>
         /// The current port
         /// </summary>
         int? _port = 14239;
-        string _ip;
         /// <summary>
         /// A list of all local servers, only populated if an IP and port were not specified
         /// </summary>
@@ -97,7 +97,9 @@ namespace DoodleEmpires.Engine.Net
         {
             get { return _map.WorldHeight; }
         }
-
+        /// <summary>
+        /// Gets the list of available servers
+        /// </summary>
         public List<ServerInfo> AvailableServers
         {
             get { return _availableServers; }
@@ -146,46 +148,116 @@ namespace DoodleEmpires.Engine.Net
         GraphicsDeviceManager graphicsManager;
         SpriteFont _debugFont;
 
+        /// <summary>
+        /// This games map
+        /// </summary>
         protected SPMap _map;
+        /// <summary>
+        /// The tile manager to use
+        /// </summary>
         protected TileManager _tileManager;
+        /// <summary>
+        /// The block lookup atlas to use
+        /// </summary>
         protected TextureAtlas _blockAtlas;
 
+        /// <summary>
+        /// The sound engine to use
+        /// </summary>
         protected SoundEngine _soundEngine;
 
+        /// <summary>
+        /// The camera to use
+        /// </summary>
         protected Camera2D _view;
+        /// <summary>
+        /// The camera's controller instance
+        /// </summary>
         protected CameraControl _cameraController;
+        /// <summary>
+        /// A paper texture for drawing to the background
+        /// </summary>
         protected Texture2D _paperTex;
 
+        /// <summary>
+        /// The previous keyboard state
+        /// </summary>
         protected KeyboardState _prevKeyState;
+        /// <summary>
+        /// The vector to move the camera by
+        /// </summary>
         protected Vector2 _moveVector;
+        /// <summary>
+        /// The mouses' position in the world
+        /// </summary>
         protected Vector2 _mouseWorldPos;
 
+        /// <summary>
+        /// a random number generator used for some events
+        /// </summary>
         protected Random _rand;
 
+        /// <summary>
+        /// The main games's GUI controller
+        /// </summary>
         protected GUIContainer _mainControl;
+        /// <summary>
+        /// The main menu's GUI controller
+        /// </summary>
         protected GUIContainer _menuControl;
+        /// <summary>
+        /// The server list GUI controller
+        /// </summary>
         protected GUIContainer _serverListControl;
+        /// <summary>
+        /// A label displaying the FPS
+        /// </summary>
         protected GUILabel _fpsLabel;
+
         GUIButton _saveButton;
         GUIButton _loadButton;
         GUIListView _serverList;
         GUIGridView _zoneView;
 
+        /// <summary>
+        /// The font to use in GUI rendering
+        /// </summary>
         protected SpriteFont _guiFont;
 
+        /// <summary>
+        /// The type of block to place
+        /// </summary>
         protected byte _editType = 1;
+        /// <summary>
+        /// The type of zone to place
+        /// </summary>
         protected short _zoneTpye = 1;
 
+        /// <summary>
+        /// A list of block textures loaded from the atlas
+        /// </summary>
         protected Texture2D[] _blockTexs;
 
+        /// <summary>
+        /// True if the user is currently defining a zone
+        /// </summary>
         protected bool _isDefininingZone = false;
+        /// <summary>
+        /// The corner of the zone currently being defined
+        /// </summary>
         protected Vector2 _zoneStart = Vector2.Zero;
 
+        /// <summary>
+        /// The game's current state
+        /// </summary>
         protected GameState _gameState = GameState.MainMenu;
 
         #endregion
 
         bool _singlePlayer = true;
+        /// <summary>
+        /// Gets or sets whether this game in singleplayer
+        /// </summary>
         protected bool SinglePlayer
         {
             get { return _singlePlayer; }
@@ -304,13 +376,8 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         private void PollForServers()
         {
-            if (_ip == null)
-            {
-                for (int i = GlobalNetVars.MIN_PORT; i <= GlobalNetVars.MAX_PORT; i++)
-                    _client.DiscoverLocalPeers(i);
-            }
-            else
-                _client.Connect(_ip, _port.Value);
+            for (int i = GlobalNetVars.MIN_PORT; i <= GlobalNetVars.MAX_PORT; i++)
+                _client.DiscoverLocalPeers(i);
 
             _client.DiscoverKnownPeer("192.0.247.228", 14245);
         }
@@ -341,6 +408,7 @@ namespace DoodleEmpires.Engine.Net
             _menuControl.Bounds = new Rectangle(0, 0, 120, 165);
             _menuControl.X = GraphicsDevice.Viewport.Width / 2 - _menuControl.Bounds.Width / 2;
             _menuControl.Y = GraphicsDevice.Viewport.Height / 2 - _menuControl.Bounds.Height / 2;
+            _menuControl.BackColor = Color.White;
 
             _serverListControl = new GUIPanel(GraphicsDevice, null);
             _serverListControl.Bounds = new Rectangle(0, 0, 120, 165);
@@ -356,16 +424,25 @@ namespace DoodleEmpires.Engine.Net
             serverListBack.Text = "Back";
             serverListBack.Bounds = new Rectangle(40, _serverList.Bounds.Bottom + 5, 40, 15);
             serverListBack.OnMousePressed += ExitToMenu;
-            
+
+            GUIButton campaignButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
+            campaignButton.Bounds = new Rectangle(20, 20, 80, 20);
+            campaignButton.Text = "Campaign";
+            campaignButton.OnMousePressed += campaignButton_OnMousePressed;
+            campaignButton.BackColor = Color.LightGray;
+            campaignButton.Enabled = false;
+
             GUIButton singlePlayerButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
-            singlePlayerButton.Bounds = new Rectangle(20, 20, 80, 20);
+            singlePlayerButton.Bounds = new Rectangle(20, campaignButton.Bounds.Bottom + 5, 80, 20);
             singlePlayerButton.Text = "Singleplayer";
             singlePlayerButton.OnMousePressed += singlePlayerButton_OnPressed;
+            singlePlayerButton.BackColor = Color.LightGray;
 
             GUIButton LANButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
             LANButton.Bounds = new Rectangle(20, singlePlayerButton.Bounds.Bottom + 5, 80, 20);
             LANButton.Text = "LAN";
             LANButton.OnMousePressed += LANButton_OnPressed;
+            LANButton.BackColor = Color.LightGray;
 
             singlePlayerButton.Invalidating = true;
 
@@ -420,6 +497,11 @@ namespace DoodleEmpires.Engine.Net
                     });
                 }
             }
+        }
+
+        void campaignButton_OnMousePressed()
+        {
+            throw new NotImplementedException();
         }
 
         #region Standard Game
@@ -606,11 +688,11 @@ namespace DoodleEmpires.Engine.Net
 
             switch (_gameState)
             {
-                case GameState.ServerList:
-                    DrawServerList();
-                    break;
                 case GameState.MainMenu:
                     DrawMenu();
+                    break;
+                case GameState.ServerList:
+                    DrawServerList();
                     break;
                 case GameState.InGame:
                     DrawMainGame();
@@ -636,7 +718,7 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected virtual void DrawMenu()
         {
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _menuControl.Draw();
         }
@@ -872,7 +954,7 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         /// <param name="sender">The object to raise the event</param>
         /// <param name="item">The newly selected item</param>
-        private void OnZoneChanged(object send, GridViewItem item)
+        private void OnZoneChanged(object sender, GridViewItem item)
         {
             _zoneTpye = (short)item.Tag;
         }

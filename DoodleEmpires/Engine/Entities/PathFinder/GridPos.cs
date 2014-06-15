@@ -43,21 +43,45 @@ using System.Threading.Tasks;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder
 {
+    /// <summary>
+    /// Represents a position within a grid
+    /// </summary>
     public struct GridPos
     {
+        /// <summary>
+        /// The x coord of this position
+        /// </summary>
         public int x;
+        /// <summary>
+        /// The y coord of this position
+        /// </summary>
         public int y;
+
+        /// <summary>
+        /// Creates a new grid position
+        /// </summary>
+        /// <param name="iX">The x coord of the position</param>
+        /// <param name="iY">The y coord of the position</param>
         public GridPos(int iX, int iY)
         {
             this.x = iX;
             this.y = iY;
         }
 
+        /// <summary>
+        /// Gets a semi-unique hash code for this position
+        /// </summary>
+        /// <returns>A semi-unique integer</returns>
         public override int GetHashCode()
         {
             return x ^ y;
         }
 
+        /// <summary>
+        /// Checks if this position is equal to another object
+        /// </summary>
+        /// <param name="obj">The object to check against</param>
+        /// <returns>True if this is equal to <i>obj</i></returns>
         public override bool Equals(System.Object obj)
         {
             if (!(obj is GridPos))
@@ -67,12 +91,23 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             return (x == p.x) && (y == p.y);
         }
 
+        /// <summary>
+        /// Checks if this position is equal to another position
+        /// </summary>
+        /// <param name="p">The position to check against</param>
+        /// <returns>True if this is equal to <i>p</i></returns>
         public bool Equals(GridPos p)
         {
             // Return true if the fields match:
             return (x == p.x) && (y == p.y);
         }
 
+        /// <summary>
+        /// Checks if two grid positions are equal
+        /// </summary>
+        /// <param name="a">The first position</param>
+        /// <param name="b">The second position</param>
+        /// <returns>True if <i>a</i> and <i>b</i> are equal</returns>
         public static bool operator ==(GridPos a, GridPos b)
         {
             // If both are null, or both are same instance, return true.
@@ -85,11 +120,23 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             return a.x == b.x && a.y == b.y;
         }
 
+        /// <summary>
+        /// Checks if two grid positions are inequal
+        /// </summary>
+        /// <param name="a">The first position</param>
+        /// <param name="b">The second position</param>
+        /// <returns>True if <i>a</i> and <i>b</i> are not equal</returns>
         public static bool operator !=(GridPos a, GridPos b)
         {
             return !(a == b);
         }
 
+        /// <summary>
+        /// Sets this position's values to those given
+        /// </summary>
+        /// <param name="iX">The x coord of the position</param>
+        /// <param name="iY">The y coord of the position</param>
+        /// <returns>This position, with the modified values</returns>
         public GridPos Set(int iX, int iY)
         {
             this.x = iX;

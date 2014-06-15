@@ -43,27 +43,44 @@ using System.Collections;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder.Utils
 {
+    /// <summary>
+    /// Represents a queue where items are sorted into a "priority" list
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class PriorityQueue<T> where T : IComparable
     {
         private List<T> m_data;
-
+                
+        /// <summary>
+        /// Creates a new priority queue
+        /// </summary>
         public PriorityQueue()
         {
             this.m_data = new List<T>();
         }
 
+        /// <summary>
+        /// Adds an item to the queue
+        /// </summary>
+        /// <param name="queueItem">The item to add</param>
         public void Enqueue(T queueItem)
         {
             m_data.Add(queueItem);
             m_data.Sort();
         }
 
+        /// <summary>
+        /// Clears this queue
+        /// </summary>
         public void Clear()
         {
             m_data.Clear();
         }
 
-
+        /// <summary>
+        /// Removes and returns the first item in the queue
+        /// </summary>
+        /// <returns>The first item in the queue</returns>
         public T Dequeue()
         {
             T frontItem = m_data[0];
@@ -71,16 +88,29 @@ namespace DoodleEmpires.Engine.Entities.PathFinder.Utils
             return frontItem;
         }
 
+        /// <summary>
+        /// Returns the first item in the queue without removing it
+        /// </summary>
+        /// <returns>The first item in the queue</returns>
         public T Peek()
         {
             T frontItem = m_data[0];
             return frontItem;
         }
 
+        /// <summary>
+        /// Checks if this queue contans an item
+        /// </summary>
+        /// <param name="queueItem">The item to search for</param>
+        /// <returns>True if the queue contains th item</returns>
         public bool Contains(T queueItem)
         {
             return m_data.Contains(queueItem);
         }
+
+        /// <summary>
+        /// Gets the number of instances in this queue
+        /// </summary>
         public int Count
         {
             get

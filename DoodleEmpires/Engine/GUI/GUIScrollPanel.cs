@@ -9,18 +9,48 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DoodleEmpires.Engine.GUI
 {
-    class GUIScrollPanel : GUIContainer
+    /// <summary>
+    /// Represents a scrollable GUI container
+    /// <b>STILL A W.I.P</b>
+    /// </summary>
+    public class GUIScrollPanel : GUIContainer
     {
+        /// <summary>
+        /// The render target for the scroll bar
+        /// </summary>
         protected RenderTarget2D _scrollBar;
+        /// <summary>
+        /// The render target for the scroll bar housing
+        /// </summary>
         protected RenderTarget2D _scrollHousing;
+        /// <summary>
+        /// The render target for the internal components
+        /// </summary>
         protected RenderTarget2D _internalTarget;
+        /// <summary>
+        /// The width of the scroll bar
+        /// </summary>
         protected int _scrollSize = 8;
+        /// <summary>
+        /// The rectangle representing the scroll housing
+        /// </summary>
         protected Rectangle _scrollHousingRect;
 
+        /// <summary>
+        /// How far down this panel is scrolled
+        /// </summary>
         protected float _scrollValue = 0.0f;
 
+        /// <summary>
+        /// Creates a new GUI scroll panel
+        /// </summary>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="parent">The parent container</param>
         public GUIScrollPanel(GraphicsDevice graphics, GUIContainer parent) : base(graphics, parent) { }
 
+        /// <summary>
+        /// Called when this scroll panel has been resized
+        /// </summary>
         protected override void Resized()
         {
             RenderScrollBar();
@@ -31,6 +61,9 @@ namespace DoodleEmpires.Engine.GUI
             base.Resized();
         }
 
+        /// <summary>
+        /// Renders the scroll bar
+        /// </summary>
         protected virtual void RenderScrollBar()
         {
             _scrollHousingRect = new Rectangle(_bounds.Width - _scrollSize, 0, _scrollSize, _bounds.Height);
@@ -44,11 +77,14 @@ namespace DoodleEmpires.Engine.GUI
             _graphics.DrawRect(0,0, _scrollSize, _bounds.Height, Color.Black);
             _graphics.DrawLine(0, _scrollSize, _scrollSize, _scrollSize, Color.Black);
             _graphics.DrawLine(0, _bounds.Height - _scrollSize, _scrollSize, _bounds.Height - _scrollSize, Color.Black);
-            _graphics.SetRenderTarget(null);
 
             _effect.Projection = Matrix.CreateOrthographicOffCenter(0, _bounds.Width, _bounds.Height, 0, 1.0f, 1000.0f);
         }
 
+        /// <summary>
+        /// Begins invalidation on this control
+        /// </summary>
+        /// <returns></returns>
         protected override bool BeginInvalidate()
         {
             if (_screenBounds.Width > 0 && _screenBounds.Height > 0)
@@ -68,10 +104,16 @@ namespace DoodleEmpires.Engine.GUI
             return false;
         }
 
+        /// <summary>
+        /// Called when this control invalidates
+        /// </summary>
         protected override void Invalidate()
         {
         }
 
+        /// <summary>
+        /// Ends invalidation on this control
+        /// </summary>
         protected override void EndInvalidate()
         {
             _graphics.SetRenderTarget(_internalTarget);
@@ -105,7 +147,7 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         /// <param name="e">The mouse event arguments</param>
         /// <returns>True if the input was handled</returns>
-        public override bool MousePressed(MouseEventArgs e)
+        public override void MousePressed(MouseEventArgs e)
         {
             Vector2 mouseP = e.Location - new Vector2(_screenBounds.X, _screenBounds.Y);
             if (e.LeftButton == ButtonState.Pressed && _scrollHousingRect.Contains(mouseP))
@@ -119,11 +161,7 @@ namespace DoodleEmpires.Engine.GUI
                 _scrollValue = _scrollValue < 0 ? 0 : _scrollValue;
 
                 Invalidating = true;
-
-                return true;
             }
-
-            return false;
         }
     }
 }

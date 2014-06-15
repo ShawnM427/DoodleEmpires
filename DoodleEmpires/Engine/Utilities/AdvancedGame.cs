@@ -10,6 +10,11 @@ using System.Reflection;
 
 namespace DoodleEmpires.Engine.Utilities
 {
+    #pragma warning disable 169, 67
+
+    /// <summary>
+    /// Represents a slighty more advanced base game class
+    /// </summary>
     public abstract class AdvancedGame : Game
     {
         /// <summary>
@@ -17,10 +22,22 @@ namespace DoodleEmpires.Engine.Utilities
         /// </summary>
         protected SpriteBatch SpriteBatch;
 
+        /// <summary>
+        /// Occurs when the mouse is clicked
+        /// </summary>
         protected event MouseEvent MouseClickedEvent;
+        /// <summary>
+        /// Occurs when the mouse is released
+        /// </summary>
         protected event MouseEvent MouseReleasedEvent;
+        /// <summary>
+        /// Occurs when the mouse is held down
+        /// </summary>
         protected event MouseEvent MouseDownEvent;
 
+        /// <summary>
+        /// True if the mouse is currently down
+        /// </summary>
         protected bool _mouseDown;
 
         /// <summary>
@@ -126,6 +143,10 @@ namespace DoodleEmpires.Engine.Utilities
         }
     }
 
+    /// <summary>
+    /// Represents an event that occurs when the mouse is pressed
+    /// </summary>
+    /// <param name="args">The mouse event arguments</param>
     public delegate void MouseEvent(MouseEventArgs args);
     
     /// <summary>

@@ -11,9 +11,18 @@ namespace DoodleEmpires.Engine.Utilities
     /// <typeparam name="T">The type of objects to handle</typeparam>
     public class ObjectManager<T>
     {
+        /// <summary>
+        /// The internal list of items
+        /// </summary>
         protected List<T> _items = new List<T>();
+        /// <summary>
+        /// The internal lookup dictionary to use
+        /// </summary>
         protected Dictionary<string, short> _zookUp = new Dictionary<string, short>();
 
+        /// <summary>
+        /// Gets the list of items handled by this manager
+        /// </summary>
         public List<T> Items
         {
             get { return _items; }

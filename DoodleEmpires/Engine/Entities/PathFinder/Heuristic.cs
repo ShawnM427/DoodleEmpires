@@ -42,34 +42,64 @@ using System.Text;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder
 {
+    /// <summary>
+    /// The Heuristic to use to find the length of the path
+    /// </summary>
     public enum HeuristicMode
     {
+        /// <summary>
+        /// Simply sums the x and y components
+        /// </summary>
         MANHATTAN,
+        /// <summary>
+        /// Uses a square root to measure accurate distance
+        /// </summary>
         EUCLIDEAN,
+        /// <summary>
+        /// Gets the maximum of the x or y
+        /// </summary>
         CHEBYSHEV,
         
     };
 
+    /// <summary>
+    /// Implementations of heuristic methods
+    /// </summary>
     public class Heuristic
     {
-      public static float Manhattan(int iDx, int iDy)
-      {
-          return (float)iDx + iDy;
-      }
+        /// <summary>
+        /// Find manhattan distance
+        /// </summary>
+        /// <param name="iDx">The x coord</param>
+        /// <param name="iDy">The y coord</param>
+        /// <returns>A relative distance</returns>
+        public static float Manhattan(int iDx, int iDy)
+        {
+            return (float)iDx + iDy;
+        }
 
-      public static float Euclidean(int iDx, int iDy)
-      {
-          float tFdx = (float)iDx;
-          float tFdy = (float)iDy;
-          return (float) Math.Sqrt((double)(tFdx * tFdx + tFdy * tFdy));
-      }
+        /// <summary>
+        /// Find euclidean distance
+        /// </summary>
+        /// <param name="iDx">The x coord</param>
+        /// <param name="iDy">The y coord</param>
+        /// <returns>A relative distance</returns>
+        public static float Euclidean(int iDx, int iDy)
+        {
+            float tFdx = (float)iDx;
+            float tFdy = (float)iDy;
+            return (float)Math.Sqrt((double)(tFdx * tFdx + tFdy * tFdy));
+        }
 
-      public static float Chebyshev(int iDx, int iDy)
-      {
-          return (float)Math.Max(iDx, iDy);
-      }
-
+        /// <summary>
+        /// Find Chebyshev distance
+        /// </summary>
+        /// <param name="iDx">The x coord</param>
+        /// <param name="iDy">The y coord</param>
+        /// <returns>A relative distance</returns>
+        public static float Chebyshev(int iDx, int iDy)
+        {
+            return (float)Math.Max(iDx, iDy);
+        }
     }
-
-
 }

@@ -43,20 +43,38 @@ using System.Collections;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder.Utils
 {
-
+    /// <summary>
+    /// Represents an object with 2 items
+    /// </summary>
+    /// <typeparam name="T">The type of the first item</typeparam>
+    /// <typeparam name="U">The type of the second item</typeparam>
     public class Pair<T, U>
     {
+        /// <summary>
+        /// Creates a new blank pair
+        /// </summary>
         public Pair()
         {
         }
 
+        /// <summary>
+        /// Creates a new pair
+        /// </summary>
+        /// <param name="iFirst">The first item</param>
+        /// <param name="iSecond">The second item</param>
         public Pair(T iFirst, U iSecond)
         {
             this.first = iFirst;
             this.second = iSecond;
         }
 
+        /// <summary>
+        /// Gets or sets the first item
+        /// </summary>
         public T first { get; set; }
+        /// <summary>
+        /// Gets or sets the second item
+        /// </summary>
         public U second { get; set; }
     }
 }

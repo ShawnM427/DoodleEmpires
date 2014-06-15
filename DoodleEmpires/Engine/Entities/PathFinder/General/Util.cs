@@ -42,9 +42,17 @@ using System.Text;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder.Utils
 {
+    /// <summary>
+    /// Some basic utilities
+    /// </summary>
     public class Util
     {
         private static Random m_random = new Random();
+
+        /// <summary>
+        /// Gets a random number between 0 and 1.0
+        /// </summary>
+        /// <returns></returns>
         public static float Random()
         {
             var result = m_random.NextDouble();

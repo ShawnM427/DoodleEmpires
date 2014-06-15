@@ -40,16 +40,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;
+using Microsoft.Xna.Framework;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder
 {
+    /// <summary>
+    /// A basic implementation of a rectangle class
+    /// </summary>
     public struct GridRect
     {
+        /// <summary>
+        /// The minumum x of this grid rectangle
+        /// </summary>
         public int minX;
+        /// <summary>
+        /// The minumum y of this grid rectangle
+        /// </summary>
         public int minY;
+        /// <summary>
+        /// The maximum x of this grid rectangle
+        /// </summary>
         public int maxX;
+        /// <summary>
+        /// The maximum y of this grid rectangle
+        /// </summary>
         public int maxY;
 
+        /// <summary>
+        /// Creates a new grid rectangle
+        /// </summary>
+        /// <param name="iMinX">The minimum x coord</param>
+        /// <param name="iMinY">The minimum y cood</param>
+        /// <param name="iMaxX">The maximum x coord</param>
+        /// <param name="iMaxY">The maxiumum y coord</param>
         public GridRect(int iMinX, int iMinY, int iMaxX, int iMaxY)
         {
             minX = iMinX;
@@ -58,11 +81,20 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             maxY = iMaxY;
         }
 
+        /// <summary>
+        /// Gets a semi-unique hash cod for this object
+        /// </summary>
+        /// <returns>A semi-unique integer for this object</returns>
         public override int GetHashCode()
         {
             return minX ^ minY ^ maxX ^ maxY;
         }
 
+        /// <summary>
+        /// Checks equality between this object and another
+        /// </summary>
+        /// <param name="obj">The object to check against</param>
+        /// <returns>True if this object is equal to the other object</returns>
         public override bool Equals(System.Object obj)
         {
             if (!(obj is GridRect))
@@ -72,12 +104,23 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             return (minX == p.minX) && (minY == p.minY) && (maxX == p.maxX) && (maxY == p.maxY);
         }
 
+        /// <summary>
+        /// Checks if this rectangle is equal to another
+        /// </summary>
+        /// <param name="p">The rectangle to check against</param>
+        /// <returns>True if this is equal to <i>p</i></returns>
         public bool Equals(GridRect p)
         {
             // Return true if the fields match:
             return (minX == p.minX) && (minY == p.minY) && (maxX == p.maxX) && (maxY == p.maxY);
         }
 
+        /// <summary>
+        /// Checks if two rectangles are equal
+        /// </summary>
+        /// <param name="a">The first rectangle</param>
+        /// <param name="b">The second rectangle</param>
+        /// <returns>True if <i>a</i> and <i>b</i> are equal</returns>
         public static bool operator ==(GridRect a, GridRect b)
         {
             // If both are null, or both are same instance, return true.
@@ -90,11 +133,35 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             return (a.minX == b.minX) && (a.minY == b.minY) && (a.maxX == b.maxX) && (a.maxY == b.maxY);
         }
 
+        /// <summary>
+        /// Checks if two rectangles are inequal
+        /// </summary>
+        /// <param name="a">The first rectangle</param>
+        /// <param name="b">The second rectangle</param>
+        /// <returns>True if <i>a</i> and <i>b</i> are not equal</returns>
         public static bool operator !=(GridRect a, GridRect b)
         {
             return !(a == b);
         }
 
+        /// <summary>
+        /// Converts an XNA rectangle to a GridRect
+        /// </summary>
+        /// <param name="xnaRect">The xna rectangle to create a grid rectangle from</param>
+        /// <returns>A GridRect with the same values as the XNA rectangle</returns>
+        public static implicit operator GridRect(Rectangle xnaRect)
+        {
+            return new GridRect(xnaRect.Left, xnaRect.Top, xnaRect.Right, xnaRect.Bottom);
+        }
+
+        /// <summary>
+        /// Sets all values in this rectangle to the given ones
+        /// </summary>
+        /// <param name="iMinX">The minimum x coord</param>
+        /// <param name="iMinY">The minimum y cood</param>
+        /// <param name="iMaxX">The maximum x coord</param>
+        /// <param name="iMaxY">The maxiumum y coord</param>
+        /// <returns>This rectangle with given modifications</returns>
         public GridRect Set(int iMinX, int iMinY, int iMaxX, int iMaxY)
         {
             this.minX = iMinX;

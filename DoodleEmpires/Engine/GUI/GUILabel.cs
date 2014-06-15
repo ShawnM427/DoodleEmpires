@@ -7,9 +7,18 @@ using Microsoft.Xna.Framework;
 
 namespace DoodleEmpires.Engine.GUI
 {
+    /// <summary>
+    /// A simple GUI element for drawing text
+    /// </summary>
     public class GUILabel : GUIElement
     {
+        /// <summary>
+        /// This label's text
+        /// </summary>
         protected string _text;
+        /// <summary>
+        /// This label's font
+        /// </summary>
         protected SpriteFont _font;
 
         /// <summary>
@@ -31,6 +40,12 @@ namespace DoodleEmpires.Engine.GUI
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of a GUI label
+        /// </summary>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="font">The font to use to render text</param>
+        /// <param name="parent">The parent GUI container</param>
         public GUILabel(GraphicsDevice graphics, SpriteFont font, GUIContainer parent)
             : base(graphics, parent)
         {
@@ -41,6 +56,9 @@ namespace DoodleEmpires.Engine.GUI
             _bounds.Height = (int)_font.MeasureString(_text).Y;
         }
         
+        /// <summary>
+        /// Called when this label needs to invalidate
+        /// </summary>
         protected override void Invalidate()
         {
             _spriteBatch.DrawString(_font, _text, Vector2.Zero, _foreColor);

@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using DoodleEmpires.Engine.Entities;
 using System;
 
+/// <summary>
+/// Represents an implementation of a 2D camera
+/// </summary>
 public interface ICamera2D
 {
     /// <summary>
@@ -92,15 +95,34 @@ public interface ICamera2D
     Rectangle ScreenBounds { get; set; }
 }
 
+/// <summary>
+/// Represents a 2-Dimensional camera
+/// </summary>
 public class Camera2D : ICamera2D
 {
     private Vector2 _position;
+    /// <summary>
+    /// The height of the graphics viewport
+    /// </summary>
     protected float _viewportHeight;
+    /// <summary>
+    /// The width of the graphics viewport
+    /// </summary>
     protected float _viewportWidth;
+    /// <summary>
+    /// The bounds that this camera has in the world
+    /// </summary>
     protected Rectangle _viewBounds = new Rectangle(0,0,0,0);
 
+    /// <summary>
+    /// The graphics device that this camera is bound to
+    /// </summary>
     protected GraphicsDevice _graphics;
     
+    /// <summary>
+    /// Creates a new 2D camera
+    /// </summary>
+    /// <param name="graphics">The graphics device to bind to</param>
     public Camera2D(GraphicsDevice graphics)
     {
         _graphics = graphics;
@@ -110,20 +132,53 @@ public class Camera2D : ICamera2D
 
     #region Properties
 
+    /// <summary>
+    /// Gets or sets this camera's position
+    /// </summary>
     public Vector2 Position
     {
         get { return _position; }
         set { _position = value; }
     }
+    /// <summary>
+    /// Gets or sets this camera's rotation
+    /// </summary>
     public float Rotation { get; set; }
+    /// <summary>
+    /// Gets or sets this camera's orgin
+    /// </summary>
     public Vector2 Origin { get; set; }
+    /// <summary>
+    /// Gets or sets this camera's scale
+    /// </summary>
     public Vector2 Scale { get; set; }
+    /// <summary>
+    /// Gets the screen centre for this camera
+    /// </summary>
     public Vector2 ScreenCenter { get; protected set; }
+    /// <summary>
+    /// Gets or sets this camera's transformation matrix
+    /// </summary>
     public Matrix Transform { get; set; }
+    /// <summary>
+    /// Gets or sets this camera's projection matrix
+    /// </summary>
     public Matrix Projection { get; set; }
+    /// <summary>
+    /// Gets or sets this camera's focus object
+    /// </summary>
     public IFocusable Focus { get; set; }
+    /// <summary>
+    /// Gets or sets this camera's movement speed
+    /// </summary>
     public float MoveSpeed { get; set; }
+    /// <summary>
+    /// Gets the view bounds for this camera
+    /// </summary>
     public Rectangle ViewBounds { get { return _viewBounds; } }
+    /// <summary>
+    /// Gets the snap bounds for this camera
+    /// </summary>
     public Rectangle ScreenBounds { get; set; }
 
     #endregion
@@ -221,7 +276,7 @@ public class Camera2D : ICamera2D
     /// <summary>
     /// Gets the world co-ordinates for the given screen co-ordinates
     /// </summary>
-    /// <param name="screenCoords">The screen co-ordinates to convert</param>
+    /// <param name="screenPoint">The screen co-ordinates to convert</param>
     /// <returns>The point in the world relating to the point on the screen</returns>
     public Vector2 PointToWorld(Vector2 screenPoint)
     {

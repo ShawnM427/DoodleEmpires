@@ -7,11 +7,26 @@ using Microsoft.Xna.Framework;
 
 namespace DoodleEmpires.Engine.Utilities
 {
+    /// <summary>
+    /// Represents a texture handler that can supply source bounds from a texture atlas
+    /// </summary>
     public class TextureAtlas
     {
+        /// <summary>
+        /// The source texture for this atlas
+        /// </summary>
         protected Texture2D _texture;
+        /// <summary>
+        /// The source rectangles for this atlas
+        /// </summary>
         protected Rectangle[] _sources;
+        /// <summary>
+        /// The number of textures along the x axis
+        /// </summary>
         protected int _xTexs;
+        /// <summary>
+        /// The number of textures along the y axis
+        /// </summary>
         protected int _yTexs;
         private int _maxID;
 
@@ -83,6 +98,11 @@ namespace DoodleEmpires.Engine.Utilities
             get { return GetSource(ID); }
         }
 
+        /// <summary>
+        /// Breaks this texture atlas into a series of sub-textures
+        /// </summary>
+        /// <param name="graphics">The graphics device to bind the textures to</param>
+        /// <returns>An array of textures</returns>
         public Texture2D[] GetTextures(GraphicsDevice graphics)
         {
             RenderTarget2D renderTarget = new RenderTarget2D(graphics, _texture.Width / _xTexs, _texture.Height / _yTexs, 

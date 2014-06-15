@@ -11,7 +11,10 @@ namespace DoodleEmpires.Engine.Economy
     /// </summary>
     public class TechNode
     {
-        public static TechNode None = new TechNode("None", "", null);
+        /// <summary>
+        /// Represents an empty tech node, such as the root node of a tech tree
+        /// </summary>
+        public static readonly TechNode None = new TechNode("None", "", null);
 
         string _name;
         string _description;
@@ -23,6 +26,7 @@ namespace DoodleEmpires.Engine.Economy
         public string Name
         {
             get { return _name; }
+            set { _name = value; }
         }
         /// <summary>
         /// Gets the description for this node
@@ -30,6 +34,7 @@ namespace DoodleEmpires.Engine.Economy
         public string Description
         {
             get { return _description; }
+            set { _description = value; }
         }
         /// <summary>
         /// Gets the icon of this tech node
@@ -37,6 +42,7 @@ namespace DoodleEmpires.Engine.Economy
         public Texture2D Icon
         {
             get { return _icon; }
+            set { _icon = value; }
         }
 
         /// <summary>
@@ -45,7 +51,6 @@ namespace DoodleEmpires.Engine.Economy
         /// <param name="name">The name for this node</param>
         /// <param name="description">The description for this node</param>
         /// <param name="icon">The icon for this node</param>
-        /// <param name="requiredNodes">The required nodes for this node</param>
         protected TechNode(string name, string description, Texture2D icon)
         {
             _name = name;

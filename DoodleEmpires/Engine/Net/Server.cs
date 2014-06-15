@@ -16,6 +16,9 @@ using DoodleEmpires.Engine.Economy;
 
 namespace DoodleEmpires.Engine.Net
 {
+    /// <summary>
+    /// The main game server
+    /// </summary>
     public class GameServer
     {
         NetServer _server;
@@ -26,14 +29,19 @@ namespace DoodleEmpires.Engine.Net
 
         ServerMap _map;
 
-        TileManager _tileManager;
-
+        /// <summary>
+        /// Gets or sets whether this server should exit at the end of it's current loop
+        /// </summary>
         public bool Exiting
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Runs this server with the given command-line arguments
+        /// </summary>
+        /// <param name="args"></param>
         public void Run(string[] args)
         {
             int port = GlobalNetVars.DEFAULT_PORT;
@@ -140,8 +148,6 @@ namespace DoodleEmpires.Engine.Net
                                 case NetPacketType.ReqZoneRemoved:
                                     HandleReqDelZone(msg);
                                     break;
-
-                                    break;
                             }
                             break;
                     }
@@ -155,12 +161,20 @@ namespace DoodleEmpires.Engine.Net
             _server.Shutdown("app exiting");
         }
 
+        /// <summary>
+        /// Saves this server to a stream
+        /// </summary>
+        /// <param name="fileStream">The file stream to save to</param>
         public void Save(Stream fileStream)
         {
             Console.WriteLine("Saving Map");
             _map.SaveToStream(fileStream);
         }
 
+        /// <summary>
+        /// Loads a server map from a stream
+        /// </summary>
+        /// <param name="fileStream">The stream to load from</param>
         public void Load(Stream fileStream)
         {
             Console.WriteLine("Loading Map");

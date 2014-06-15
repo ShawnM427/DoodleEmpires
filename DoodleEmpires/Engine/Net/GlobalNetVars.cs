@@ -5,13 +5,34 @@ using System.Text;
 
 namespace DoodleEmpires.Engine.Net
 {
+    /// <summary>
+    /// A collection of global networking constants
+    /// </summary>
     public static class GlobalNetVars
     {
+        /// <summary>
+        /// The default port for servers to bind to
+        /// </summary>
         public const int DEFAULT_PORT = 14245;
+        /// <summary>
+        /// The port of the master server
+        /// </summary>
         public const int MASTER_SERVER_PORT = 14556;
+        /// <summary>
+        /// The minimum port
+        /// </summary>
         public const int MIN_PORT = 14240;
+        /// <summary>
+        /// The maximum port
+        /// </summary>
         public const int MAX_PORT = 14250;
+        /// <summary>
+        /// The default name for an unnamed server
+        /// </summary>
         public const string DEFAULT_SERVERNAME = "<noName>";
+        /// <summary>
+        /// Time delay between polling for servers
+        /// </summary>
         public const double SERVER_POLLING_RATE = 5.0;
     }
 }

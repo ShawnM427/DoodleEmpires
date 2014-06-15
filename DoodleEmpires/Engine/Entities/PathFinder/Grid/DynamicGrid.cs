@@ -44,13 +44,21 @@ using System.Collections;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder
 {
+    /// <summary>
+    /// A dynamic pathfinding grid
+    /// </summary>
     public class DynamicGrid : BaseGrid
     {
+        /// <summary>
+        /// A dictionary containing all non-null nodes
+        /// </summary>
         protected Dictionary<GridPos, Node> m_nodes;
         private bool m_notSet;
-
-
-        public override int width
+        
+        /// <summary>
+        /// Gets the width of this grid
+        /// </summary>
+        public override int Width
         {
             get
             {
@@ -63,8 +71,10 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
 
             }
         }
-
-        public override int height
+        /// <summary>
+        /// Gets the height of this grid
+        /// </summary>
+        public override int Height
         {
             get
             {
@@ -78,6 +88,10 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
+        /// <summary>
+        /// Creates a new dynamic grid
+        /// </summary>
+        /// <param name="iWalkableGridList">A list of all walkable positions</param>
         public DynamicGrid(List<GridPos> iWalkableGridList = null)
             : base()
         {
@@ -90,6 +104,10 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             buildNodes(iWalkableGridList);
         }
 
+        /// <summary>
+        /// Builds the nodes from a list of walkable points
+        /// </summary>
+        /// <param name="iWalkableGridList">A list of walkable grid coords</param>
         protected void buildNodes(List<GridPos> iWalkableGridList)
         {
 
@@ -102,37 +120,37 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
-
+        /// <summary>
+        /// Gets the node at the given co-ordinates
+        /// </summary>
+        /// <param name="iX">The x coord to get</param>
+        /// <param name="iY">The y coord to get</param>
+        /// <returns>The node at the given position</returns>
         public override Node GetNodeAt(int iX, int iY)
         {
             GridPos pos = new GridPos(iX, iY);
             return GetNodeAt(pos);
         }
 
+        /// <summary>
+        /// Gets whether the node at the given co-ordinates is walkable
+        /// </summary>
+        /// <param name="iX">The x coord to get</param>
+        /// <param name="iY">The y coord to get</param>
+        /// <returns>True if the node at the position is walkable</returns>
         public override bool IsWalkableAt(int iX, int iY)
         {
             GridPos pos = new GridPos(iX, iY);
             return IsWalkableAt(pos);
         }
 
-        private void setBoundingBox()
-        {
-            m_notSet = true;
-            foreach (KeyValuePair<GridPos, Node> pair in m_nodes)
-            {
-                if (pair.Key.x < m_gridRect.minX || m_notSet)
-                    m_gridRect.minX = pair.Key.x;
-                if (pair.Key.x > m_gridRect.maxX || m_notSet)
-                    m_gridRect.maxX = pair.Key.x;
-                if (pair.Key.y < m_gridRect.minY || m_notSet)
-                    m_gridRect.minY = pair.Key.y;
-                if (pair.Key.y > m_gridRect.maxY || m_notSet)
-                    m_gridRect.maxY = pair.Key.y;
-                m_notSet = false;
-            }
-            m_notSet = false;
-        }
-
+        /// <summary>
+        /// Sets whether the node at the given co-ordinates is walkable
+        /// </summary>
+        /// <param name="iX">The x coord to set</param>
+        /// <param name="iY">The y coord to set</param>
+        /// <param name="iWalkable">Whether to node is walkable</param>
+        /// <returns>The sucess of the operation</returns>
         public override bool SetWalkableAt(int iX, int iY, bool iWalkable)
         {
             GridPos pos = new GridPos(iX, iY);
@@ -170,6 +188,29 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             return true;
         }
 
+        private void setBoundingBox()
+        {
+            m_notSet = true;
+            foreach (KeyValuePair<GridPos, Node> pair in m_nodes)
+            {
+                if (pair.Key.x < m_gridRect.minX || m_notSet)
+                    m_gridRect.minX = pair.Key.x;
+                if (pair.Key.x > m_gridRect.maxX || m_notSet)
+                    m_gridRect.maxX = pair.Key.x;
+                if (pair.Key.y < m_gridRect.minY || m_notSet)
+                    m_gridRect.minY = pair.Key.y;
+                if (pair.Key.y > m_gridRect.maxY || m_notSet)
+                    m_gridRect.maxY = pair.Key.y;
+                m_notSet = false;
+            }
+            m_notSet = false;
+        }
+
+        /// <summary>
+        /// Gets the node at the given co-ordinates
+        /// </summary>
+        /// <param name="iPos">The position to get</param>
+        /// <returns>The node at the given position</returns>
         public override Node GetNodeAt(GridPos iPos)
         {
             if (m_nodes.ContainsKey(iPos))
@@ -179,21 +220,39 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             return null;
         }
 
+        /// <summary>
+        /// Gets whether the node at the given co-ordinates is walkable
+        /// </summary>
+        /// <param name="iPos">The position to check</param>
+        /// <returns>True if the node at the position is walkable</returns>
         public override bool IsWalkableAt(GridPos iPos)
         {
             return m_nodes.ContainsKey(iPos);
         }
 
+        /// <summary>
+        /// Sets whether the node at the given co-ordinates is walkable
+        /// </summary>
+        /// <param name="iPos">The position to set</param>
+        /// <param name="iWalkable">Whether the node at the position is walkable</param>
+        /// <returns>The sucess of the operation</returns>
         public override bool SetWalkableAt(GridPos iPos, bool iWalkable)
         {
             return SetWalkableAt(iPos.x, iPos.y, iWalkable);
         }
 
+        /// <summary>
+        /// Resets this grid
+        /// </summary>
         public override void Reset()
         {
             Reset(null);
         }
 
+        /// <summary>
+        /// Resets this grid using a list of walkable points
+        /// </summary>
+        /// <param name="iWalkableGridList">A list of walkable positions</param>
         public void Reset(List<GridPos> iWalkableGridList)
         {
 
@@ -213,6 +272,10 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
+        /// <summary>
+        /// Creates a clone of this grid
+        /// </summary>
+        /// <returns>A duplicate of this grid</returns>
         public override BaseGrid Clone()
         {
             DynamicGrid tNewGrid = new DynamicGrid(null);

@@ -43,14 +43,24 @@ using System.Collections;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder.Utils
 {
+    /// <summary>
+    /// Represents an object that cotains a default of an object
+    /// </summary>
+    /// <typeparam name="T">The type of instance to hold</typeparam>
     public class SingletonHolder<T> where T : new()
     {
         private static T m_instance;
 
+        /// <summary>
+        /// Creates a new singleton holder
+        /// </summary>
         private SingletonHolder()
         {
         }
 
+        /// <summary>
+        /// Gets the default instance for this singleton
+        /// </summary>
         public static T Instance
         {
             get

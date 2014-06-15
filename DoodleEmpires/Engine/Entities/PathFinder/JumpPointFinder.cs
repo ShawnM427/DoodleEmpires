@@ -43,12 +43,29 @@ using System.Collections;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder
 {
-
+    /// <summary>
+    /// The delagate to use for finding distance
+    /// </summary>
+    /// <param name="iDx">The x coord</param>
+    /// <param name="iDy">The y coord</param>
+    /// <returns>A hueristic distance</returns>
     public delegate float HeuristicDelegate(int iDx, int iDy);
 
+    /// <summary>
+    /// Represents the parameters fed into a jump point search
+    /// </summary>
     public class JumpPointParam
     {
-
+        /// <summary>
+        /// Creates a new set of search parameters
+        /// </summary>
+        /// <param name="iGrid">The grid to search</param>
+        /// <param name="iStartPos">The starting position to search from</param>
+        /// <param name="iEndPos">The ending position to search to</param>
+        /// <param name="iAllowEndNodeUnWalkable">True if the end node can be unwalkable</param>
+        /// <param name="iCrossCorner">True if the search can cross corners</param>
+        /// <param name="iCrossAdjacentPoint">True if an adjacent node needs to be opened to allow a corner</param>
+        /// <param name="iMode">The heuristic mode to use</param>
         public JumpPointParam(BaseGrid iGrid, GridPos iStartPos, GridPos iEndPos, bool iAllowEndNodeUnWalkable = true, bool iCrossCorner = true, bool iCrossAdjacentPoint = true, HeuristicMode iMode = HeuristicMode.EUCLIDEAN)
         {
             switch (iMode)
@@ -81,6 +98,14 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             m_useRecursive = false;
         }
 
+        /// <summary>
+        /// Creates a new set of search parameters
+        /// </summary>
+        /// <param name="iGrid">The grid to search</param>
+        /// <param name="iAllowEndNodeUnWalkable">True if the end node can be unwalkable</param>
+        /// <param name="iCrossCorner">True if the search can cross corners</param>
+        /// <param name="iCrossAdjacentPoint">True if an adjacent node needs to be opened to allow a corner</param>
+        /// <param name="iMode">The heuristic mode to use</param>
         public JumpPointParam(BaseGrid iGrid, bool iAllowEndNodeUnWalkable = true, bool iCrossCorner = true, bool iCrossAdjacentPoint=true, HeuristicMode iMode = HeuristicMode.EUCLIDEAN)
         {
             switch (iMode)
@@ -110,6 +135,10 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             m_useRecursive = false;
         }
 
+        /// <summary>
+        /// Sets the heuristic to use
+        /// </summary>
+        /// <param name="iMode">The heuristic mode to use</param>
         public void SetHeuristic(HeuristicMode iMode)
         {
             m_heuristic = null;
@@ -130,6 +159,12 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
+        /// <summary>
+        /// Resets this search
+        /// </summary>
+        /// <param name="iStartPos">The new starting position to use</param>
+        /// <param name="iEndPos">The new end position to use</param>
+        /// <param name="iSearchGrid">The new grid to use, or null to use the old grid</param>
         public void Reset(GridPos iStartPos, GridPos iEndPos, BaseGrid iSearchGrid = null)
         {
             openList.Clear();
@@ -145,10 +180,25 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
                 m_startNode = new Node(iStartPos.x, iStartPos.y, true);
             if (m_endNode == null)
                 m_endNode = new Node(iEndPos.x, iEndPos.y, true);
-
-
         }
 
+        /// <summary>
+        /// Gets or sets whether an adjacent node needs to be open in order to cross a corner
+        /// </summary>
+        /// <example>
+        /// -------------
+        /// | x | x | t |
+        /// -------------
+        /// | x | s | x |
+        /// -------------
+        /// | x | x | x |
+        /// -------------
+        /// where x is closed, s is start and t is open.
+        /// 
+        /// If false, this would return t as a valid walking point,
+        /// if true, either the top middle or the left middle would
+        /// need to be open
+        /// </example>
         public bool CrossAdjacentPoint
         {
             get
@@ -160,7 +210,9 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
                 m_crossAdjacentPoint = value;
             }
         }
-
+        /// <summary>
+        /// Gets or sets whether the search can cross corners
+        /// </summary>
         public bool CrossCorner
         {
             get
@@ -173,6 +225,9 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the search allows for the end node to be unwalkable
+        /// </summary>
         public bool AllowEndNodeUnWalkable
         {
             get
@@ -185,6 +240,9 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
+        /// <summary>
+        /// Gets the heuristic being used
+        /// </summary>
         public HeuristicDelegate HeuristicFunc
         {
             get
@@ -193,6 +251,9 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
+        /// <summary>
+        /// Gets the grid that the search is being applied to
+        /// </summary>
         public BaseGrid SearchGrid
         {
             get
@@ -201,6 +262,9 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
+        /// <summary>
+        /// Gets the starting node
+        /// </summary>
         public Node StartNode
         {
             get
@@ -208,6 +272,9 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
                 return m_startNode;
             }
         }
+        /// <summary>
+        /// Gets the end node
+        /// </summary>
         public Node EndNode
         {
             get
@@ -216,6 +283,9 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this search uses recursion
+        /// </summary>
         public bool UseRecursive
         {
             get
@@ -227,21 +297,72 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
                 m_useRecursive = value;
             }
         }
+
+        /// <summary>
+        /// The heuristic to use
+        /// </summary>
         protected HeuristicDelegate m_heuristic;
+        /// <summary>
+        /// True if an adjacent node needs to be open in order to cross a corner
+        /// </summary>
+        /// <example>
+        /// -------------
+        /// | x | x | t |
+        /// -------------
+        /// | x | s | x |
+        /// -------------
+        /// | x | x | x |
+        /// -------------
+        /// where x is closed, s is start and t is open.
+        /// 
+        /// If false, this would return t as a valid walking point,
+        /// if true, either the top middle or the left middle would
+        /// need to be open
+        /// </example>
         protected bool m_crossAdjacentPoint;
+        /// <summary>
+        /// True if this search can cross corners
+        /// </summary>
         protected bool m_crossCorner;
+        /// <summary>
+        /// True if the end node can be unwalkable
+        /// </summary>
         protected bool m_allowEndNodeUnWalkable;
 
+        /// <summary>
+        /// True if this search should use recursion instead of a loop
+        /// </summary>
         protected bool m_useRecursive;
 
+        /// <summary>
+        /// The grid to search
+        /// </summary>
         protected BaseGrid m_searchGrid;
+        /// <summary>
+        /// The starting node
+        /// </summary>
         protected Node m_startNode;
+        /// <summary>
+        /// The ending node
+        /// </summary>
         protected Node m_endNode;
 
+        /// <summary>
+        /// A list of all open nodes
+        /// </summary>
         public List<Node> openList;
     }
+    
+    /// <summary>
+    /// Performs a jump point search
+    /// </summary>
     class JumpPointFinder
     {
+        /// <summary>
+        /// Finds a path using the given parameters
+        /// </summary>
+        /// <param name="iParam">The input parameters to use</param>
+        /// <returns>A list of grid positions representing a path</returns>
         public static List<GridPos> FindPath(JumpPointParam iParam)
         {
 
@@ -357,6 +478,7 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             public GridPos? jx;
             public GridPos? jy;
             public int stage;
+
             public JumpSnapshot()
             {
             

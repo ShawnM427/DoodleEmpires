@@ -14,6 +14,9 @@ namespace DoodleEmpires.Engine.GUI
     /// </summary>
     public abstract class GUIElement : IGUI
     {
+        /// <summary>
+        /// The foreground color for graphical elements, such as text
+        /// </summary>
         protected Color _foreColor = Color.Black;
         
         /// <summary>
@@ -41,7 +44,12 @@ namespace DoodleEmpires.Engine.GUI
             }
         }
         
-        public GUIElement(GraphicsDevice graphics, GUIContainer parent) : base(graphics, parent)
+        /// <summary>
+        /// Creates a new GUI element
+        /// </summary>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="parent">The parent container</param>
+        protected GUIElement(GraphicsDevice graphics, GUIContainer parent) : base(graphics, parent)
         {
             _backColor = Color.Transparent;
         }

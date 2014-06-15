@@ -773,6 +773,7 @@
             <summary>
             Creates a new skeleton
             </summary>
+            <param name="parentControl">The parent control to render to</param>
             <param name="name">The name for this skeleton</param>
             <param name="orgin">The orgin point of the skeleton</param>
         </member>
@@ -835,6 +836,7 @@
             <summary>
             Loads a skeleton from a stream
             </summary>
+            <param name="parentControl">The parent control to render to</param>
             <param name="r">The binary reader to use</param>
             <returns>A skeleton loaded from the stream</returns>
         </member>
