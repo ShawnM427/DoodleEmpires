@@ -43,18 +43,32 @@ using System.Collections;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder
 {
+    /// <summary>
+    /// Represents a non-dynamic navigation grid
+    /// </summary>
     public class StaticGrid : BaseGrid
     {
-        public override int width { get; protected set; }
-
-        public override int height { get; protected set; }
+        /// <summary>
+        /// Gets the width of this grid
+        /// </summary>
+        public override int Width { get; protected set; }
+        /// <summary>
+        /// Gets the height of this grid
+        /// </summary>
+        public override int Height { get; protected set; }
 
         private Node[][] m_nodes;
 
+        /// <summary>
+        /// Creates a new static grid
+        /// </summary>
+        /// <param name="iWidth">The width of the grid</param>
+        /// <param name="iHeight">The height of the grid</param>
+        /// <param name="iMatrix">The walkable matrix to apply to this map</param>
         public StaticGrid(int iWidth, int iHeight, bool[][] iMatrix = null):base()
         {
-            width = iWidth;
-            height = iHeight;
+            Width = iWidth;
+            Height = iHeight;
             m_gridRect.minX = 0;
             m_gridRect.minY = 0;
             m_gridRect.maxX = iWidth-1;
@@ -62,7 +76,13 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             this.m_nodes = buildNodes(iWidth, iHeight, iMatrix);
         }
 
-
+        /// <summary>
+        /// Builds all the nodes for this map
+        /// </summary>
+        /// <param name="iWidth">The width of the map</param>
+        /// <param name="iHeight">The height of the map</param>
+        /// <param name="iMatrix">The walkable matrix to apply to this map</param>
+        /// <returns>A collection of nodes</returns>
         private Node[][] buildNodes(int iWidth, int iHeight, bool[][] iMatrix)
         {
 
@@ -72,7 +92,7 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
                 tNodes[widthTrav] = new Node[iHeight];
                 for (int heightTrav = 0; heightTrav < iHeight; heightTrav++)
                 {
-                    tNodes[widthTrav][heightTrav] = new Node(widthTrav, heightTrav, null);
+                    tNodes[widthTrav][heightTrav] = new Node(widthTrav, heightTrav, false);
                 }
             }
 
@@ -104,57 +124,110 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             return tNodes;
         }
 
+        /// <summary>
+        /// Gets the node at the given co-ordinates
+        /// </summary>
+        /// <param name="iX">The x coord to get</param>
+        /// <param name="iY">The y coord to get</param>
+        /// <returns>The node at the given position</returns>
         public override Node GetNodeAt(int iX, int iY)
         {
             return this.m_nodes[iX][iY];
         }
 
+        /// <summary>
+        /// Gets whether the node at the given co-ordinates is walkable
+        /// </summary>
+        /// <param name="iX">The x coord to get</param>
+        /// <param name="iY">The y coord to get</param>
+        /// <returns>True if the node at the position is walkable</returns>
         public override bool IsWalkableAt(int iX, int iY)
         {
             return isInside(iX, iY) && this.m_nodes[iX][iY].walkable;
         }
 
+        /// <summary>
+        /// Checks whether the given coordinate is inside of this map
+        /// </summary>
+        /// <param name="iX">The x coord to check</param>
+        /// <param name="iY">The y coord to check</param>
+        /// <returns>True if the coordinate is within this map</returns>
         protected bool isInside(int iX, int iY)
         {
-            return (iX >= 0 && iX < width) && (iY >= 0 && iY < height);
+            return (iX >= 0 && iX < Width) && (iY >= 0 && iY < Height);
         }
 
+        /// <summary>
+        /// Sets whether the node at the given co-ordinates is walkable
+        /// </summary>
+        /// <param name="iX">The x coord to set</param>
+        /// <param name="iY">The y coord to set</param>
+        /// <param name="iWalkable">Whether to node is walkable</param>
+        /// <returns>The sucess of the operation</returns>
         public override bool SetWalkableAt(int iX, int iY, bool iWalkable)
         {
             this.m_nodes[iX][iY].walkable = iWalkable;
             return true;
         }
 
+        /// <summary>
+        /// Checks whether the given coordinate is inside of this map
+        /// </summary>
+        /// <param name="iPos">The position to check</param>
+        /// <returns>True if the coordinate is within this map</returns>
         protected bool isInside(GridPos iPos)
         {
             return isInside(iPos.x, iPos.y);
         }
 
+        /// <summary>
+        /// Gets the node at the given co-ordinates
+        /// </summary>
+        /// <param name="iPos">The position to get</param>
+        /// <returns>The node at the given position</returns>
         public override Node GetNodeAt(GridPos iPos)
         {
             return GetNodeAt(iPos.x, iPos.y);
         }
 
+        /// <summary>
+        /// Gets whether the node at the given co-ordinates is walkable
+        /// </summary>
+        /// <param name="iPos">The position to check</param>
+        /// <returns>True if the node at the position is walkable</returns>
         public override bool IsWalkableAt(GridPos iPos)
         {
             return IsWalkableAt(iPos.x, iPos.y);
         }
 
+        /// <summary>
+        /// Sets whether the node at the given co-ordinates is walkable
+        /// </summary>
+        /// <param name="iPos">The position to set</param>
+        /// <param name="iWalkable">Whether the node at the position is walkable</param>
+        /// <returns>The sucess of the operation</returns>
         public override bool SetWalkableAt(GridPos iPos, bool iWalkable)
         {
             return SetWalkableAt(iPos.x, iPos.y, iWalkable);
         }
 
+        /// <summary>
+        /// Resets this grid
+        /// </summary>
         public override void Reset()
         {
             Reset(null);
         }
 
+        /// <summary>
+        /// Resets this grid with the given walkable matrix
+        /// </summary>
+        /// <param name="iMatrix">The matrix of walkable positions</param>
         public void Reset(bool[][] iMatrix)
         {
-            for (int widthTrav = 0; widthTrav < width; widthTrav++)
+            for (int widthTrav = 0; widthTrav < Width; widthTrav++)
             {
-                for (int heightTrav = 0; heightTrav < height; heightTrav++)
+                for (int heightTrav = 0; heightTrav < Height; heightTrav++)
                 {
                     m_nodes[widthTrav][heightTrav].Reset();
                 }
@@ -164,14 +237,14 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             {
                 return;
             }
-            if (iMatrix.Length != width || iMatrix[0].Length != height)
+            if (iMatrix.Length != Width || iMatrix[0].Length != Height)
             {
                 throw new System.ApplicationException("Matrix size does not fit");
             }
 
-            for (int widthTrav = 0; widthTrav < width; widthTrav++)
+            for (int widthTrav = 0; widthTrav < Width; widthTrav++)
             {
-                for (int heightTrav = 0; heightTrav < height; heightTrav++)
+                for (int heightTrav = 0; heightTrav < Height; heightTrav++)
                 {
                     if (iMatrix[widthTrav][heightTrav])
                     {
@@ -185,10 +258,14 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
         }
 
+        /// <summary>
+        /// Creates a clone of this grid
+        /// </summary>
+        /// <returns>A clone of this grid</returns>
         public override BaseGrid Clone()
         {
-            int tWidth = width;
-            int tHeight = height;
+            int tWidth = Width;
+            int tHeight = Height;
             Node[][] tNodes = this.m_nodes;
 
             StaticGrid tNewGrid = new StaticGrid(tWidth, tHeight, null);
@@ -207,6 +284,4 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             return tNewGrid;
         }
     }
-
-
 }

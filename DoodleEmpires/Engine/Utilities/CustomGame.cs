@@ -10,6 +10,8 @@ using OpenTK;
 
 namespace DoodleEmpires.Engine.Utilities
 {
+    #pragma warning disable 
+
     public abstract class CustomGame : OpenTKGameWindow, IDisposable
     {
         bool _exiting = false;

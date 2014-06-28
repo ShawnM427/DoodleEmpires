@@ -9,22 +9,61 @@ using DoodleEmpires.Engine.Utilities;
 
 namespace DoodleEmpires.Engine.GUI
 {
+    /// <summary>
+    /// The base class for all GUI elements and containers
+    /// </summary>
     public abstract class IGUI
     {
         private bool _invalidating = true;
 
+        /// <summary>
+        /// The graphics device used to draw within this component
+        /// </summary>
         protected GraphicsDevice _graphics;
+        /// <summary>
+        /// The spritebatch used to draw within this component
+        /// </summary>
         protected SpriteBatch _spriteBatch;
+        /// <summary>
+        /// The effect used to draw within this component
+        /// </summary>
         protected BasicEffect _effect;
+        /// <summary>
+        /// The internal render target to render to
+        /// </summary>
         protected RenderTarget2D _renderTarget;
+        /// <summary>
+        /// This component's bounds
+        /// </summary>
         protected Rectangle _bounds;
+        /// <summary>
+        /// This component's bounds on the screen
+        /// </summary>
         protected Rectangle _screenBounds;
+        /// <summary>
+        /// The Color multiplier to used when drawing this component
+        /// </summary>
         protected Color _colorMultiplier = Color.White;
+        /// <summary>
+        /// The background color of this component
+        /// </summary>
         protected Color _backColor = Color.LightGray;
+        /// <summary>
+        /// This components parent container
+        /// </summary>
         protected GUIContainer _parent;
+        /// <summary>
+        /// True if this component is visible
+        /// </summary>
         protected bool _visible = true;
+        /// <summary>
+        /// True if this component is enabled
+        /// </summary>
         protected bool _enabled = true;
 
+        /// <summary>
+        /// The corner vertices of this GUI peice
+        /// </summary>
         protected VertexPositionColor[] _cornerVerts = new VertexPositionColor[5]
         {
             new VertexPositionColor(new Vector3(0, 0, 0.5f), Color.Black),
@@ -130,6 +169,9 @@ namespace DoodleEmpires.Engine.GUI
             }
         }
 
+        /// <summary>
+        /// Gets or sets the left bound of the client rectangle
+        /// </summary>
         public int X
         {
             get { return _bounds.X; }
@@ -139,6 +181,9 @@ namespace DoodleEmpires.Engine.GUI
                 Bounds = _bounds;
             }
         }
+        /// <summary>
+        /// Gets or sets the top bound of the client rectangle
+        /// </summary>
         public int Y
         {
             get { return _bounds.Y; }
@@ -148,6 +193,9 @@ namespace DoodleEmpires.Engine.GUI
                 Bounds = _bounds;
             }
         }
+        /// <summary>
+        /// Gets or sets the width of the client rectangle
+        /// </summary>
         public int Width
         {
             get { return _bounds.Width; }
@@ -157,6 +205,9 @@ namespace DoodleEmpires.Engine.GUI
                 Bounds = _bounds;
             }
         }
+        /// <summary>
+        /// Gets or sets the height of the client rectangle
+        /// </summary>
         public int Height
         {
             get { return _bounds.Height; }
@@ -166,9 +217,13 @@ namespace DoodleEmpires.Engine.GUI
                 Bounds = _bounds;
             }
         }
-
-
-        public IGUI(GraphicsDevice graphics, GUIContainer parent)
+        
+        /// <summary>
+        /// Creates a new GUI component
+        /// </summary>
+        /// <param name="graphics">The GraphicsDevice to bind to</param>
+        /// <param name="parent">The parent container</param>
+        protected IGUI(GraphicsDevice graphics, GUIContainer parent)
         {
             _graphics = graphics;
             _spriteBatch = new SpriteBatch(graphics);
@@ -256,7 +311,7 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         /// <param name="e">The mouse event arguments</param>
         /// <returns>True if the input was handled</returns>
-        public virtual bool MousePressed(MouseEventArgs e) { return false; }
+        public virtual void MousePressed(MouseEventArgs e) { }
 
         /// <summary>
         /// Called when this component has been resized

@@ -14,7 +14,18 @@ namespace DoodleEmpires.Engine.GUI
     /// </summary>
     public abstract class GUIContainer : IGUI
     {
+        static readonly Color _disabledColor = Color.White * 0.4f;
+        static readonly Color _enabledColor = Color.White;
+
+        static Texture2D _pixelTex;
+
+        /// <summary>
+        /// A list of all controls that this container holds
+        /// </summary>
         protected List<IGUI> _controls;
+        /// <summary>
+        /// The spacing to the left/right/top/bottom to shift elements
+        /// </summary>
         protected int _margin = 5;
 
         /// <summary>
@@ -46,14 +57,29 @@ namespace DoodleEmpires.Engine.GUI
             set { _margin = value; }
         }
 
+        /// <summary>
+        /// Creates a new GUI container
+        /// </summary>
+        /// <param name="graphics">The graphics device to bind to</param>
         public GUIContainer(GraphicsDevice graphics) : this(graphics, null)
         {
         }
 
+        /// <summary>
+        /// Creates a new GUI container
+        /// </summary>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="parent">The parent container</param>
         public GUIContainer(GraphicsDevice graphics, GUIContainer parent)
             : base(graphics, parent)
         {
             _controls = new List<IGUI>();
+
+            if (_pixelTex == null)
+            {
+                _pixelTex = new Texture2D(graphics, 1, 1);
+                _pixelTex.SetData<Color>(new Color[] { Color.White });
+            }
         }
 
         /// <summary>
@@ -88,7 +114,14 @@ namespace DoodleEmpires.Engine.GUI
             foreach (IGUI control in _controls)
             {
                 if (control != null && control.Visible && control.Image != null)
+                {
                     _spriteBatch.Draw(control.Image, control.Bounds, Color.White);
+
+                    if (!control.Enabled)
+                    {
+                        _spriteBatch.Draw(_pixelTex, control.Bounds, _disabledColor);
+                    }
+                }
             }
 
             base.EndInvalidate();
@@ -110,13 +143,14 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         /// <param name="e">The mouse event arguments</param>
         /// <returns>True if the input was handled</returns>
-        public override bool MousePressed(MouseEventArgs e)
+        public override void MousePressed(MouseEventArgs e)
         {
-            foreach (IGUI control in _controls)
-                if (control.Enabled && control.MousePressed(e))
-                    return true;
-
-            return false;
+            if (_screenBounds.Contains(e.Location))
+            {
+                foreach (IGUI control in _controls)
+                    if (control.Enabled && control.ScreenBounds.Contains(e.Location))
+                        control.MousePressed(e);
+            }
         }
     }
 }

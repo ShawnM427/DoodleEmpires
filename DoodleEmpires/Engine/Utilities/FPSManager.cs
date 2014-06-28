@@ -11,6 +11,9 @@ namespace DoodleEmpires.Engine.Utilities
     /// </summary>
     public static class FPSManager
     {
+        /// <summary>
+        /// The standard frame speed
+        /// </summary>
         public static int FrameSpeed = 60;
         /// <summary>
         /// Gets the total number of frames that have been rendered
@@ -26,6 +29,9 @@ namespace DoodleEmpires.Engine.Utilities
         public static double CurrentFramesPerSecond { get; private set; }
 
         static float _multiplier = 1.0F;
+        /// <summary>
+        /// Gets a multiplier that synchs tick rate to frame speed
+        /// </summary>
         public static float Multiplier
         {
             get { return _multiplier; }

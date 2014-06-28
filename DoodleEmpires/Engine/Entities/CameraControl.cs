@@ -8,6 +8,9 @@ using DoodleEmpires.Engine.Utilities;
 
 namespace DoodleEmpires.Engine.Entities
 {
+    /// <summary>
+    /// A basic controller for a 2D camera
+    /// </summary>
     public class CameraControl : IFocusable
     {
         const Keys MOVELEFT = Keys.A;
@@ -16,21 +19,39 @@ namespace DoodleEmpires.Engine.Entities
         const Keys MOVEDOWN = Keys.S;
         const float SPEED = 4.0F;
 
+        /// <summary>
+        /// The current target position
+        /// </summary>
         protected Vector2 _position = Vector2.Zero;
+        /// <summary>
+        /// The bounds that the controller must stay within
+        /// </summary>
         protected Rectangle _bounds = new Rectangle(0, 0, 800, 400);
 
+        /// <summary>
+        /// Gets or sets the camera controller's position
+        /// </summary>
         public Vector2 Position
         {
             get { return _position; }
             set { _position = value; }
         }
 
+        /// <summary>
+        /// Creates a new camera controller
+        /// </summary>
+        /// <param name="camera">The camera to control</param>
         public CameraControl(ICamera2D camera)
         {
+            camera.Focus = this;
             _bounds = camera.ScreenBounds;
         }
 
         KeyboardState _ks;
+        /// <summary>
+        /// Updates this camera controller
+        /// </summary>
+        /// <param name="gameTime">The current game time</param>
         public void Update(GameTime gameTime)
         {
             _ks = Keyboard.GetState();

@@ -8,27 +8,44 @@ using Microsoft.Xna.Framework;
 
 namespace DoodleEmpires.Engine.Terrain
 {
+    /// <summary>
+    /// Represents a tile manager 
+    /// </summary>
     public class TileManager
     {
         List<Tile> _tileTypes = new List<Tile>();
         bool[,] _connections = new bool[256,256];
         Dictionary<string, byte> _tiles = new Dictionary<string, byte>();
 
+        /// <summary>
+        /// Gets the list of tiles
+        /// </summary>
         public List<Tile> Tiles
         {
             get { return _tileTypes; }
         }
-
+        /// <summary>
+        /// Gets the tile with the given ID
+        /// </summary>
+        /// <param name="ID">The ID of the tile</param>
+        /// <returns>The Tile with the given ID</returns>
         public Tile this[int ID]
         {
             get { return _tileTypes[ID]; }
         }
-
+        /// <summary>
+        /// Gets the ID of the tile with the name
+        /// </summary>
+        /// <param name="name">The name of the tile to get</param>
+        /// <returns>The ID of the tile with the given name</returns>
         public byte this[string name]
         {
             get { return _tiles[name.ToLower()]; }
         }
 
+        /// <summary>
+        /// Creates a new tile manager
+        /// </summary>
         public TileManager()
         {
             RegisterTile("Air",0, Color.Transparent, RenderType.None, false); //adds the air tile type
@@ -102,6 +119,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// <summary>
         /// Adds a new tile type to this tile manager
         /// </summary>
+        /// <param name="name">The name of the tile to register</param>
         /// <param name="tile">The tile to add</param>
         /// <returns>The TileID for the new tile</returns>
         public byte RegisterTile(string name, Tile tile)
@@ -118,11 +136,21 @@ namespace DoodleEmpires.Engine.Terrain
                 throw new ArgumentException(string.Format("There is already a tile named \"{0}\"", name));
         }
 
+        /// <summary>
+        /// Gets the name of the tile with the given ID
+        /// </summary>
+        /// <param name="ID">The ID of the tile</param>
+        /// <returns>The name of tile with the given ID</returns>
         public string NameOf(byte ID)
         {
             return _tiles.First( x => x.Value == ID).Key;
         }
 
+        /// <summary>
+        /// Gets the index of the tile with the given name
+        /// </summary>
+        /// <param name="name">The name of the tile</param>
+        /// <returns>The index of tile with the given name</returns>
         public byte IndexOf(string name)
         {
             return _tiles.First(x => x.Key == name).Value;
@@ -136,6 +164,7 @@ namespace DoodleEmpires.Engine.Terrain
         /// <param name="atlas">The texture atlas to look up textures from</param>
         /// <param name="mooreState">The neighbour states for this block</param>
         /// <param name="tileID">The ID of the tile to render</param>
+        /// <param name="metaData">The meta data for the tile to render</param>
         /// <param name="diffuseColor">The color to transform everything by</param>
         public void RenderTile(SpriteBatch spriteBatch, Rectangle bounds, TextureAtlas atlas, byte mooreState, 
             byte tileID, byte metaData, Color diffuseColor)

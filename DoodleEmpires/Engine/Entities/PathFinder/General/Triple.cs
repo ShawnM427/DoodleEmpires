@@ -42,12 +42,27 @@ using System.Text;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder.Utils
 {
+    /// <summary>
+    /// Represents an object with 3 items
+    /// </summary>
+    /// <typeparam name="T">The type of the first item</typeparam>
+    /// <typeparam name="U">The type of the second item</typeparam>
+    /// <typeparam name="V">The type of the third item</typeparam>
     public class Triple<T,U,V>
     {
+        /// <summary>
+        /// Creates a new blank triple
+        /// </summary>
         public Triple()
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of a triple
+        /// </summary>
+        /// <param name="iFirst">The first item</param>
+        /// <param name="iSecond">The second item</param>
+        /// <param name="iThird">The third item</param>
         public Triple(T iFirst, U iSecond,V iThird)
         {
             this.first = iFirst;
@@ -55,8 +70,17 @@ namespace DoodleEmpires.Engine.Entities.PathFinder.Utils
             this.third = iThird;
         }
 
+        /// <summary>
+        /// Gets or sets the first item in this triple
+        /// </summary>
         public T first { get; set; }
+        /// <summary>
+        /// Gets or sets the second item in this triple
+        /// </summary>
         public U second { get; set; }
+        /// <summary>
+        /// Gets or sets the third item in this triple
+        /// </summary>
         public V third { get; set; }
     }
 }

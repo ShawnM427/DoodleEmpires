@@ -43,25 +43,49 @@ using System.Collections;
 
 namespace DoodleEmpires.Engine.Entities.PathFinder
 {
+    /// <summary>
+    /// Represents a collection of nodes that internally uses a dictionary
+    /// with GridPos as the lookup
+    /// </summary>
     public class NodePool
     {
+        /// <summary>
+        /// The internal dictionary of nodes
+        /// </summary>
         protected Dictionary<GridPos, Node> m_nodes;
 
+        /// <summary>
+        /// Creates a new node pool
+        /// </summary>
         public NodePool()
         {
             m_nodes = new Dictionary<GridPos, Node>();
         }
 
+        /// <summary>
+        /// Gets the dictionary of nodes in this pool
+        /// </summary>
         public Dictionary<GridPos, Node> Nodes
         {
             get { return m_nodes; }
         }
+
+        /// <summary>
+        /// Gets the node at the given x and y coords
+        /// </summary>
+        /// <param name="iX">The x coord to find</param>
+        /// <param name="iY">The y coord to find</param>
+        /// <returns>The node at [x, y], or null if none exists</returns>
         public Node GetNode(int iX, int iY)
         {
             GridPos pos = new GridPos(iX, iY);
             return GetNode(pos);
         }
-
+        /// <summary>
+        /// Gets the node at the given coords
+        /// </summary>
+        /// <param name="iPos">The position to get the node at</param>
+        /// <returns>The node at <i>iPos</i>, or null if none exists</returns>
         public Node GetNode(GridPos iPos)
         {
             if (m_nodes.ContainsKey(iPos))
@@ -69,12 +93,24 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
            return null;
         }
 
+        /// <summary>
+        /// Sets whether the node at the coords is walkable, or has an unkown state
+        /// </summary>
+        /// <param name="iX">The x coord to set</param>
+        /// <param name="iY">The y coord to set</param>
+        /// <param name="iWalkable">True if walkable, or null if unkown</param>
+        /// <returns>The node that has been set</returns>
         public Node SetNode(int iX, int iY, bool? iWalkable = null)
         {
             GridPos pos = new GridPos(iX, iY);
             return SetNode(pos,iWalkable);
         }
-
+        /// <summary>
+        /// Sets whether the node at the coords is walkable, or has an unkown state
+        /// </summary>
+        /// <param name="iPos">The coords to set</param>
+        /// <param name="iWalkable">True if walkable, or null if unkown</param>
+        /// <returns>The node that has been set</returns>
         public Node SetNode(GridPos iPos, bool? iWalkable = null)
         {
             if (iWalkable.HasValue)
@@ -101,11 +137,21 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
             }
             return null;
         }
+
+        /// <summary>
+        /// Removes a node from this node pool
+        /// </summary>
+        /// <param name="iX">The x coord to remove at</param>
+        /// <param name="iY">The y coord to remove at</param>
         protected void removeNode(int iX, int iY)
         {
             GridPos pos = new GridPos(iX, iY);
             removeNode(pos);
         }
+        /// <summary>
+        /// Removes a node from this node pool
+        /// </summary>
+        /// <param name="iPos">The coords to remove at</param>
         protected void removeNode(GridPos iPos)
         {
             if (m_nodes.ContainsKey(iPos))

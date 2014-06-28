@@ -19,41 +19,65 @@ namespace DoodleEmpires.Engine.Entities
         float _constructionMultiplier;
         float _harvestingMultiplier;
 
+        /// <summary>
+        /// Gets or sets the armor multiplier for this buff
+        /// </summary>
         public float ArmorMultiplier
         {
             get { return _armorMultiplier; }
             set { _armorMultiplier = value; }
         }
+        /// <summary>
+        /// Gets or sets the health multiplier for this buff
+        /// </summary>
         public float HealthMultiplier
         {
             get { return _healthMultiplier; }
             set { _healthMultiplier = value; }
         }
+        /// <summary>
+        /// Gets or sets the health regeneration multiplier for this buff
+        /// </summary>
         public float RegenMultiplier
         {
             get { return _regenMultiplier; }
             set { _regenMultiplier = value; }
         }
+        /// <summary>
+        /// Gets or sets the speed multiplier for this buff
+        /// </summary>
         public float SpeedMultiplier
         {
             get { return _speedMultiplier; }
             set { _speedMultiplier = value; }
         }
+        /// <summary>
+        /// Gets or sets the firing rate multiplier for this buff
+        /// </summary>
         public float FireRateMultiplier
         {
             get { return _firespeedMultiplier; }
             set { _firespeedMultiplier = value; }
         }
+        /// <summary>
+        /// Gets or sets the ammo regeneration multiplier for this buff
+        /// </summary>
         public float AmmoRegenMultiplier
         {
             get { return _ammoRegenMultiplier; }
             set { _ammoRegenMultiplier = value; }
         }
+        /// <summary>
+        /// Gets or sets the construction speed multiplier for this buff
+        /// </summary>
         public float ConstructionMultiplier
         {
             get { return _constructionMultiplier; }
             set { _constructionMultiplier = value; }
         }
+        /// <summary>
+        /// Gets or sets the haversting speed multiplier for this buff
+        /// </summary>
         public float HarvestingMultiplier
         {
             get { return _harvestingMultiplier; }

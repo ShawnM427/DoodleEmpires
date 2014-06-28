@@ -29,6 +29,9 @@ namespace DoodleEmpires
                 game.Run();
         }
 
+        /// <summary>
+        /// Runs a game server
+        /// </summary>
         public static void RunServer()
         {
             Thread thread = new Thread(StartServer);

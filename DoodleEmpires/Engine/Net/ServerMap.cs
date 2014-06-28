@@ -57,10 +57,19 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected int _height;
         
+        /// <summary>
+        /// A randoom number generator used for some events
+        /// </summary>
         protected Random _random;
 
+        /// <summary>
+        /// How far down to shift terrain generation
+        /// </summary>
         protected float _terrainHeightModifier;
 
+        /// <summary>
+        /// Thread used for updating tiles
+        /// </summary>
         protected BackgroundWorker _updateThread;
         
         List<Zoning> _zones = new List<Zoning>();
@@ -164,8 +173,11 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// Creates a new voxel based terrain
         /// </summary>
+        /// <param name="tileManager">The tile manager for this map</param>
         /// <param name="width">The width of the map, in tiles</param>
         /// <param name="height">The height of the map, in tiles</param>
+        /// <param name="seed">The seed to generate from, or null to pick random seed</param>
+        /// <param name="terrainHeightModifier">The height to shift the terrain down by</param>
         public ServerMap(TileManager tileManager, int width, int height, int? seed = null, float terrainHeightModifier = 25)
         {
             _tileManager = tileManager;
@@ -658,9 +670,7 @@ namespace DoodleEmpires.Engine.Net
         /// Reads a voxel terrain from the stream
         /// </summary>
         /// <param name="stream">The stream to read from</param>
-        /// <param name="graphics">The graphics device to bind to</param>
         /// <param name="tileManager">The tile manager to use</param>
-        /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
         public static ServerMap ReadFromStream(Stream stream, TileManager tileManager)
         {
@@ -688,9 +698,7 @@ namespace DoodleEmpires.Engine.Net
         /// Reads a voxel terrain from the stream using Terrain Version 0.0.1
         /// </summary>
         /// <param name="reader">The stream to read from</param>
-        /// <param name="graphics">The graphics device to bind to</param>
         /// <param name="tileManager">The tile manager to use</param>
-        /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
         private static ServerMap LoadVersion_0_0_1(BinaryReader reader, TileManager tileManager)
         {
@@ -724,9 +732,7 @@ namespace DoodleEmpires.Engine.Net
         /// Reads a voxel terrain from the stream using Terrain Version 0.0.1
         /// </summary>
         /// <param name="reader">The stream to read from</param>
-        /// <param name="graphics">The graphics device to bind to</param>
         /// <param name="tileManager">The tile manager to use</param>
-        /// <param name="atlas">The texture atlas to use</param>
         /// <returns>A voxel terrain loaded from the stream</returns>
         private static ServerMap LoadVersion_0_0_2(BinaryReader reader, TileManager tileManager)
         {
@@ -762,6 +768,11 @@ namespace DoodleEmpires.Engine.Net
 
         #region Networking
 
+        /// <summary>
+        /// Writes this terrain into an outgoing packet. 
+        /// Note that this packet will be very large afterwards
+        /// </summary>
+        /// <param name="message">The packet to write to</param>
         public void WriteToMessage(NetOutgoingMessage message)
         {
             message.Write((short)_width);
@@ -790,26 +801,44 @@ namespace DoodleEmpires.Engine.Net
         #endregion
     }
 
+    /// <summary>
+    /// Represents a change that has been made since the world was generated
+    /// </summary>
     public class DeltaMapChange
     {
         int _x;
         int _y;
         byte _newID;
 
+        /// <summary>
+        /// The x coord of the change
+        /// </summary>
         public int X
         {
             get { return _x; }
         }
+        /// <summary>
+        /// The y coord of the change
+        /// </summary>
         public int Y
         {
             get { return _y; }
         }
+        /// <summary>
+        /// The new ID for the change
+        /// </summary>
         public byte NewID
         {
             get { return _newID; }
             set { _newID = value; }
         }
 
+        /// <summary>
+        /// Creates a new instance of a map change
+        /// </summary>
+        /// <param name="x">The x-coord of the tile</param>
+        /// <param name="y">The y-coord of the tile</param>
+        /// <param name="newID">The new ID of the tile</param>
         public DeltaMapChange(int x, int y, byte newID)
         {
             _x = x;

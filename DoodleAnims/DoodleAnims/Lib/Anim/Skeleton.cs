@@ -63,6 +63,7 @@ namespace DoodleAnims.Lib.Anim
         /// <summary>
         /// Creates a new skeleton
         /// </summary>
+        /// <param name="parentControl">The parent control to render to</param>
         /// <param name="name">The name for this skeleton</param>
         /// <param name="orgin">The orgin point of the skeleton</param>
         public Skeleton(Control parentControl, string name, PointF orgin)
@@ -205,6 +206,7 @@ namespace DoodleAnims.Lib.Anim
         /// <summary>
         /// Loads a skeleton from a stream
         /// </summary>
+        /// <param name="parentControl">The parent control to render to</param>
         /// <param name="r">The binary reader to use</param>
         /// <returns>A skeleton loaded from the stream</returns>
         public static Skeleton Load(Control parentControl, BinaryReader r)

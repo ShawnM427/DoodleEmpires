@@ -7,12 +7,30 @@ using Microsoft.Xna.Framework;
 
 namespace DoodleEmpires.Engine.GUI
 {
+    /// <summary>
+    /// A GUI element for basic rendering of text
+    /// </summary>
     public class GUITextPane : GUIElement
     {
+        /// <summary>
+        /// The text passed to this component
+        /// </summary>
         protected string _text;
+        /// <summary>
+        /// The text that is actually drawn
+        /// </summary>
         protected string _drawnText;
-        protected SpriteFont _font;        
+        /// <summary>
+        /// The font to draw text in
+        /// </summary>
+        protected SpriteFont _font; 
+        /// <summary>
+        /// The margin from either side of the bounds
+        /// </summary>
         protected float _margin = 2.0f;
+        /// <summary>
+        /// The text's position in the frame
+        /// </summary>
         protected Vector2 _textPos = new Vector2(2.0f, 2.0f);
 
         /// <summary>
@@ -63,6 +81,12 @@ namespace DoodleEmpires.Engine.GUI
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of a text pane
+        /// </summary>
+        /// <param name="graphics">The graphics device to bind to</param>
+        /// <param name="font">The font to use for text rendering</param>
+        /// <param name="parent">The parent container for this component</param>
         public GUITextPane(GraphicsDevice graphics, SpriteFont font, GUIContainer parent)
             : base(graphics, parent)
         {

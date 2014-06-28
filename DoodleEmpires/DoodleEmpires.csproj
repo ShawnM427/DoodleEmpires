@@ -21,6 +21,7 @@
     <DefineConstants>TRACE;DEBUG;WINDOWS PROFILING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>doc.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE;WINDOWS PROFILING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>doc.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
@@ -38,6 +40,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\Campaign\Campaign.cs" />
+    <Compile Include="Engine\Campaign\CutScene.cs" />
     <Compile Include="Engine\Economy\Resources.cs" />
     <Compile Include="Engine\Economy\TechNode.cs" />
     <Compile Include="Engine\Economy\TechTree.cs" />
@@ -64,7 +68,6 @@
     <Compile Include="Engine\Entities\PathFinder\Heuristic.cs" />
     <Compile Include="Engine\Entities\PathFinder\JumpPointFinder.cs" />
     <Compile Include="Engine\Entities\PathFinder\NodePool.cs" />
-    <Compile Include="Engine\Entities\Pathfinding.cs" />
     <Compile Include="Engine\Entities\UnitBuff.cs" />
     <Compile Include="Engine\Economy\Zoning.cs" />
     <Compile Include="Engine\Entities\UnitState.cs" />
@@ -92,19 +95,15 @@
     <Compile Include="Engine\Render\2DCamera.cs" />
     <Compile Include="Engine\Entities\CameraControl.cs" />
     <Compile Include="Engine\Sound\SoundEngine.cs" />
-    <Compile Include="Engine\Terrain\ChunkedTerrainRenderer.cs" />
     <Compile Include="Engine\Render\ColoredMesh.cs" />
     <Compile Include="Engine\Render\Particle\Particle.cs" />
     <Compile Include="Engine\Render\Particle\ParticleEmitter.cs" />
     <Compile Include="Engine\Render\Particle\ParticleEngine.cs" />
     <Compile Include="Engine\Render\RenderChunk.cs" />
-    <Compile Include="Engine\Terrain\FaultFormation.cs" />
-    <Compile Include="Engine\Terrain\Terrain.cs" />
     <Compile Include="Engine\Terrain\Tile.cs" />
     <Compile Include="Engine\Terrain\TileManager.cs" />
     <Compile Include="Engine\Terrain\TileType.cs" />
     <Compile Include="Engine\Terrain\Utils.cs" />
-    <Compile Include="Engine\Terrain\VolcanicFormation.cs" />
     <Compile Include="Engine\Net\SPMap.cs" />
     <Compile Include="Engine\Terrain\VoxelMap.cs" />
     <Compile Include="Engine\Utilities\AdvancedGame.cs" />

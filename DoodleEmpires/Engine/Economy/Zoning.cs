@@ -64,7 +64,7 @@ namespace DoodleEmpires.Engine.Economy
         /// <summary>
         /// Writes basic zone data to stream (TODO Actually save zone info)
         /// </summary>
-        /// <param name="stream">The stream to write to</param>
+        /// <param name="writer">The stream to write to</param>
         public void WriteToStream(BinaryWriter writer)
         {
             writer.Write(Bounds.X);
@@ -78,7 +78,7 @@ namespace DoodleEmpires.Engine.Economy
         /// <summary>
         /// Reads basic zone data from stream (TODO Actually load zone info)
         /// </summary>
-        /// <param name="stream">The stream to read from</param>
+        /// <param name="reader">The stream to read from</param>
         /// <returns>A basic zone loaded from teh memory stream</returns>
         public static Zoning ReadFromStream(BinaryReader reader)
         {
@@ -90,6 +90,10 @@ namespace DoodleEmpires.Engine.Economy
             return new Zoning(bounds, GlobalZoneManager.Manager.Get(zoneID));
         }
 
+        /// <summary>
+        /// Writes this zone to an outgoing packet, DOES NOT WRITE PACKET HEADER
+        /// </summary>
+        /// <param name="msg">The packet to write to</param>
         public void WriteToPacket(NetOutgoingMessage msg)
         {
             msg.Write(_bounds.X);
@@ -100,6 +104,11 @@ namespace DoodleEmpires.Engine.Economy
             msg.Write(_info.ZoneID);
         }
 
+        /// <summary>
+        /// Reads a zone from an incoming packet, DOES NOT READ PACKET HEADER
+        /// </summary>
+        /// <param name="msg">The packet to parse</param>
+        /// <returns>A zone read from the packet</returns>
         public static Zoning ReadFromPacket(NetIncomingMessage msg)
         {
             int x = msg.ReadInt32();
@@ -179,17 +188,28 @@ namespace DoodleEmpires.Engine.Economy
             }
         }
 
+        /// <summary>
+        /// Gets the name of this zone
+        /// </summary>
         public string Name
         {
             get { return _name; }
         }
 
+        /// <summary>
+        /// Gets or sets the ID of this zone
+        /// </summary>
         public short ZoneID
         {
             get { return _zoneID; }
             set { _zoneID = value; }
         }
 
+        /// <summary>
+        /// Creates a new zoning info
+        /// </summary>
+        /// <param name="color">The color of the zone</param>
+        /// <param name="name">The name of the zone</param>
         public ZoneInfo(Color color, string name)
         {
             _name = name;

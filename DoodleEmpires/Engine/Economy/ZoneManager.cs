@@ -8,11 +8,16 @@ using Microsoft.Xna.Framework;
 namespace DoodleEmpires.Engine.Economy
 {
     /// <summary>
-    /// Manages zones and zone types
+    /// Manages zone types
     /// </summary>
     public class ZoneManager 
         : ObjectManager<ZoneInfo> 
     {
+        /// <summary>
+        /// Adds a new zone type to this manager
+        /// </summary>
+        /// <param name="name">The name of the zone to add</param>
+        /// <param name="item">The zone info</param>
         public override void Add(string name, ZoneInfo item)
         {
             item.ZoneID = (short)_items.Count;
@@ -20,15 +25,24 @@ namespace DoodleEmpires.Engine.Economy
         }
     }
 
+    /// <summary>
+    /// A static class for handling zonings
+    /// </summary>
     public static class GlobalZoneManager
     {
         static ZoneManager _manager;
 
+        /// <summary>
+        /// Gets the internal zone manager
+        /// </summary>
         public static ZoneManager Manager
         {
             get { return _manager; }
         }
 
+        /// <summary>
+        /// Initializes the static zone manager
+        /// </summary>
         static GlobalZoneManager()
         {
             _manager = new ZoneManager();
