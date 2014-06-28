@@ -721,8 +721,8 @@ namespace DoodleEmpires.Engine.Net
 
                     if (_debugging)
                     {
-                        if (!_aiGrid.IsWalkableAt(x, y))
-                            _spriteBatch.Draw(_pixelTex, _voxelBounds[x, y], Color.Black * 0.25f);
+                        if (_aiGrid.IsWalkableAt(x, y))
+                            _spriteBatch.Draw(_pixelTex, _voxelBounds[x, y], Color.LightGreen * 0.5f);
                     }
                 }
             }

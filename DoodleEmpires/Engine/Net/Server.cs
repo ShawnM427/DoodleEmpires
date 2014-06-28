@@ -211,8 +211,6 @@ namespace DoodleEmpires.Engine.Net
                 _server.SendMessage(outM, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
 
                 SendPlayerJoined(pInfo);
-
-                Console.WriteLine("Accepting request from a client");
             }
             else
             {
@@ -297,11 +295,13 @@ namespace DoodleEmpires.Engine.Net
         
         private void SendPlayerJoined(PlayerInfo newPlayer)
         {
+            Console.WriteLine("Accepting join request from \"{0}\"", newPlayer.UserName);
+
             NetOutgoingMessage message = _server.CreateMessage();
             message.Write((byte)NetPacketType.PlayerJoined, 8);
             newPlayer.WriteToPacket(message);
 
-            _server.SendMessage(message, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
+            _server.SendMessage(message, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);            
         }
 
         private void SendPlayerLeft(PlayerInfo player)
@@ -311,6 +311,8 @@ namespace DoodleEmpires.Engine.Net
             player.WriteToPacket(message);
 
             _server.SendMessage(message, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
+
+            Console.WriteLine("Player {0} has left the game", player.UserName);
         }
 
         private void SendBlockChanged(int x, int y, byte newID)

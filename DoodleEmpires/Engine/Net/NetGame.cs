@@ -430,7 +430,8 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="gameTime">The current time stamp</param>
         protected override void Update(GameTime gameTime)
         {
-            #if PROFILING
+            //#if PROFILING
+
             Window.Title = "" + FPSManager.AverageFramesPerSecond;
 
             if (Keyboard.GetState().IsKeyDown(Keys.PageUp))
@@ -438,7 +439,8 @@ namespace DoodleEmpires.Engine.Net
 
             if (Keyboard.GetState().IsKeyDown(Keys.PageDown))
                 return;
-            #endif
+
+            //#endif
 
             switch (_gameState)
             {
@@ -629,6 +631,21 @@ namespace DoodleEmpires.Engine.Net
             _map.Render(_view);
 
             _mainControl.Draw();
+
+            SpriteBatch.Begin();
+
+            if (!_singlePlayer)
+            {
+                int i = 0;
+
+                foreach (PlayerInfo player in _players)
+                {
+                    SpriteBatch.DrawString(_guiFont, player.UserName, new Vector2(_mainControl.Bounds.Right + 2, i * 15), Color.Black);
+                    i++;
+                }
+            }
+
+            SpriteBatch.End();
         }
 
         /// <summary>
