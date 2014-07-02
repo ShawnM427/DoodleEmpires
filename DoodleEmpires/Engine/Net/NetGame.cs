@@ -214,6 +214,10 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected GUILabel _fpsLabel;
 
+        protected Effect _cameraPostEffect;
+        protected int _effectTag = 0;
+        protected float _seed = 0.01f;
+
         GUIButton _saveButton;
         GUIButton _loadButton;
         GUIListView _serverList;
@@ -399,6 +403,9 @@ namespace DoodleEmpires.Engine.Net
                 _soundEngine.AddSound(sName, Content.Load<SoundEffect>("Sounds\\" + sName));
             }
 
+            _cameraPostEffect = Content.Load<Effect>("PostShaders");
+            _cameraPostEffect.Parameters["blurDistance"].SetValue(0.001f);
+
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
 
             _mainControl = new GUIPanel(GraphicsDevice, null);
@@ -564,7 +571,26 @@ namespace DoodleEmpires.Engine.Net
                         _map.Debugging = !_map.Debugging;
                     }
 
+                    if (keyState.IsKeyDown(Keys.F4) && _prevKeyState.IsKeyUp(Keys.F4))
+                    {
+                        _effectTag++;
+                        _effectTag = _effectTag >= _cameraPostEffect.Techniques.Count ? 0 : _effectTag;
+
+                        _cameraPostEffect.CurrentTechnique = _cameraPostEffect.Techniques[_effectTag];
+                    }
+
+                    if (keyState.IsKeyDown(Keys.F5) && _prevKeyState.IsKeyUp(Keys.F5))
+                    {
+                        _effectTag--;
+                        _effectTag = _effectTag < 0 ? _cameraPostEffect.Techniques.Count - 1 : _effectTag;
+
+                        _cameraPostEffect.CurrentTechnique = _cameraPostEffect.Techniques[_effectTag];
+                    }
+
                     _prevKeyState = keyState;
+
+                    _cameraPostEffect.Parameters["seed"].SetValue(_seed);
+                    _seed += 0.01f;
                     break;
             }
 
@@ -707,6 +733,10 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected virtual void DrawMainGame()
         {
+            if (_view != null && _view.PostEffect == null)
+                _view.PostEffect = _cameraPostEffect;
+
+
             GraphicsDevice.Clear(Color.White);
             GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
 
