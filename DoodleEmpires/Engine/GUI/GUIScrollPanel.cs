@@ -149,8 +149,8 @@ namespace DoodleEmpires.Engine.GUI
         /// <returns>True if the input was handled</returns>
         public override void MousePressed(MouseEventArgs e)
         {
-            Vector2 mouseP = e.Location - new Vector2(_screenBounds.X, _screenBounds.Y);
-            if (e.LeftButton == ButtonState.Pressed && _scrollHousingRect.Contains(mouseP))
+            Vector2 mouseP = new Vector2(e.X - _screenBounds.X, e.Y - _screenBounds.Y);
+            if (e.LeftButton == ButtonChangeState.Pressed && _scrollHousingRect.Contains(mouseP))
             {
                 if (mouseP.Y < _scrollSize)
                     _scrollValue -= 1.0f;

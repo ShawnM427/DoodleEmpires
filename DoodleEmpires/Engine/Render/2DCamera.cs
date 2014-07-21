@@ -64,6 +64,16 @@ public interface ICamera2D
     /// <seealso cref="IFocusable"/>
     /// <value>The focus.</value>
     IFocusable Focus { get; set; }
+
+    /// <summary>
+    /// Begins rendering with this camera
+    /// </summary>
+    void BeginDraw();
+
+    /// <summary>
+    /// Ends the rendering pass and presents this camera's view
+    /// </summary>
+    void EndDraw();
     
     /// <summary>
     /// Determines whether the target is in view given the specified position.
@@ -93,6 +103,11 @@ public interface ICamera2D
     /// Gets or sets the bounds that this camera is limited to
     /// </summary>
     Rectangle ScreenBounds { get; set; }
+
+    /// <summary>
+    /// Gets or sets the post-processing effect for this camera
+    /// </summary>
+    Effect PostEffect { get; set; }
 }
 
 /// <summary>
@@ -100,6 +115,10 @@ public interface ICamera2D
 /// </summary>
 public class Camera2D : ICamera2D
 {
+    protected RenderTarget2D _renderTarget;
+    protected Effect _postEffect;
+    protected SpriteBatch _spriteBatch;
+
     private Vector2 _position;
     /// <summary>
     /// The height of the graphics viewport
@@ -118,6 +137,12 @@ public class Camera2D : ICamera2D
     /// The graphics device that this camera is bound to
     /// </summary>
     protected GraphicsDevice _graphics;
+
+    public Effect PostEffect
+    {
+        get { return _postEffect; }
+        set { _postEffect = value; }
+    }
     
     /// <summary>
     /// Creates a new 2D camera
@@ -126,6 +151,7 @@ public class Camera2D : ICamera2D
     public Camera2D(GraphicsDevice graphics)
     {
         _graphics = graphics;
+        _spriteBatch = new SpriteBatch(graphics);
         
         Initialize();
     }
@@ -246,6 +272,39 @@ public class Camera2D : ICamera2D
                     Matrix.CreateRotationZ(Rotation) *
                     Matrix.CreateTranslation(Origin.X, Origin.Y, 0) *
                     Matrix.CreateScale(new Vector3(Scale, 1.0F));
+    }
+
+    public void BeginDraw()
+    {
+        if (_renderTarget == null)
+            _renderTarget = new RenderTarget2D(_graphics, _graphics.Viewport.Width, _graphics.Viewport.Height,
+                false, SurfaceFormat.Color, DepthFormat.Depth24);
+
+        _graphics.SetRenderTarget(_renderTarget);
+        _graphics.Clear(Color.White);
+    }
+
+    /// <summary>
+    /// Finishes rendering with this camera and presents to the screen
+    /// </summary>
+    public void EndDraw()
+    {
+        _graphics.SetRenderTarget(null);
+        _graphics.Clear(Color.Black);
+        
+        if (_postEffect != null)
+        {
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default,
+                RasterizerState.CullCounterClockwise, _postEffect);
+        }
+        else
+        {
+            _spriteBatch.Begin();
+        }
+
+        _spriteBatch.Draw(_renderTarget, _graphics.Viewport.Bounds, Color.White);
+
+        _spriteBatch.End();
     }
 
     /// <summary>

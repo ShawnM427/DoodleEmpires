@@ -107,7 +107,6 @@
     <Compile Include="Engine\Net\SPMap.cs" />
     <Compile Include="Engine\Terrain\VoxelMap.cs" />
     <Compile Include="Engine\Utilities\AdvancedGame.cs" />
-    <Compile Include="Engine\Utilities\CustomGame.cs" />
     <Compile Include="Engine\Utilities\EventExtensions.cs" />
     <Compile Include="Engine\Utilities\FPSManager.cs" />
     <Compile Include="Engine\Utilities\Noise.cs" />
@@ -160,6 +159,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
+    <None Include="OpenTK.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Tao.Sdl.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MonoGame.Framework.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -169,6 +177,9 @@
     <None Include="Content\GUIFont.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Content\PostShaders.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

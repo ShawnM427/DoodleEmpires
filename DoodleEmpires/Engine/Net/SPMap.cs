@@ -641,16 +641,16 @@ namespace DoodleEmpires.Engine.Net
 
             if (doNeighbours)
             {
-                //UpdateVoxel(x - 1, y - 1, false);
+                UpdateVoxel(x - 1, y - 1, false);
                 UpdateVoxel(x, y - 1, false);
-                //UpdateVoxel(x + 1, y - 1, false);
+                UpdateVoxel(x + 1, y - 1, false);
 
                 UpdateVoxel(x - 1, y, false);
                 UpdateVoxel(x + 1, y, false);
 
-                //UpdateVoxel(x - 1, y + 1, false);
+                UpdateVoxel(x - 1, y + 1, false);
                 UpdateVoxel(x, y + 1, false);
-                //UpdateVoxel(x + 1, y + 1, false);
+                UpdateVoxel(x + 1, y + 1, false);
             }
         }
 
@@ -713,6 +713,8 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="camera">The camera to render with</param>
         public virtual void Render(ICamera2D camera)
         {
+            camera.BeginDraw();
+
             if (BackDrop != null)
             {
                 _spriteBatch.Begin(SpriteSortMode.Texture, null, SamplerState.LinearWrap, null, null);
@@ -766,6 +768,8 @@ namespace DoodleEmpires.Engine.Net
             }
 
             _spriteBatch.End();
+
+            camera.EndDraw();
         }
 
         #endregion

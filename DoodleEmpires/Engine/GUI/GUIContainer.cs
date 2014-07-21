@@ -145,10 +145,10 @@ namespace DoodleEmpires.Engine.GUI
         /// <returns>True if the input was handled</returns>
         public override void MousePressed(MouseEventArgs e)
         {
-            if (_screenBounds.Contains(e.Location))
+            if (_screenBounds.Contains(e.Position))
             {
                 foreach (IGUI control in _controls)
-                    if (control.Enabled && control.ScreenBounds.Contains(e.Location))
+                    if (control.Enabled && control.ScreenBounds.Contains(e.Position))
                         control.MousePressed(e);
             }
         }

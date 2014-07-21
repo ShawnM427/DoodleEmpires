@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DoodleEmpires.Engine.Utilities;
+using Microsoft.Xna.Framework.Input;
 
 namespace DoodleEmpires.Engine.GUI
 {
