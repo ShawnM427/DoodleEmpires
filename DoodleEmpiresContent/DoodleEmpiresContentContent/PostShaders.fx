@@ -1,5 +1,8 @@
-//------------------------------ TEXTURE PROPERTIES ----------------------------
-// This is the texture that SpriteBatch will try to set before drawing
+/// This Shader file is a compilation of sshaders creates by Shawn Matthews for use
+/// in any project that uses deferred rendering. Copyright © 2014 to Shawn Matthews
+/// Please don't steal code... 
+
+// The texture to store the screen texture under
 texture ScreenTexture;
  
 // Our sampler for the texture, which is just going to be pretty simple
@@ -10,6 +13,8 @@ sampler TextureSampler = sampler_state
 
 float blurDistance;
 float edgeEpsilon;
+extern float noiseEpsilon = 0.5;
+extern float yeOldeEpsilon = 0.95;
 
 float seed;
 
@@ -120,7 +125,7 @@ float4 YeOldePS(float4 position : SV_Position, float4 color : COLOR0, float2 tex
 {
     float rand = rand_1_05(texCoord * seed);
 
-	if (rand > 0.999)
+	if (rand > yeOldeEpsilon)
 		return float4(0,0,0,1);
 	else
 	{	
@@ -139,13 +144,49 @@ float4 NoisePS(float4 position : SV_Position, float4 color : COLOR0, float2 texC
 {
     float rand = rand_1_05(texCoord * seed);
 
-	if (rand > 0.5)
+	if (rand > noiseEpsilon)
 		return float4(0,0,0,1);
 	else
 	{	
 		float4 sColor = tex2D(TextureSampler, texCoord);
 		return sColor;
 	}
+}
+
+float4 SinCityPS(float4 position : SV_Position, float4 color : COLOR0, float2 texCoord : TEXCOORD0) : COLOR
+{
+
+        float3 colorin, colorout;
+        colorin = tex2D( TextureSampler , texCoord.xy).rgb;
+        //convert to linear space, probably not necessary since I totally destroy
+        //the color space later anyway
+        colorin = pow(colorin, .45f);
+        
+        //initialize the black&white color to the average color value,
+        //not 100% correct but works decently
+        float3 bwcolor = dot(colorin.rgb, 1.f.xxx) * 0.33333f;
+              
+        //calculate the weight of the red color. smoothstep is a function that
+        //creates a quadratic interpolation between 0 and 1 using the first
+        //arg as the min value, the second as max value and third as interpolation
+        //value. Result is clamped to be [0, 1]
+        //I just picked these constants because they looked decent in the image
+        float weight = smoothstep(0.1f, 0.25f, colorin.r - bwcolor);
+
+        //Mess with the color space of the b&w. Again, arbitrary constants
+        bwcolor = pow(bwcolor * 1.1f, 2.f);
+        //interpolate between black&white and red based on the weight
+        colorout = lerp(bwcolor, colorin * float3(1.1f, 0.5f, 0.5f), weight);
+
+         //pow: convert back to gamma space
+        return pow(float4(colorout, 1.f), 2.2f);
+}
+
+float4 ToonPS(float4 position : SV_Position, float4 color : COLOR0, float2 texCoord : TEXCOORD0) : COLOR
+{
+	float4 colorIn = tex2D(TextureSampler, texCoord);
+
+    return round(colorIn * 8) / 4;
 }
  
 //-------------------------- TECHNIQUES ----------------------------------------
@@ -162,7 +203,12 @@ technique YeOlde
 {
 	pass Pass1
 	{
-		PixelShader = compile ps_3_0 YeOldePS();
+		PixelShader = compile ps_3_0 SepiaPS();
+	}
+
+	pass Pass2
+	{
+		PixelShader = compile ps_3_0 NoisePS();
 	}
 }
 
@@ -219,5 +265,26 @@ technique Sobel
     pass Pass1
     {
         PixelShader = compile ps_3_0 SobelPS();
+    }
+}
+
+technique Toon
+{
+    pass Pass1
+    {
+        PixelShader = compile ps_3_0 ToonPS();
+    }
+
+	pass Pass2
+	{
+		PixelShader = compile ps_3_0 SimpleEdgePS();
+	}
+}
+
+technique SinCity
+{
+    pass Pass1
+    {
+        PixelShader = compile ps_3_0 SinCityPS();
     }
 }

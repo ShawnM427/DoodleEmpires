@@ -284,11 +284,14 @@ public class Camera2D : ICamera2D
         _graphics.Clear(Color.White);
     }
 
+    /// <summary>
+    /// Finishes rendering with this camera and presents to the screen
+    /// </summary>
     public void EndDraw()
     {
         _graphics.SetRenderTarget(null);
         _graphics.Clear(Color.Black);
-
+        
         if (_postEffect != null)
         {
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default,

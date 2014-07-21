@@ -406,6 +406,9 @@ namespace DoodleEmpires.Engine.Net
             _cameraPostEffect = Content.Load<Effect>("PostShaders");
             _cameraPostEffect.Parameters["blurDistance"].SetValue(0.001f);
 
+            _cameraPostEffect.Parameters["noiseEpsilon"].SetValue(0.5f);
+            //_cameraPostEffect.Parameters["yeOldeEpsilon"].SetValue(0.95f);
+
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
 
             _mainControl = new GUIPanel(GraphicsDevice, null);
@@ -519,9 +522,9 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="gameTime">The current time stamp</param>
         protected override void Update(GameTime gameTime)
         {
-            //#if PROFILING
+            #if PROFILING
 
-            Window.Title = "" + FPSManager.AverageFramesPerSecond;
+            //Window.Title = "" + FPSManager.AverageFramesPerSecond;
 
             if (Keyboard.GetState().IsKeyDown(Keys.PageUp))
                 Thread.Sleep(1);
@@ -529,7 +532,7 @@ namespace DoodleEmpires.Engine.Net
             if (Keyboard.GetState().IsKeyDown(Keys.PageDown))
                 return;
 
-            //#endif
+            #endif
 
             switch (_gameState)
             {
@@ -577,6 +580,8 @@ namespace DoodleEmpires.Engine.Net
                         _effectTag = _effectTag >= _cameraPostEffect.Techniques.Count ? 0 : _effectTag;
 
                         _cameraPostEffect.CurrentTechnique = _cameraPostEffect.Techniques[_effectTag];
+
+                        Window.Title = "Doodle Empires | " + _cameraPostEffect.CurrentTechnique.Name;
                     }
 
                     if (keyState.IsKeyDown(Keys.F5) && _prevKeyState.IsKeyUp(Keys.F5))
@@ -585,12 +590,17 @@ namespace DoodleEmpires.Engine.Net
                         _effectTag = _effectTag < 0 ? _cameraPostEffect.Techniques.Count - 1 : _effectTag;
 
                         _cameraPostEffect.CurrentTechnique = _cameraPostEffect.Techniques[_effectTag];
+
+                        Window.Title = "Doodle Empires | " + _cameraPostEffect.CurrentTechnique.Name;
                     }
 
                     _prevKeyState = keyState;
 
                     _cameraPostEffect.Parameters["seed"].SetValue(_seed);
                     _seed += 0.01f;
+
+                    _seed = _seed > 1 ? 0.001f : _seed;
+
                     break;
             }
 

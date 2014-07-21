@@ -641,16 +641,16 @@ namespace DoodleEmpires.Engine.Net
 
             if (doNeighbours)
             {
-                //UpdateVoxel(x - 1, y - 1, false);
+                UpdateVoxel(x - 1, y - 1, false);
                 UpdateVoxel(x, y - 1, false);
-                //UpdateVoxel(x + 1, y - 1, false);
+                UpdateVoxel(x + 1, y - 1, false);
 
                 UpdateVoxel(x - 1, y, false);
                 UpdateVoxel(x + 1, y, false);
 
-                //UpdateVoxel(x - 1, y + 1, false);
+                UpdateVoxel(x - 1, y + 1, false);
                 UpdateVoxel(x, y + 1, false);
-                //UpdateVoxel(x + 1, y + 1, false);
+                UpdateVoxel(x + 1, y + 1, false);
             }
         }
 

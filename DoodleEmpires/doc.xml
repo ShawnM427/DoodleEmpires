@@ -693,6 +693,11 @@
             </summary>
             <param name="gameTime">The current game time</param>
         </member>
+        <member name="M:Camera2D.EndDraw">
+            <summary>
+            Finishes rendering with this camera and presents to the screen
+            </summary>
+        </member>
         <member name="M:Camera2D.IsInView(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.Texture2D)">
             <summary>
             Determines whether the target is in view given the specified position.
