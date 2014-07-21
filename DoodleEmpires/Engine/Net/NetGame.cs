@@ -18,25 +18,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DoodleEmpires.Engine.Utilities;
-using DoodleEmpires.Engine.Terrain;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using DoodleEmpires.Engine.Entities;
-using Microsoft.Xna.Framework.Input;
-using Lidgren.Network;
 using System.IO;
-using DoodleEmpires.Engine.GUI;
-using DoodleEmpires.Engine.Economy;
 using System.Windows.Forms;
-using DoodleEmpires.Engine.Sound;
-using Microsoft.Xna.Framework.Audio;
-
-using MouseEventArgs = DoodleEmpires.Engine.Utilities.MouseEventArgs;
-using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
 using System.Threading;
 using System.Net;
+
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+
+using Lidgren.Network;
+
+using DoodleEmpires.Engine.Entities;
+using DoodleEmpires.Engine.Utilities;
+using DoodleEmpires.Engine.Terrain;
+using DoodleEmpires.Engine.GUI;
+using DoodleEmpires.Engine.Economy;
+using DoodleEmpires.Engine.Sound;
+
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
+using MouseEventArgs = DoodleEmpires.Engine.Utilities.MouseEventArgs;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -808,19 +811,19 @@ namespace DoodleEmpires.Engine.Net
         /// Called when a mouse button is pressed
         /// </summary>
         /// <param name="args">The current mouse arguments</param>
-        protected override void MousePressed(MouseEventArgs args)
+        protected void MousePressed(MouseEventArgs args)
         {
             switch (_gameState)
             {
                 case GameState.InGame:
-                    if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) & args.LeftButton == ButtonState.Pressed)
+                    if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) & args.LeftButton == ButtonChangeState.Pressed)
                     {
                         _isDefininingZone = true;
-                        _zoneStart = _view.PointToWorld(args.Location);
+                        _zoneStart = _view.PointToWorld(args.Position);
                     }
-                    else if (args.RightButton == ButtonState.Pressed)
+                    else if (args.RightButton == ButtonChangeState.Pressed)
                     {
-                        Vector2 worldPos = _view.PointToWorld(args.Location);
+                        Vector2 worldPos = _view.PointToWorld(args.Position);
 
                         if (_singlePlayer)
                         {
@@ -840,8 +843,6 @@ namespace DoodleEmpires.Engine.Net
                     }
                     break;
             }
-
-            base.MousePressed(args);
         }
 
         /// <summary>
@@ -859,12 +860,12 @@ namespace DoodleEmpires.Engine.Net
                     _serverListControl.MousePressed(args);
                     break;
                 case GameState.InGame:
-                    if (!_mainControl.ScreenBounds.Contains(args.Location))
+                    if (!_mainControl.ScreenBounds.Contains(args.Position))
                     {
                         #region handle editing
-                        if (args.LeftButton == ButtonState.Pressed && !_isDefininingZone)
+                        if (args.LeftButton == ButtonChangeState.Pressed && !_isDefininingZone)
                         {
-                            Vector2 pos = _view.PointToWorld(args.Location);
+                            Vector2 pos = _view.PointToWorld(args.Position);
 
                             int pX = (int)pos.X / SPMap.TILE_WIDTH;
                             int pY = (int)pos.Y / SPMap.TILE_HEIGHT;
@@ -880,9 +881,9 @@ namespace DoodleEmpires.Engine.Net
                             _prevReqX = pX;
                             _prevReqY = pY;
                         }
-                        else if (args.RightButton == ButtonState.Pressed)
+                        else if (args.RightButton == ButtonChangeState.Pressed)
                         {
-                            Vector2 pos = _view.PointToWorld(args.Location);
+                            Vector2 pos = _view.PointToWorld(args.Position);
 
                             int pX = (int)pos.X / SPMap.TILE_WIDTH;
                             int pY = (int)pos.Y / SPMap.TILE_HEIGHT;
@@ -904,15 +905,13 @@ namespace DoodleEmpires.Engine.Net
                     }
                     break;
             }
-
-            base.MouseDown(args);
         }
 
         /// <summary>
         /// Called when a mouse button is released
         /// </summary>
         /// <param name="args">The current mouse arguments</param>
-        protected override void MouseReleased(MouseEventArgs args)
+        protected void MouseReleased(MouseEventArgs args)
         {
             switch (_gameState)
             {
@@ -922,9 +921,9 @@ namespace DoodleEmpires.Engine.Net
                     _prevReqDelX = -1;
                     _prevReqDelY = -1;
 
-                    if (_isDefininingZone & args.LeftButton == ButtonState.Pressed)
+                    if (_isDefininingZone & args.LeftButton == ButtonChangeState.Released)
                     {
-                        Vector2 zoneEnd = _view.PointToWorld(args.Location);
+                        Vector2 zoneEnd = _view.PointToWorld(args.Position);
 
                         int x = (int)Math.Min(_zoneStart.X, zoneEnd.X);
                         int y = (int)Math.Min(_zoneStart.Y, zoneEnd.Y);
@@ -947,8 +946,6 @@ namespace DoodleEmpires.Engine.Net
                     }
                     break;
             }
-
-            base.MouseReleased(args);
         }
 
         /// <summary>
@@ -1016,6 +1013,21 @@ namespace DoodleEmpires.Engine.Net
             _zoneTpye = (short)item.Tag;
         }
 
+        protected override void MouseEvent(MouseEventArgs state)
+        {
+            if (state.LeftButton == ButtonChangeState.Pressed ||
+                state.RightButton == ButtonChangeState.Pressed ||
+                state.RightButton == ButtonChangeState.Pressed)
+                MousePressed(state);
+
+            if (state.LeftButton == ButtonChangeState.Released ||
+                state.RightButton == ButtonChangeState.Released ||
+                state.RightButton == ButtonChangeState.Released)
+                MouseReleased(state);
+
+            base.MouseEvent(state);
+        }
+
         #endregion
 
         #region SP Side
@@ -1030,8 +1042,6 @@ namespace DoodleEmpires.Engine.Net
 
             if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
                 LoadGame(loadDialog.FileName.Replace(".dem", ""));
-
-            _mouseDown = false;
         }
 
         void saveButton_OnMousePressed()
@@ -1044,8 +1054,6 @@ namespace DoodleEmpires.Engine.Net
 
             if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
                 SaveGame(saveDialog.FileName);
-
-            _mouseDown = false;
         }
         
         /// <summary>

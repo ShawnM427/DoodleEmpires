@@ -4,34 +4,6 @@
         <name>DoodleEmpires</name>
     </assembly>
     <members>
-        <member name="T:DoodleEmpires.Engine.Utilities.GraphicsDeviceService">
-            <summary>
-            Helper class responsible for creating and managing the GraphicsDevice.
-            All GraphicsDeviceControl instances share the same GraphicsDeviceService,
-            so even though there can be many controls, there will only ever be a single
-            underlying GraphicsDevice. This implements the standard IGraphicsDeviceService
-            interface, which provides notification events for when the device is reset
-            or disposed.
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.GraphicsDeviceService.#ctor(System.IntPtr,System.Int32,System.Int32)">
-            <summary>
-            Constructor is private, because this is a singleton class:
-            client controls should use the public AddRef method instead.
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.GraphicsDeviceService.ResetDevice(System.Int32,System.Int32)">
-            <summary>
-            Resets the graphics device to whichever is bigger out of the specified
-            resolution or its current size. This behavior means the device will
-            demand-grow to the largest of all its GraphicsDeviceControl clients.
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.GraphicsDeviceService.GraphicsDevice">
-            <summary>
-            Gets the current graphics device.
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Economy.TechNode">
             <summary>
             Represents a node in a tech tree
@@ -3706,11 +3678,6 @@
             Gets or sets the spritebatch for drawing
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.AdvancedGame._mouseDown">
-            <summary>
-            True if the mouse is currently down
-            </summary>
-        </member>
         <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.#ctor">
             <summary>
             Creates a new advanced game
@@ -3733,81 +3700,11 @@
             </summary>
             <param name="gameTime">The current game time</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MousePressed(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
+        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseEvent(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
             <summary>
-            Called when the mouse has been pressed
+            Called when the state of the mouse has changed
             </summary>
-            <param name="args">The mouse event arguments</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseReleased(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
-            <summary>
-            Called when the mouse has been released
-            </summary>
-            <param name="args">The mouse event arguments</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseDown(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
-            <summary>
-            Called when a mouse button is down
-            </summary>
-            <param name="args">The mouse event arguments</param>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseClickedEvent">
-            <summary>
-            Occurs when the mouse is clicked
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseReleasedEvent">
-            <summary>
-            Occurs when the mouse is released
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseDownEvent">
-            <summary>
-            Occurs when the mouse is held down
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Utilities.MouseEvent">
-            <summary>
-            Represents an event that occurs when the mouse is pressed
-            </summary>
-            <param name="args">The mouse event arguments</param>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Utilities.MouseEventArgs">
-            <summary>
-            Represents the arguments for the mouse
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.MouseEventArgs.#ctor(Microsoft.Xna.Framework.Input.MouseState,System.Int32)">
-            <summary>
-            Creates a new mouse event argument
-            </summary>
-            <param name="mouseState">The current mouse state</param>
-            <param name="scrollChange">The change in the scroll wheel value</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.MouseEventArgs.Location">
-            <summary>
-            Gets the location of the mouse
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.MouseEventArgs.ScrollChange">
-            <summary>
-            Gets the change in the scroll wheel value
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.MouseEventArgs.LeftButton">
-            <summary>
-            Gets the button state for the left button
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.MouseEventArgs.MiddleButton">
-            <summary>
-            Gets the button state for the middle button
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.MouseEventArgs.RightButton">
-            <summary>
-            Gets the button state for the right button
-            </summary>
+            <param name="state"></param>
         </member>
         <member name="T:DoodleEmpires.Engine.Terrain.Leaves">
             <summary>

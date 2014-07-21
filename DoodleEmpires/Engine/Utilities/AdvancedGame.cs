@@ -21,24 +21,9 @@ namespace DoodleEmpires.Engine.Utilities
         /// Gets or sets the spritebatch for drawing
         /// </summary>
         protected SpriteBatch SpriteBatch;
-
-        /// <summary>
-        /// Occurs when the mouse is clicked
-        /// </summary>
-        protected event MouseEvent MouseClickedEvent;
-        /// <summary>
-        /// Occurs when the mouse is released
-        /// </summary>
-        protected event MouseEvent MouseReleasedEvent;
-        /// <summary>
-        /// Occurs when the mouse is held down
-        /// </summary>
-        protected event MouseEvent MouseDownEvent;
-
-        /// <summary>
-        /// True if the mouse is currently down
-        /// </summary>
-        protected bool _mouseDown;
+        
+        private MouseState _mouseState;
+        private MouseState _prevMouseState;
 
         /// <summary>
         /// Creates a new advanced game
@@ -57,40 +42,7 @@ namespace DoodleEmpires.Engine.Utilities
             // Create a new SpriteBatch, which can be used to draw textures.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Type t = typeof(OpenTKGameWindow);
-            PropertyInfo pInf = t.GetProperty("Window", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            OpenTK.GameWindow _window = (OpenTK.GameWindow)pInf.GetValue((OpenTKGameWindow)Window, new object[0]);
-
-            _window.Mouse.ButtonDown += new EventHandler<OpenTK.Input.MouseButtonEventArgs>(Mouse_ButtonDown);
-            _window.Mouse.ButtonUp += new EventHandler<OpenTK.Input.MouseButtonEventArgs>(Mouse_ButtonUp);
-
             base.Initialize();
-        }
-
-        void Mouse_ButtonUp(object sender, OpenTK.Input.MouseButtonEventArgs e)
-        {
-            _mouseDown = false;
-
-            MouseReleased(
-                new MouseEventArgs(new MouseState(e.X, e.Y, 0,
-                e.Button == OpenTK.Input.MouseButton.Left ? ButtonState.Pressed : ButtonState.Released,
-                e.Button == OpenTK.Input.MouseButton.Middle ? ButtonState.Pressed : ButtonState.Released,
-                e.Button == OpenTK.Input.MouseButton.Right ? ButtonState.Pressed : ButtonState.Released,
-                e.Button == OpenTK.Input.MouseButton.Button1 ? ButtonState.Pressed : ButtonState.Released,
-                e.Button == OpenTK.Input.MouseButton.Button2 ? ButtonState.Pressed : ButtonState.Released), 0));
-        }
-
-        void Mouse_ButtonDown(object sender, OpenTK.Input.MouseButtonEventArgs e)
-        {
-            _mouseDown = true;
-
-            MousePressed(
-                new MouseEventArgs(new MouseState(e.X, e.Y, 0,
-                e.Button == OpenTK.Input.MouseButton.Left ? ButtonState.Pressed : ButtonState.Released,
-                e.Button == OpenTK.Input.MouseButton.Middle ? ButtonState.Pressed : ButtonState.Released,
-                e.Button == OpenTK.Input.MouseButton.Right ? ButtonState.Pressed : ButtonState.Released,
-                e.Button == OpenTK.Input.MouseButton.Button1 ? ButtonState.Pressed : ButtonState.Released,
-                e.Button == OpenTK.Input.MouseButton.Button2 ? ButtonState.Pressed : ButtonState.Released), 0));
         }
 
         /// <summary>
@@ -99,11 +51,49 @@ namespace DoodleEmpires.Engine.Utilities
         /// <param name="gameTime">The current game time</param>
         protected override void Update(GameTime gameTime)
         {
-            if (!IsActive)
-                _mouseDown = false;
+            _mouseState = Mouse.GetState();
 
-            if (_mouseDown)
-                MouseDown(new MouseEventArgs(Mouse.GetState(), 0));
+            if (_mouseState.LeftButton != _prevMouseState.LeftButton ||
+                _mouseState.MiddleButton != _prevMouseState.MiddleButton ||
+                _mouseState.RightButton != _prevMouseState.RightButton)
+                MouseEvent(new MouseEventArgs(_mouseState.X, _mouseState.Y, 
+                    (_mouseState.LeftButton == ButtonState.Released && _prevMouseState.LeftButton == ButtonState.Pressed) ?
+                    ButtonChangeState.Released : 
+                    (_mouseState.LeftButton == ButtonState.Pressed && _prevMouseState.LeftButton == ButtonState.Released) ?
+                    ButtonChangeState.Pressed : ButtonChangeState.None,
+
+                    (_mouseState.MiddleButton == ButtonState.Released && _prevMouseState.MiddleButton == ButtonState.Pressed) ?
+                    ButtonChangeState.Released : 
+                    (_mouseState.MiddleButton == ButtonState.Pressed && _prevMouseState.MiddleButton == ButtonState.Released) ?
+                    ButtonChangeState.Pressed : ButtonChangeState.None,
+
+                    (_mouseState.RightButton == ButtonState.Released && _prevMouseState.RightButton == ButtonState.Pressed) ?
+                    ButtonChangeState.Released : 
+                    (_mouseState.RightButton == ButtonState.Pressed && _prevMouseState.RightButton == ButtonState.Released) ?
+                    ButtonChangeState.Pressed : ButtonChangeState.None));
+
+            if (_mouseState.LeftButton == ButtonState.Pressed && _prevMouseState.LeftButton == ButtonState.Pressed ||
+                _mouseState.RightButton == ButtonState.Pressed && _prevMouseState.RightButton == ButtonState.Pressed ||
+                _prevMouseState.MiddleButton == ButtonState.Pressed && _prevMouseState.MiddleButton == ButtonState.Pressed)
+            {
+                MouseDown(new MouseEventArgs(_mouseState.X, _mouseState.Y,
+                    (_mouseState.LeftButton == ButtonState.Released && _prevMouseState.LeftButton == ButtonState.Pressed) ?
+                    ButtonChangeState.Released :
+                    (_mouseState.LeftButton == ButtonState.Pressed) ?
+                    ButtonChangeState.Pressed : ButtonChangeState.None,
+
+                    (_mouseState.MiddleButton == ButtonState.Released && _prevMouseState.MiddleButton == ButtonState.Pressed) ?
+                    ButtonChangeState.Released :
+                    (_mouseState.MiddleButton == ButtonState.Pressed) ?
+                    ButtonChangeState.Pressed : ButtonChangeState.None,
+
+                    (_mouseState.RightButton == ButtonState.Released && _prevMouseState.RightButton == ButtonState.Pressed) ?
+                    ButtonChangeState.Released :
+                    (_mouseState.RightButton == ButtonState.Pressed) ?
+                    ButtonChangeState.Pressed : ButtonChangeState.None));
+            }
+
+           _prevMouseState = Mouse.GetState();
 
             base.Update(gameTime);
         }
@@ -119,98 +109,45 @@ namespace DoodleEmpires.Engine.Utilities
         }
 
         /// <summary>
-        /// Called when the mouse has been pressed
+        /// Called when the state of the mouse has changed
         /// </summary>
-        /// <param name="args">The mouse event arguments</param>
-        protected virtual void MousePressed(MouseEventArgs args)
+        /// <param name="state"></param>
+        protected virtual void MouseEvent(MouseEventArgs state)
         {
         }
 
-        /// <summary>
-        /// Called when the mouse has been released
-        /// </summary>
-        /// <param name="args">The mouse event arguments</param>
-        protected virtual void MouseReleased(MouseEventArgs args)
+        protected virtual void MouseDown(MouseEventArgs state)
         {
-        }
 
-        /// <summary>
-        /// Called when a mouse button is down
-        /// </summary>
-        /// <param name="args">The mouse event arguments</param>
-        protected virtual void MouseDown(MouseEventArgs args)
-        {
         }
     }
 
-    /// <summary>
-    /// Represents an event that occurs when the mouse is pressed
-    /// </summary>
-    /// <param name="args">The mouse event arguments</param>
-    public delegate void MouseEvent(MouseEventArgs args);
-    
-    /// <summary>
-    /// Represents the arguments for the mouse
-    /// </summary>
-    public class MouseEventArgs : EventArgs
+    public struct MouseEventArgs
     {
-        Vector2 _location;
-        ButtonState _leftButton;
-        ButtonState _middleButton;
-        ButtonState _rightButton;
-        int _scrollChange;
-
-        /// <summary>
-        /// Gets the location of the mouse
-        /// </summary>
-        public Vector2 Location
+        public int X;
+        public int Y;
+        public ButtonChangeState LeftButton;
+        public ButtonChangeState MiddleButton;
+        public ButtonChangeState RightButton;
+        public Vector2 Position
         {
-            get { return _location; }
-            set { _location = value; }
-        }
-        /// <summary>
-        /// Gets the change in the scroll wheel value
-        /// </summary>
-        public int ScrollChange
-        {
-            get { return _scrollChange; }
-        }
-        /// <summary>
-        /// Gets the button state for the left button
-        /// </summary>
-        public ButtonState LeftButton
-        {
-            get { return _leftButton; }
-        }
-        /// <summary>
-        /// Gets the button state for the middle button
-        /// </summary>
-        public ButtonState MiddleButton
-        {
-            get { return _middleButton; }
-        }
-        /// <summary>
-        /// Gets the button state for the right button
-        /// </summary>
-        public ButtonState RightButton
-        {
-            get { return _rightButton; }
+            get { return new Vector2(X, Y); }
         }
 
-        /// <summary>
-        /// Creates a new mouse event argument
-        /// </summary>
-        /// <param name="mouseState">The current mouse state</param>
-        /// <param name="scrollChange">The change in the scroll wheel value</param>
-        public MouseEventArgs(MouseState mouseState, int scrollChange)
+        public MouseEventArgs(int x, int y, ButtonChangeState left, ButtonChangeState middle, ButtonChangeState right)
         {
-            _location = new Vector2(mouseState.X, mouseState.Y);
-
-            _leftButton = mouseState.LeftButton;
-            _middleButton = mouseState.MiddleButton;
-            _rightButton = mouseState.RightButton;
-
-            _scrollChange = scrollChange;
+            X = x;
+            Y = y;
+            LeftButton = left;
+            MiddleButton = middle;
+            RightButton = right;
         }
+    }
+
+    public enum ButtonChangeState
+    {
+        None = 0,
+        Pressed = 1,
+        Released = 2
     }
 }

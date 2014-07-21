@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using DoodleEmpires.Engine.Utilities;
+using Microsoft.Xna.Framework.Input;
 
 namespace DoodleEmpires.Engine.GUI
 {
@@ -223,7 +224,7 @@ namespace DoodleEmpires.Engine.GUI
         /// <param name="e">The mouse arguments</param>
         public override void MousePressed(MouseEventArgs e)
         {
-            Vector2 sMousePos = e.Location - new Vector2(_screenBounds.X, _screenBounds.Y);
+            Vector2 sMousePos = new Vector2(e.X - _screenBounds.X, e.Y - _screenBounds.Y);
 
             for (int x = 0; x < _items.Count; x++)
             {
