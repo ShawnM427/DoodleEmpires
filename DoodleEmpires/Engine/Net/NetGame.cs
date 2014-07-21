@@ -407,7 +407,7 @@ namespace DoodleEmpires.Engine.Net
             _cameraPostEffect.Parameters["blurDistance"].SetValue(0.001f);
 
             _cameraPostEffect.Parameters["noiseEpsilon"].SetValue(0.5f);
-            //_cameraPostEffect.Parameters["yeOldeEpsilon"].SetValue(0.95f);
+            _cameraPostEffect.Parameters["yeOldeEpsilon"].SetValue(0.95f);
 
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
 

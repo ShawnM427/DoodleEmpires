@@ -203,12 +203,7 @@ technique YeOlde
 {
 	pass Pass1
 	{
-		PixelShader = compile ps_3_0 SepiaPS();
-	}
-
-	pass Pass2
-	{
-		PixelShader = compile ps_3_0 NoisePS();
+		PixelShader = compile ps_3_0 YeOldePS();
 	}
 }
 
