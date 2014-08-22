@@ -1234,7 +1234,7 @@ namespace DoodleEmpires.Engine.Net
                     byte B = reader.ReadByte();
                     byte A = reader.ReadByte();
 
-                    Zoning zone = new Zoning(bounds, new ZoneInfo(Color.FromNonPremultiplied(R, G, B, A), "<unknown>"));
+                    Zoning zone = new Zoning(bounds, 0, new ZoneInfo(Color.FromNonPremultiplied(R, G, B, A), "<unknown>"));
                     terrain.AddZone(zone);
                 }
             }

@@ -115,8 +115,17 @@ public interface ICamera2D
 /// </summary>
 public class Camera2D : ICamera2D
 {
+    /// <summary>
+    /// The internal texture to render to
+    /// </summary>
     protected RenderTarget2D _renderTarget;
+    /// <summary>
+    /// The post processing effect to apply
+    /// </summary>
     protected Effect _postEffect;
+    /// <summary>
+    /// Teh spritebatch used to render the final image
+    /// </summary>
     protected SpriteBatch _spriteBatch;
 
     private Vector2 _position;
@@ -138,6 +147,9 @@ public class Camera2D : ICamera2D
     /// </summary>
     protected GraphicsDevice _graphics;
 
+    /// <summary>
+    /// Gets or sets the post-processing effect for this camera
+    /// </summary>
     public Effect PostEffect
     {
         get { return _postEffect; }
@@ -274,6 +286,9 @@ public class Camera2D : ICamera2D
                     Matrix.CreateScale(new Vector3(Scale, 1.0F));
     }
 
+    /// <summary>
+    /// Sets the graphics states and begins rendering with this camera
+    /// </summary>
     public void BeginDraw()
     {
         if (_renderTarget == null)

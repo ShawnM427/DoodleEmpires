@@ -19,6 +19,11 @@ namespace DoodleEmpires.Engine.GUI
         ListViewItem _selectedItem;
 
         /// <summary>
+        /// The position at which the header text is drawn
+        /// </summary>
+        protected Vector2 _headerTextPos = Vector2.Zero;
+
+        /// <summary>
         /// A rectangle representing the size of one item
         /// </summary>
         protected Rectangle _itemSize = new Rectangle(0, 0,0,0);
@@ -68,9 +73,12 @@ namespace DoodleEmpires.Engine.GUI
             set
             {
                 _font = value;
-                
+
                 if (_font != null)
-                    HeaderSize = (int)_font.MeasureString(" ").Y;
+                {
+                    HeaderSize = (int)_font.MeasureString(" ").Y + 5;
+                    _headerTextPos = new Vector2(3, 5);
+                }
             }
         }
         /// <summary>
@@ -104,6 +112,20 @@ namespace DoodleEmpires.Engine.GUI
                 BuildItemBounds();
             }
         }
+        /// <summary>
+        /// Gets or sets the internal list of items for this list view. This can be modified, but remember to call invalidate after
+        /// </summary>
+        public List<ListViewItem> Items
+        {
+            get { return _items; }
+            set
+            {
+                _items = value;
+                Invalidating = true;
+                _selectedIndex = -1;
+                _selectedItem = null;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the client bounds for this control
@@ -130,6 +152,21 @@ namespace DoodleEmpires.Engine.GUI
         }
 
         /// <summary>
+        /// Gets or sets the number of items shown at once
+        /// </summary>
+        public int ShownItems
+        {
+            get { return _itemCount; }
+            set
+            {
+                _itemCount = value;
+                _itemSize.Height = _internalItemBounds.Height / _itemCount;
+                BuildItemBounds();
+                Invalidating = true;
+            }
+        }
+
+        /// <summary>
         /// Creates a new GUI list view
         /// </summary>
         /// <param name="graphics">The graphics device to bind to</param>
@@ -147,10 +184,9 @@ namespace DoodleEmpires.Engine.GUI
         {
             _itemBounds = new Rectangle[_itemCount];
 
-            for (int x = 0; x < _itemCount; x++)
+            for (int i = 0; i < _itemCount; i++)
             {
-                    _itemBounds[x] = new Rectangle(0,
-                        x * _itemSize.Height + _headerSize, _itemSize.Width + 1, _itemSize.Height + 1);
+                    _itemBounds[i] = new Rectangle(0, i * _itemSize.Height + _headerSize + 3, _itemSize.Width + 1, _itemSize.Height + 1);
             }
         }
 
@@ -180,24 +216,31 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         protected override void Invalidate()
         {
-            if (_selectedIndex == -1 && _items.Count > 0)
+            if (_selectedIndex == -1)
             {
-                _selectedIndex = 0;
-                _headerDrawnText = _headerText + " " + _items[_selectedIndex].Text;
-                _items[_selectedIndex].Selected = true;
+                if (_items.Count > 0)
+                {
+                    _selectedIndex = 0;
+                    _headerDrawnText = _headerText + " " + _items[_selectedIndex].Text;
+                    _items[_selectedIndex].Selected = true;
+                }
+                else
+                {
+                    _headerDrawnText = _headerText;
+                }
             }
 
             if (_font != null)
             {
-                _spriteBatch.DrawString(_font, _headerDrawnText, Vector2.Zero, _foreColor);
+                _spriteBatch.DrawString(_font, _headerDrawnText, _headerTextPos, _foreColor);
 
-                for (int x = 0; x < _items.Count; x++)
+                for (int index = 0; index < _items.Count; index++)
                 {
-                    Vector2 tPos = - _font.MeasureString(_items[x].Text) / 2;
-                    tPos.X += _itemBounds[x].Center.X ;
-                    tPos.Y += _itemBounds[x].Center.Y;
+                    Vector2 tPos = - _font.MeasureString(_items[index].Text) / 2;
+                    tPos.X += _itemBounds[index].Center.X ;
+                    tPos.Y += _itemBounds[index].Center.Y;
 
-                    _spriteBatch.DrawString(_font, _items[x].Text, tPos, _items[x].ColorModifier);
+                    _spriteBatch.DrawString(_font, _items[index].Text, tPos, _items[index].ColorModifier);
                 }
             }
         }
@@ -211,9 +254,9 @@ namespace DoodleEmpires.Engine.GUI
 
             _effect.CurrentTechnique.Passes[0].Apply();
             _graphics.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, _cornerVerts, 0, 4);
-            for (int x = 0; x < _itemCount; x++)
+            for (int index = 0; index < _itemCount; index++)
             {
-                _graphics.DrawRect(_itemBounds[x], Color.Black);
+                _graphics.DrawRect(_itemBounds[index], Color.Black);
             }
             base.EndInvalidate();
         }

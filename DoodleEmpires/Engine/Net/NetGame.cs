@@ -177,10 +177,6 @@ namespace DoodleEmpires.Engine.Net
         /// The camera's controller instance
         /// </summary>
         protected CameraControl _cameraController;
-        /// <summary>
-        /// A paper texture for drawing to the background
-        /// </summary>
-        protected Texture2D _paperTex;
 
         /// <summary>
         /// The previous keyboard state
@@ -217,20 +213,24 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected GUILabel _fpsLabel;
 
+        /// <summary>
+        /// The post processing effect for the camera to use
+        /// </summary>
         protected Effect _cameraPostEffect;
-        protected int _effectTag = 0;
+        /// <summary>
+        /// The ID of the current post processing technique to use
+        /// </summary>
+        protected int _effectTechnique = 0;
+        /// <summary>
+        /// A time based seed between 0 and 1 for the post processing effect to use
+        /// </summary>
         protected float _seed = 0.01f;
 
         GUIButton _saveButton;
         GUIButton _loadButton;
         GUIListView _serverList;
         GUIGridView _zoneView;
-
-        /// <summary>
-        /// The font to use in GUI rendering
-        /// </summary>
-        protected SpriteFont _guiFont;
-
+        
         /// <summary>
         /// The type of block to place
         /// </summary>
@@ -239,12 +239,7 @@ namespace DoodleEmpires.Engine.Net
         /// The type of zone to place
         /// </summary>
         protected short _zoneTpye = 1;
-
-        /// <summary>
-        /// A list of block textures loaded from the atlas
-        /// </summary>
-        protected Texture2D[] _blockTexs;
-
+        
         /// <summary>
         /// True if the user is currently defining a zone
         /// </summary>
@@ -259,6 +254,24 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected GameState _gameState = GameState.MainMenu;
 
+        #endregion
+
+        #region Content
+        Texture2D _mainMenuBackdrop;
+        Texture2D _serverListBackdrop;
+
+        /// <summary>
+        /// A paper texture for drawing to the background
+        /// </summary>
+        protected Texture2D _paperTex;
+        /// <summary>
+        /// A list of block textures loaded from the atlas
+        /// </summary>
+        protected Texture2D[] _blockTexs;
+        /// <summary>
+        /// The font to use in GUI rendering
+        /// </summary>
+        protected SpriteFont _guiFont;
         #endregion
 
         bool _singlePlayer = true;
@@ -336,6 +349,9 @@ namespace DoodleEmpires.Engine.Net
             IsMouseVisible = true;
             IsFixedTimeStep = false;
 
+            if (userName == "unknown")
+                userName = this.Window.Handle.ToString();
+
             _myPlayer = new PlayerInfo(userName);
 
             OnFoundServer += new FoundServerEvent(NetGame_OnFoundServer);
@@ -394,6 +410,7 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected override void LoadContent()
         {
+            _serverListBackdrop = Content.Load<Texture2D>("testBackdrop");
             _paperTex = Content.Load<Texture2D>("Paper");
 
             _debugFont = Content.Load<SpriteFont>("debugFont");
@@ -410,7 +427,7 @@ namespace DoodleEmpires.Engine.Net
             _cameraPostEffect.Parameters["blurDistance"].SetValue(0.001f);
 
             _cameraPostEffect.Parameters["noiseEpsilon"].SetValue(0.5f);
-            _cameraPostEffect.Parameters["yeOldeEpsilon"].SetValue(0.95f);
+            //_cameraPostEffect.Parameters["yeOldeEpsilon"].SetValue(0.95f);
 
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
 
@@ -424,18 +441,19 @@ namespace DoodleEmpires.Engine.Net
             _menuControl.BackColor = Color.White;
 
             _serverListControl = new GUIPanel(GraphicsDevice, null);
-            _serverListControl.Bounds = new Rectangle(0, 0, 120, 165);
+            _serverListControl.Bounds = new Rectangle(0, 0, 240, 400);
             _serverListControl.X = GraphicsDevice.Viewport.Width / 2 - _serverListControl.Bounds.Width / 2;
             _serverListControl.Y = GraphicsDevice.Viewport.Height / 2 - _serverListControl.Bounds.Height / 2;
 
             _serverList = new GUIListView(GraphicsDevice, _serverListControl);
-            _serverList.Bounds = new Rectangle(0, 0, 120, 140);
+            _serverList.Bounds = new Rectangle(0, 0, _serverListControl.Width, _serverListControl.Height - 20);
+            _serverList.ShownItems = 6;
             _serverList.Font = _guiFont;
             _serverList.HeaderText = "Host: ";
 
             GUIButton serverListBack = new GUIButton(GraphicsDevice, _guiFont, _serverListControl);
-            serverListBack.Text = "Back";
-            serverListBack.Bounds = new Rectangle(40, _serverList.Bounds.Bottom + 5, 40, 15);
+            serverListBack.Text = "< Back";
+            serverListBack.Bounds = new Rectangle(3, _serverList.Bounds.Bottom + 2, 55, 15);
             serverListBack.OnMousePressed += ExitToMenu;
 
             GUIButton campaignButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
@@ -456,6 +474,12 @@ namespace DoodleEmpires.Engine.Net
             LANButton.Text = "LAN";
             LANButton.OnMousePressed += LANButton_OnPressed;
             LANButton.BackColor = Color.LightGray;
+
+            GUIButton QuitButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
+            QuitButton.Bounds = new Rectangle(20, LANButton.Bounds.Bottom + 5, 80, 20);
+            QuitButton.Text = "Quit";
+            QuitButton.OnMousePressed += Exit;
+            QuitButton.BackColor = Color.LightGray;
 
             singlePlayerButton.Invalidating = true;
 
@@ -527,7 +551,7 @@ namespace DoodleEmpires.Engine.Net
         {
             #if PROFILING
 
-            //Window.Title = "" + FPSManager.AverageFramesPerSecond;
+            Window.Title = "" + FPSManager.AverageFramesPerSecond;
 
             if (Keyboard.GetState().IsKeyDown(Keys.PageUp))
                 Thread.Sleep(1);
@@ -579,20 +603,20 @@ namespace DoodleEmpires.Engine.Net
 
                     if (keyState.IsKeyDown(Keys.F4) && _prevKeyState.IsKeyUp(Keys.F4))
                     {
-                        _effectTag++;
-                        _effectTag = _effectTag >= _cameraPostEffect.Techniques.Count ? 0 : _effectTag;
+                        _effectTechnique++;
+                        _effectTechnique = _effectTechnique >= _cameraPostEffect.Techniques.Count ? 0 : _effectTechnique;
 
-                        _cameraPostEffect.CurrentTechnique = _cameraPostEffect.Techniques[_effectTag];
+                        _cameraPostEffect.CurrentTechnique = _cameraPostEffect.Techniques[_effectTechnique];
 
                         Window.Title = "Doodle Empires | " + _cameraPostEffect.CurrentTechnique.Name;
                     }
 
                     if (keyState.IsKeyDown(Keys.F5) && _prevKeyState.IsKeyUp(Keys.F5))
                     {
-                        _effectTag--;
-                        _effectTag = _effectTag < 0 ? _cameraPostEffect.Techniques.Count - 1 : _effectTag;
+                        _effectTechnique--;
+                        _effectTechnique = _effectTechnique < 0 ? _cameraPostEffect.Techniques.Count - 1 : _effectTechnique;
 
-                        _cameraPostEffect.CurrentTechnique = _cameraPostEffect.Techniques[_effectTag];
+                        _cameraPostEffect.CurrentTechnique = _cameraPostEffect.Techniques[_effectTechnique];
 
                         Window.Title = "Doodle Empires | " + _cameraPostEffect.CurrentTechnique.Name;
                     }
@@ -780,6 +804,10 @@ namespace DoodleEmpires.Engine.Net
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            SpriteBatch.Begin();
+            SpriteBatch.Draw(_serverListBackdrop, GraphicsDevice.Viewport.Bounds, Color.White);
+            SpriteBatch.End();
+
             _menuControl.Draw();
         }
 
@@ -789,6 +817,10 @@ namespace DoodleEmpires.Engine.Net
         protected virtual void DrawServerList()
         {
             GraphicsDevice.Clear(Color.White);
+
+            SpriteBatch.Begin();
+            SpriteBatch.Draw(_serverListBackdrop, GraphicsDevice.Viewport.Bounds, Color.White);
+            SpriteBatch.End();
 
             _serverListControl.Draw();
         }
@@ -800,10 +832,14 @@ namespace DoodleEmpires.Engine.Net
         {
             _gameState = GameState.MainMenu;
             _serverRefreshTimer.Stop();
+            _availableServers.Clear();
+
+            _serverList.Items = new List<GUI.ListViewItem>();
+            _serverList.Invalidating = true;
 
             if (_client != null)
             {
-                _client.Disconnect("Disconnecting");
+                ExitGame("Quit to menu");
             }
         }
 
@@ -935,11 +971,11 @@ namespace DoodleEmpires.Engine.Net
                         
                         if (_singlePlayer)
                         {
-                            _map.DefineZone(new Zoning(bounds, GlobalZoneManager.Manager.Get(_zoneTpye)));
+                            _map.DefineZone(new Zoning(bounds, _myPlayer.PlayerIndex, GlobalZoneManager.Manager.Get(_zoneTpye)));
                         }
                         else
                         {
-                            RequestNewZone(new Zoning(bounds, GlobalZoneManager.Manager.Get(_zoneTpye)));
+                            RequestNewZone(new Zoning(bounds, _myPlayer.PlayerIndex, GlobalZoneManager.Manager.Get(_zoneTpye)));
                         }
 
                         _isDefininingZone = false;
@@ -975,6 +1011,7 @@ namespace DoodleEmpires.Engine.Net
             item.ColorModifier = Color.Black;
 
             _serverList.AddItem(item);
+            _serverList.Invalidating = true;
         }
 
         /// <summary>
@@ -1013,6 +1050,10 @@ namespace DoodleEmpires.Engine.Net
             _zoneTpye = (short)item.Tag;
         }
 
+        /// <summary>
+        /// Invoked when a mouse button state has changed
+        /// </summary>
+        /// <param name="state">A snapshot of mouse values</param>
         protected override void MouseEvent(MouseEventArgs state)
         {
             if (state.LeftButton == ButtonChangeState.Pressed ||
@@ -1026,6 +1067,21 @@ namespace DoodleEmpires.Engine.Net
                 MouseReleased(state);
 
             base.MouseEvent(state);
+        }
+
+        /// <summary>
+        /// Called when the application is exiting
+        /// </summary>
+        /// <param name="sender">The object to raise the event</param>
+        /// <param name="args">The event args sent to this event</param>
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+
+            if (_client != null)
+            {
+                ExitGame("Quit game");
+            }
         }
 
         #endregion
@@ -1184,6 +1240,8 @@ namespace DoodleEmpires.Engine.Net
             msg.Write((short)x);
             msg.Write((short)y);
 
+            msg.Write(_myPlayer.PlayerIndex);
+
             _client.SendMessage(msg, NetDeliveryMethod.ReliableUnordered);
 
 #if DEBUG
@@ -1197,6 +1255,7 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="reason"></param>
         public void ExitGame(string reason)
         {
+            _players.Clear();
             _client.Shutdown(reason);
         }
 
@@ -1255,8 +1314,7 @@ namespace DoodleEmpires.Engine.Net
 #if DEBUG
             AccountedUpload += m.LengthBytes;
 #endif
-
-            
+                        
             _view = new Camera2D(GraphicsDevice);
             _view.ScreenBounds = new Rectangle(0, 0, _map.WorldWidth, _map.WorldHeight);
 
@@ -1330,16 +1388,18 @@ namespace DoodleEmpires.Engine.Net
         {
             PlayerInfo pInfo = PlayerInfo.ReadFromPacket(m);
 
-            _players.Add(pInfo);
+            if (pInfo.PlayerIndex != _myPlayer.PlayerIndex)
+            {
+                _players.Add(pInfo);
+                if (OnPlayerJoined != null)
+                    OnPlayerJoined.Invoke(pInfo);
+
+                Console.WriteLine("{0} has joined the game.", pInfo.UserName);
+            }
 
 #if DEBUG
             AccountedDownload += m.LengthBytes;
 #endif
-
-            if (OnPlayerJoined != null)
-                OnPlayerJoined.Invoke(pInfo);
-
-            Console.WriteLine("{0} has joined the game.", pInfo.UserName);
         }
 
         /// <summary>

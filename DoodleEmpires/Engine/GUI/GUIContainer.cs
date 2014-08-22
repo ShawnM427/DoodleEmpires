@@ -56,6 +56,13 @@ namespace DoodleEmpires.Engine.GUI
             get { return _margin; }
             set { _margin = value; }
         }
+        /// <summary>
+        /// Gets an array containing all the controls in this container
+        /// </summary>
+        public IGUI[] Controls
+        {
+            get { return _controls.ToArray(); }
+        }
 
         /// <summary>
         /// Creates a new GUI container

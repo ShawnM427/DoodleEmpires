@@ -66,7 +66,7 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="p">The packet to write to</param>
         public void WriteToPacket(NetOutgoingMessage p)
         {
-            p.Write(PlayerIndex);
+            p.Write(PlayerIndex, 8);
 
             p.Write(_flagColor.R);
             p.Write(_flagColor.G);

@@ -27,6 +27,17 @@ namespace DoodleEmpires.Engine.Net
         NetPlayer[] _players = new NetPlayer[4];
         Dictionary<NetConnection, byte> _playerConnections = new Dictionary<NetConnection, byte>();
 
+        /// <summary>
+        /// Gets a list of all non-null player currently connected
+        /// </summary>
+        public NetPlayer[] Players
+        {
+            get
+            {
+                return Array.FindAll(_players, X => X != null);
+            }
+        }
+
         ServerMap _map;
 
         /// <summary>
@@ -108,13 +119,17 @@ namespace DoodleEmpires.Engine.Net
                             if (status == NetConnectionStatus.Disconnected)
                             {
                                 string reason = msg.ReadString();
-                                _playerConnections.Remove(msg.SenderConnection);
 
-                                NetPlayer p = Array.Find<NetPlayer>
-                                    (_players, X => X != null ? X.NetConnection == msg.SenderConnection : false);
+                                byte pID;
                                 
-                                if (p != null) 
-                                    SendPlayerLeft(p.Info);
+                                if (_playerConnections.TryGetValue(msg.SenderConnection, out pID)) 
+                                {
+                                    Console.WriteLine("Player with ID {0} left, internal ID of {1}", pID, _players[pID].PlayerIndex);
+                                    SendPlayerLeft(_players[pID].Info);
+                                    _players[pID] = null;
+                                    _playerConnections.Remove(msg.SenderConnection);
+
+                                }
 
                                 Console.WriteLine("Lost connection to {0} for {1}", msg.SenderEndpoint, reason);
                             }
@@ -202,8 +217,6 @@ namespace DoodleEmpires.Engine.Net
 
                 _playerConnections.Add(msg.SenderConnection, rID);
 
-                _players[rID] = new NetPlayer(pInfo, msg.SenderConnection);
-
                 NetOutgoingMessage outM = _server.CreateMessage();
 
                 outM.Write((byte)NetPacketType.AcceptedJoin);
@@ -225,6 +238,8 @@ namespace DoodleEmpires.Engine.Net
                 _server.SendMessage(outM, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
 
                 SendPlayerJoined(pInfo);
+
+                _players[rID] = new NetPlayer(pInfo, msg.SenderConnection);
             }
             else
             {
@@ -261,9 +276,11 @@ namespace DoodleEmpires.Engine.Net
             short x = msg.ReadInt16();
             short y = msg.ReadInt16();
 
+            byte playerID = msg.ReadByte();
+
             foreach (Zoning zone in _map.Zones)
             {
-                if (zone.Bounds.Contains(x, y))
+                if (zone.Bounds.Contains(x, y) && playerID == zone.PlayerID)
                 {
                     _map.DeleteZone(zone);
                     SendZoneRemoved(x, y);
@@ -325,7 +342,7 @@ namespace DoodleEmpires.Engine.Net
             player.WriteToPacket(message);
 
             _server.SendMessage(message, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
-
+            
             Console.WriteLine("Player {0} has left the game", player.UserName);
         }
 

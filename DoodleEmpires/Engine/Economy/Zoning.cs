@@ -50,13 +50,24 @@ namespace DoodleEmpires.Engine.Economy
             get { return _info; }
         }
 
+        byte _playerID;
+        /// <summary>
+        /// Gets the ID of the player associated with this zone
+        /// </summary>
+        public byte PlayerID
+        {
+            get { return _playerID; }
+        }
+
         /// <summary>
         /// Creates a new zone
         /// </summary>
         /// <param name="bounds">The bounds of the zone</param>
+        /// <param name="playerID">The ID of the player to bind to</param>
         /// <param name="info">The zone info to use</param>
-        public Zoning(Rectangle bounds, ZoneInfo info)
+        public Zoning(Rectangle bounds, byte playerID, ZoneInfo info)
         {
+            _playerID = playerID;
             _bounds = bounds;
             _info = info;
         }
@@ -72,6 +83,8 @@ namespace DoodleEmpires.Engine.Economy
             writer.Write(Bounds.Width);
             writer.Write(Bounds.Height);
 
+            writer.Write(_playerID);
+
             writer.Write(_info.ZoneID);
         }
 
@@ -85,9 +98,11 @@ namespace DoodleEmpires.Engine.Economy
             Rectangle bounds = 
                 new Rectangle(reader.ReadInt32(),reader.ReadInt32(),reader.ReadInt32(),reader.ReadInt32());
 
+            byte playerID = reader.ReadByte();
+
             short zoneID = reader.ReadInt16();
             
-            return new Zoning(bounds, GlobalZoneManager.Manager.Get(zoneID));
+            return new Zoning(bounds, playerID, GlobalZoneManager.Manager.Get(zoneID));
         }
 
         /// <summary>
@@ -100,6 +115,8 @@ namespace DoodleEmpires.Engine.Economy
             msg.Write(_bounds.Y);
             msg.Write(_bounds.Width);
             msg.Write(_bounds.Height);
+
+            msg.Write(_playerID);
 
             msg.Write(_info.ZoneID);
         }
@@ -116,9 +133,11 @@ namespace DoodleEmpires.Engine.Economy
             int width = msg.ReadInt32();
             int height = msg.ReadInt32();
 
+            byte playerID = msg.ReadByte();
+
             short id = msg.ReadInt16();
 
-            return new Zoning(new Rectangle(x, y, width, height), GlobalZoneManager.Manager.Get(id));
+            return new Zoning(new Rectangle(x, y, width, height), playerID, GlobalZoneManager.Manager.Get(id));
         }
     }
 

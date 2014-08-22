@@ -100,6 +100,13 @@ namespace DoodleServer
                         _server.Load(_loadDialog.OpenFile());
                     }
                     break;
+                case "list":
+                    foreach(NetPlayer pInfo in _server.Players)
+                    {
+                        if (pInfo != null)
+                            AppendTextBox(pInfo.Info.UserName + "\r");
+                    }
+                    break;
             }
         }
 
