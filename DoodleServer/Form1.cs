@@ -29,6 +29,7 @@ namespace DoodleServer
             InitializeComponent();
 
             Console.SetOut(new TextBoxWriter(this));
+            Console.Out.NewLine = "\r";
 
             _loadDialog = new OpenFileDialog();
             _loadDialog.Filter = "Doodle Empires Map|*.dem";
@@ -74,14 +75,14 @@ namespace DoodleServer
 
         private void btn_perform_Click(object sender, EventArgs e)
         {
-            string command = txt_commandIn.Text.Trim().ToLower();
+            string command = txt_commandIn.Text.Trim();
             _commandPointer = -1;
             _commandStack.Enqueue(command);
 
             txt_commandIn.Text = "";
 
             DialogResult dResult;
-            switch (command)
+            switch (command.ToLower())
             {
                 case "save":
                     dResult = _saveDialog.ShowDialog();
@@ -105,6 +106,13 @@ namespace DoodleServer
                     {
                         if (pInfo != null)
                             AppendTextBox(pInfo.Info.UserName + "\r");
+                    }
+                    break;
+                default:
+                    if (command.ToLower().StartsWith("set message "))
+                    {
+                        _server.Message = command.Remove(0, 12);
+                        AppendTextBox(string.Format("Set server message to \"{0}\"\r", _server.Message));
                     }
                     break;
             }

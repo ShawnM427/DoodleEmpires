@@ -111,6 +111,7 @@
     <Compile Include="Engine\Utilities\FPSManager.cs" />
     <Compile Include="Engine\Utilities\Noise.cs" />
     <Compile Include="Engine\Utilities\ObjectManager.cs" />
+    <Compile Include="Engine\Utilities\Random Extensions.cs" />
     <Compile Include="Engine\Utilities\RectangleF.cs" />
     <Compile Include="Engine\Utilities\TextureAtlas.cs" />
     <Compile Include="Program.cs" />

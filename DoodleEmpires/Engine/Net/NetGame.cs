@@ -147,7 +147,9 @@ namespace DoodleEmpires.Engine.Net
         #endregion
 
         #region Game Vars
-        
+
+        Dictionary<IPEndPoint, double> _serverTimers = new Dictionary<IPEndPoint, double>();
+
         GraphicsDeviceManager graphicsManager;
         SpriteFont _debugFont;
 
@@ -257,6 +259,7 @@ namespace DoodleEmpires.Engine.Net
         #endregion
 
         #region Content
+
         Texture2D _mainMenuBackdrop;
         Texture2D _serverListBackdrop;
 
@@ -272,6 +275,7 @@ namespace DoodleEmpires.Engine.Net
         /// The font to use in GUI rendering
         /// </summary>
         protected SpriteFont _guiFont;
+
         #endregion
 
         bool _singlePlayer = true;
@@ -320,6 +324,7 @@ namespace DoodleEmpires.Engine.Net
                     config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
                     config.EnableMessageType(NetIncomingMessageType.StatusChanged);
                     config.EnableMessageType(NetIncomingMessageType.Data);
+                    config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
                     config.ConnectionTimeout = 10F;
                     //config.LocalAddress = IPAddress.Parse("");
                     //config.Port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
@@ -549,17 +554,17 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="gameTime">The current time stamp</param>
         protected override void Update(GameTime gameTime)
         {
-            #if PROFILING
+            //#if PROFILING
 
-            Window.Title = "" + FPSManager.AverageFramesPerSecond;
+            //Window.Title = "" + FPSManager.AverageFramesPerSecond;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.PageUp))
-                Thread.Sleep(1);
+            //if (Keyboard.GetState().IsKeyDown(Keys.PageUp))
+            //    Thread.Sleep(1);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.PageDown))
-                return;
+            //if (Keyboard.GetState().IsKeyDown(Keys.PageDown))
+            //    return;
 
-            #endif
+            //#endif
 
             switch (_gameState)
             {
@@ -660,7 +665,21 @@ namespace DoodleEmpires.Engine.Net
                             if (OnFoundServer != null)
                                 OnFoundServer(info);
                         }
+                        else
+                        {
+                            ServerInfo currentInfo = _availableServers.Find(X => X.EndPoint == info.EndPoint);
+                            int ID = _availableServers.IndexOf(currentInfo);
+                            _availableServers[ID] = info;
+                            ((ServerInfoListItem)_serverList.Items.Find(X => currentInfo.Equals(X.Tag))).Info = info;
+                            _serverList.Invalidating = true;
+                        }
 
+                        break;
+
+                    case NetIncomingMessageType.ConnectionLatencyUpdated:
+                        ServerInfo inInfo = _availableServers.Find(X => X.EndPoint == msg.SenderEndpoint);
+                        if (inInfo.EndPoint != null)
+                            inInfo.Ping = msg.ReadSingle();
                         break;
 
                     case NetIncomingMessageType.DiscoveryRequest:
@@ -719,7 +738,7 @@ namespace DoodleEmpires.Engine.Net
                             case NetPacketType.MapChanged:
                                 HandleMapChanged(msg);
                                 break;
-
+                                
                             default:
                                 Console.WriteLine("Unknown packet type {0} received!", packetType);
                                 _client.Disconnect("You sent shitty data!");
@@ -1004,11 +1023,8 @@ namespace DoodleEmpires.Engine.Net
 
         void NetGame_OnFoundServer(ServerInfo serverInfo)
         {
-            GUI.ListViewItem item = new GUI.ListViewItem();
-            item.Tag = serverInfo;
-            item.Text = serverInfo.Name;
+            ServerInfoListItem item = new ServerInfoListItem(serverInfo);
             item.MousePressed += new EventHandler<GUI.ListViewItem>(OnServerInfoMousePressed);
-            item.ColorModifier = Color.Black;
 
             _serverList.AddItem(item);
             _serverList.Invalidating = true;
@@ -1153,6 +1169,11 @@ namespace DoodleEmpires.Engine.Net
         }
 
         #region Networking
+
+        void OnPingUpdated()
+        {
+
+        }
 
         #region Outgoing
 

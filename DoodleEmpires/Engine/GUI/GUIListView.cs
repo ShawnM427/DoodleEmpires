@@ -236,11 +236,7 @@ namespace DoodleEmpires.Engine.GUI
 
                 for (int index = 0; index < _items.Count; index++)
                 {
-                    Vector2 tPos = - _font.MeasureString(_items[index].Text) / 2;
-                    tPos.X += _itemBounds[index].Center.X ;
-                    tPos.Y += _itemBounds[index].Center.Y;
-
-                    _spriteBatch.DrawString(_font, _items[index].Text, tPos, _items[index].ColorModifier);
+                    _items[index].Render(_spriteBatch, _font, _itemBounds[index]);
                 }
             }
         }
@@ -292,12 +288,34 @@ namespace DoodleEmpires.Engine.GUI
     /// </summary>
     public class ListViewItem : EventArgs
     {
-        Texture2D _texture;
-        string _text;
-        object _tag;
-        Color _colorModifier = Color.White;
-        EventHandler<ListViewItem> _mousePressed;
-        bool _selected = false;
+        /// <summary>
+        /// The texture to use as a backdrop for this item
+        /// </summary>
+        protected Texture2D _texture;
+        /// <summary>
+        /// The text to draw in this item
+        /// </summary>
+        protected string _text;
+        /// <summary>
+        /// The object tag for this item
+        /// </summary>
+        protected object _tag;
+        /// <summary>
+        /// The modifier for the background texture
+        /// </summary>
+        protected Color _colorModifier = Color.White;
+        /// <summary>
+        /// The color to draw text with
+        /// </summary>
+        protected Color _textColor = Color.Black;
+        /// <summary>
+        /// The event handler to invoke when clicked
+        /// </summary>
+        protected EventHandler<ListViewItem> _mousePressed;
+        /// <summary>
+        /// Whether or not this item is selected
+        /// </summary>
+        protected bool _selected = false;
 
         /// <summary>
         /// Gets or sets this item's text
@@ -332,6 +350,14 @@ namespace DoodleEmpires.Engine.GUI
             set { _colorModifier = value; }
         }
         /// <summary>
+        /// Gets or sets this item's text color
+        /// </summary>
+        public Color TextColor
+        {
+            get { return _textColor; }
+            set { _textColor = value; }
+        }
+        /// <summary>
         /// Gets or sets whether this item is selected
         /// </summary>
         public bool Selected
@@ -346,6 +372,21 @@ namespace DoodleEmpires.Engine.GUI
         {
             get { return _texture; }
             set { _texture = value; }
+        }
+
+        /// <summary>
+        /// Renders this list view item
+        /// </summary>
+        /// <param name="batch">The spritebatch to use for drawing</param>
+        /// <param name="font">The font to use for rendering text for this items</param>
+        /// <param name="bounds">The bounds to render in</param>
+        public virtual void Render(SpriteBatch batch, SpriteFont font, Rectangle bounds)
+        {
+            if (_texture != null)
+                batch.Draw(_texture, bounds, _colorModifier);
+
+            if (!String.IsNullOrWhiteSpace(_text))
+                batch.DrawString(font, _text, bounds.Center.ToVector2() - (font.MeasureString(_text) / 2), _textColor);
         }
     }
 }

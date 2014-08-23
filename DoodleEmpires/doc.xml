@@ -2165,6 +2165,49 @@
             Represents an item in a list view
             </summary>
         </member>
+        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._texture">
+            <summary>
+            The texture to use as a backdrop for this item
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._text">
+            <summary>
+            The text to draw in this item
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._tag">
+            <summary>
+            The object tag for this item
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._colorModifier">
+            <summary>
+            The modifier for the background texture
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._textColor">
+            <summary>
+            The color to draw text with
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._mousePressed">
+            <summary>
+            The event handler to invoke when clicked
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._selected">
+            <summary>
+            Whether or not this item is selected
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.GUI.ListViewItem.Render(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Renders this list view item
+            </summary>
+            <param name="batch">The spritebatch to use for drawing</param>
+            <param name="font">The font to use for rendering text for this items</param>
+            <param name="bounds">The bounds to render in</param>
+        </member>
         <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.Text">
             <summary>
             Gets or sets this item's text
@@ -2183,6 +2226,11 @@
         <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.ColorModifier">
             <summary>
             Gets or sets this item's Color modifier
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.TextColor">
+            <summary>
+            Gets or sets this item's text color
             </summary>
         </member>
         <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.Selected">
@@ -3393,6 +3441,11 @@
             Gets a list of all non-null player currently connected
             </summary>
         </member>
+        <member name="P:DoodleEmpires.Engine.Net.GameServer.Message">
+            <summary>
+            Gets or sets this server's message
+            </summary>
+        </member>
         <member name="P:DoodleEmpires.Engine.Net.GameServer.Exiting">
             <summary>
             Gets or sets whether this server should exit at the end of it's current loop
@@ -3403,14 +3456,14 @@
             Represents basic info about a server
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.ServerInfo.#ctor(System.String,System.Net.IPEndPoint)">
+        <member name="M:DoodleEmpires.Engine.Net.ServerInfo.#ctor(System.String,System.Net.IPEndPoint,System.String)">
             <summary>
             Creates a new server info
             </summary>
             <param name="name">The name of the server</param>
             <param name="endpoint">The server's endpoint</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.ServerInfo.#ctor(System.String)">
+        <member name="M:DoodleEmpires.Engine.Net.ServerInfo.#ctor(System.String,System.String)">
             <summary>
             Creates a new server info
             </summary>
@@ -3429,6 +3482,13 @@
             <param name="message">The packet to read from</param>
             <returns>A server info read from the packet</returns>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.ServerInfo.Equals(System.Object)">
+            <summary>
+            Checks if this object is equal to another
+            </summary>
+            <param name="obj">The object to check against</param>
+            <returns>True if this object is equal to the given one</returns>
+        </member>
         <member name="P:DoodleEmpires.Engine.Net.ServerInfo.IP">
             <summary>
             Gets the IP of this server, represented as a string
@@ -3442,6 +3502,40 @@
         <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Name">
             <summary>
             The name of this server
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Message">
+            <summary>
+            Gets or sets the server message to be displayed
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Ping">
+            <summary>
+            Gets or sets the ping to the server in seconds
+            </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Net.ServerInfoListItem">
+            <summary>
+            A ListViewItem for drawing server info
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.ServerInfoListItem.#ctor(DoodleEmpires.Engine.Net.ServerInfo)">
+            <summary>
+            Creates a new server info list item
+            </summary>
+            <param name="info">The info of the server to draw</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.ServerInfoListItem.Render(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Renders this list view item
+            </summary>
+            <param name="batch">The spritebatch to use for drawing</param>
+            <param name="font">The font to use for rendering text for this items</param>
+            <param name="bounds">The bounds to render in</param>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfoListItem.Info">
+            <summary>
+            Gets or sets the server info associated with this item
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.PlayerID">
@@ -3537,6 +3631,11 @@
         <member name="F:DoodleEmpires.Engine.Net.NetPacketType.MapChanged">
             <summary>
             This packet states that the map has changed and needs to be re-downloaded
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetPacketType.PingMessage">
+            <summary>
+            Represents a packet used for pinging servers or clients
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.GameState">
@@ -5718,6 +5817,18 @@
             <summary>
             Gets or sets the seed to use
             </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Utilities.RandomExtensions">
+            <summary>
+            A static class holding some random extensions
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Utilities.RandomExtensions.ToVector2(Microsoft.Xna.Framework.Point)">
+            <summary>
+            Converts this point to a Vector2
+            </summary>
+            <param name="point">The point to convert</param>
+            <returns>A Vector2 containing the point's data</returns>
         </member>
         <member name="T:DoodleEmpires.Engine.Utilities.RectangleF">
             <summary>

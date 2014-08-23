@@ -84,7 +84,11 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// This packet states that the map has changed and needs to be re-downloaded
         /// </summary>
-        MapChanged = 12
+        MapChanged = 12,
+        /// <summary>
+        /// Represents a packet used for pinging servers or clients
+        /// </summary>
+        PingMessage = 13
     }
 
     /// <summary>

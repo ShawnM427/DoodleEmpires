@@ -37,6 +37,14 @@ namespace DoodleEmpires.Engine.Net
                 return Array.FindAll(_players, X => X != null);
             }
         }
+        /// <summary>
+        /// Gets or sets this server's message
+        /// </summary>
+        public string Message
+        {
+            get { return _serverInfo.Message; }
+            set { _serverInfo.Message = value; }
+        }
 
         ServerMap _map;
 
@@ -153,13 +161,15 @@ namespace DoodleEmpires.Engine.Net
                                 case NetPacketType.RequestJoin:
                                     HandlePlayerWantJoin(msg);
                                     break;
+
                                 case NetPacketType.RequestBlockChanged:
                                     HandleBlockReqChange(msg);
                                     break;
+
                                 case NetPacketType.ReqZoneadded:
                                     HandleReqZone(msg);
                                     break;
-                                default:
+
                                 case NetPacketType.ReqZoneRemoved:
                                     HandleReqDelZone(msg);
                                     break;
@@ -209,11 +219,15 @@ namespace DoodleEmpires.Engine.Net
 
             for (sbyte i = 0; i < 4; i++)
                 if (_players[i] == null)
+                {
                     ID = i;
+                    break;
+                }
 
             if (ID != -1)
             {
                 byte rID = (byte)ID;
+                pInfo.PlayerIndex = rID;
 
                 _playerConnections.Add(msg.SenderConnection, rID);
 
