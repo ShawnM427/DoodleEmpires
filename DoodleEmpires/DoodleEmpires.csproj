@@ -71,6 +71,7 @@
     <Compile Include="Engine\Entities\UnitBuff.cs" />
     <Compile Include="Engine\Economy\Zoning.cs" />
     <Compile Include="Engine\Entities\UnitState.cs" />
+    <Compile Include="Engine\GUI\GUITextBox.cs" />
     <Compile Include="Engine\GUI\GUIListView.cs" />
     <Compile Include="Engine\GUI\GUIButton.cs" />
     <Compile Include="Engine\GUI\GUIScrollPanel.cs" />

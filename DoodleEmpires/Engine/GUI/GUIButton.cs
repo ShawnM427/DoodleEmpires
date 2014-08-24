@@ -15,18 +15,38 @@ namespace DoodleEmpires.Engine.GUI
     public class GUIButton : GUILabel
     {
         /// <summary>
-        /// The size of the text being drawn on the button
+        /// The margin from either side of the bounds
         /// </summary>
-        protected Vector2 _textSize;
+        protected float _margin = 2.0f;
         /// <summary>
-        /// The position of the text within the button
+        /// The alignment of text within this control
         /// </summary>
-        protected Vector2 _textPos;
+        protected TextAlignment _alignment = TextAlignment.Centred;
 
         /// <summary>
         /// Occurs when the mouse is pressed over this button
         /// </summary>
         public event Action OnMousePressed;
+        /// <summary>
+        /// Gets or sets the text alignment for this control
+        /// </summary>
+        public virtual TextAlignment Alignment
+        {
+            get { return _alignment; }
+            set { _alignment = value; }
+        }
+        /// <summary>
+        /// Gets or sets the horizontal margin within this control
+        /// </summary>
+        public virtual float Margin
+        {
+            get { return _margin; }
+            set
+            {
+                _margin = value;
+                Invalidating = true;
+            }
+        }
         
         /// <summary>
         /// Gets or sets the text on this button
@@ -40,8 +60,6 @@ namespace DoodleEmpires.Engine.GUI
             set
             {
                 _text = value;
-                _textSize = _font.MeasureString(_text);
-                _textPos = new Vector2(_bounds.Width / 2, _bounds.Height / 2) - (_textSize / 2);
                 Invalidating = true;
             }
         }
@@ -56,24 +74,40 @@ namespace DoodleEmpires.Engine.GUI
             : base(graphics, font, parent)
         {
         }
-
-        /// <summary>
-        /// Called when this control has been resized
-        /// </summary>
-        protected override void Resized()
-        {
-            _textPos = new Vector2(
-                    (int)(_bounds.Width / 2 - _textSize.X / 2), 
-                    (int)(_bounds.Height / 2 - _textSize.Y / 2));
-        }
-
+        
         /// <summary>
         /// Called when this control needs to invalidate
         /// </summary>
         protected override void Invalidate()
         {
             _graphics.DrawRect(0, 0, _bounds.Width, _bounds.Height, Color.Black);
-            _spriteBatch.DrawString(_font, _text, _textPos, _foreColor);
+
+            Vector2 textPos = Vector2.Zero;
+            Vector2 textSize = _font.MeasureString(_text);
+            Vector2 centre = new Vector2(_bounds.Width / 2, _bounds.Height / 2);
+
+            switch (_alignment)
+            {
+                case TextAlignment.Centred:
+                    textPos = centre - textSize / 2;
+                    break;
+                case TextAlignment.TopLeft:
+                    textPos = new Vector2(_margin, _margin);
+                    break;
+                case TextAlignment.CentreLeft:
+                    textPos = new Vector2(_margin, centre.Y - textSize.Y / 2);
+                    break;
+                case TextAlignment.BottomLeft:
+                    textPos = new Vector2(_margin, _bounds.Height - textSize.Y - _margin);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            textPos.X = (int)textPos.X;
+            textPos.Y = (int)textPos.Y;
+
+            _spriteBatch.DrawString(_font, _text, textPos, _foreColor);
         }
 
         /// <summary>
@@ -83,6 +117,8 @@ namespace DoodleEmpires.Engine.GUI
         /// <returns>True if this control has handled the mouse</returns>
         public override void MousePressed(MouseEventArgs e)
         {
+            base.MousePressed(e);
+
             if (OnMousePressed != null)
             {
                 OnMousePressed.Invoke();

@@ -263,6 +263,8 @@ namespace DoodleEmpires.Engine.GUI
         /// <param name="e">The mouse arguments</param>
         public override void MousePressed(MouseEventArgs e)
         {
+            base.MousePressed(e);
+
             Vector2 sMousePos = new Vector2(e.X - _screenBounds.X, e.Y - _screenBounds.Y);
 
             for (int x = 0; x < _items.Count; x++)

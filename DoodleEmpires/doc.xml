@@ -1848,9 +1848,9 @@
             This unit is dead
             </summary>
         </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUIListView">
+        <member name="T:DoodleEmpires.Engine.GUI.GUITextBox">
             <summary>
-            A GUI element that displays a scrollable list of items
+            A simple GUI element for drawing text
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.GUI.GUIElement">
@@ -1861,6 +1861,11 @@
         <member name="T:DoodleEmpires.Engine.GUI.IGUI">
             <summary>
             The base class for all GUI elements and containers
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.IGUI._isFocused">
+            <summary>
+            Gets or sets whether this object is in focus or not
             </summary>
         </member>
         <member name="F:DoodleEmpires.Engine.GUI.IGUI._graphics">
@@ -1997,6 +2002,11 @@
             Gets or sets whether this control is visible
             </summary>
         </member>
+        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Focused">
+            <summary>
+            Gets or sets whether this control has focus
+            </summary>
+        </member>
         <member name="P:DoodleEmpires.Engine.GUI.IGUI.X">
             <summary>
             Gets or sets the left bound of the client rectangle
@@ -2037,6 +2047,81 @@
         <member name="P:DoodleEmpires.Engine.GUI.GUIElement.ForeColor">
             <summary>
             Gets or sets the forecolor for this control
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._passwordChar">
+            <summary>
+            The character to hide text behind, null is no hiding
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._alignment">
+            <summary>
+            The alignment of text within this control
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._text">
+            <summary>
+            This label's text
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._font">
+            <summary>
+            This label's font
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._margin">
+            <summary>
+            The edge margin to space text from the edge of this control
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.GUI.GUITextBox.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteFont,DoodleEmpires.Engine.GUI.GUIContainer)">
+            <summary>
+            Creates a new instance of a GUI label
+            </summary>
+            <param name="graphics">The graphics device to bind to</param>
+            <param name="font">The font to use to render text</param>
+            <param name="parent">The parent GUI container</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.GUI.GUITextBox.BeginInvalidate">
+            <summary>
+            Begins the invalidation of this control
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.GUI.GUITextBox.Invalidate">
+            <summary>
+            Called when this label needs to invalidate
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.GUI.GUITextBox.OnTextEntered(System.Object,Microsoft.Xna.Framework.TextInputEventArgs)">
+            <summary>
+            Called when text has been entered via the keyboard
+            </summary>
+            <param name="sender">The object to invoke the event</param>
+            <param name="e">The text input event arguments</param>
+        </member>
+        <member name="P:DoodleEmpires.Engine.GUI.GUITextBox.Text">
+            <summary>
+            Gets or sets the text for this label
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.GUI.GUITextBox.Alignment">
+            <summary>
+            Gets or sets the text alignment for this control
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.GUI.GUITextBox.Margin">
+            <summary>
+            Gets or sets the margin along the edges of this control
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.GUI.GUITextBox.PasswordChar">
+            <summary>
+            Gets or sets the character to hide text behind, null is no hiding
+            </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.GUI.GUIListView">
+            <summary>
+            A GUI element that displays a scrollable list of items
             </summary>
         </member>
         <member name="F:DoodleEmpires.Engine.GUI.GUIListView._headerTextPos">
@@ -2281,14 +2366,14 @@
             Gets or sets the text for this label
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIButton._textSize">
+        <member name="F:DoodleEmpires.Engine.GUI.GUIButton._margin">
             <summary>
-            The size of the text being drawn on the button
+            The margin from either side of the bounds
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIButton._textPos">
+        <member name="F:DoodleEmpires.Engine.GUI.GUIButton._alignment">
             <summary>
-            The position of the text within the button
+            The alignment of text within this control
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.GUI.GUIButton.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteFont,DoodleEmpires.Engine.GUI.GUIContainer)">
@@ -2298,11 +2383,6 @@
             <param name="graphics">The graphics device to bind to</param>
             <param name="font">The font to render text with</param>
             <param name="parent">The parent control</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIButton.Resized">
-            <summary>
-            Called when this control has been resized
-            </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.GUI.GUIButton.Invalidate">
             <summary>
@@ -2319,6 +2399,16 @@
         <member name="E:DoodleEmpires.Engine.GUI.GUIButton.OnMousePressed">
             <summary>
             Occurs when the mouse is pressed over this button
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.GUI.GUIButton.Alignment">
+            <summary>
+            Gets or sets the text alignment for this control
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.GUI.GUIButton.Margin">
+            <summary>
+            Gets or sets the horizontal margin within this control
             </summary>
         </member>
         <member name="P:DoodleEmpires.Engine.GUI.GUIButton.Text">
@@ -2493,6 +2583,11 @@
             The text that is actually drawn
             </summary>
         </member>
+        <member name="F:DoodleEmpires.Engine.GUI.GUITextPane._alignment">
+            <summary>
+            The alignment of text within this control
+            </summary>
+        </member>
         <member name="F:DoodleEmpires.Engine.GUI.GUITextPane._font">
             <summary>
             The font to draw text in
@@ -2501,11 +2596,6 @@
         <member name="F:DoodleEmpires.Engine.GUI.GUITextPane._margin">
             <summary>
             The margin from either side of the bounds
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextPane._textPos">
-            <summary>
-            The text's position in the frame
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.GUI.GUITextPane.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteFont,DoodleEmpires.Engine.GUI.GUIContainer)">
@@ -2526,6 +2616,13 @@
             Renders this control's main features to the screen
             </summary>
         </member>
+        <member name="M:DoodleEmpires.Engine.GUI.GUITextPane.OnTextEntered(System.Object,Microsoft.Xna.Framework.TextInputEventArgs)">
+            <summary>
+            Called when text has been entered via the keyboard
+            </summary>
+            <param name="sender">The object to invoke the event</param>
+            <param name="e">The text input event arguments</param>
+        </member>
         <member name="P:DoodleEmpires.Engine.GUI.GUITextPane.Bounds">
             <summary>
             The bounds relative to the parent container
@@ -2533,12 +2630,17 @@
         </member>
         <member name="P:DoodleEmpires.Engine.GUI.GUITextPane.Text">
             <summary>
-            Gets or sets the text for this label
+            Gets or sets the text for this pane
             </summary>
         </member>
         <member name="P:DoodleEmpires.Engine.GUI.GUITextPane.Margin">
             <summary>
             Gets or sets the horizontal margin within this control
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.GUI.GUITextPane.Alignment">
+            <summary>
+            Gets or sets the text alignment for this control
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.GUI.GUIPanel">
@@ -2768,6 +2870,56 @@
             <param name="y2">The y-coord of the point to draw to</param>
             <param name="color">The color of the rectangle</param>
         </member>
+        <member name="T:DoodleEmpires.Engine.GUI.TextAlignment">
+            <summary>
+            Represents the alignment of text in a GUI component that displays text
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.Centred">
+            <summary>
+            The text is centred in the component
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.TopLeft">
+            <summary>
+            The text sits at the top left corner of the component
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.CentreLeft">
+            <summary>
+            The text sits centred along the left edge of the component
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.BottomLeft">
+            <summary>
+            The text sits at the bottom left corner of the component
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.CentreTop">
+            <summary>
+            The text sits centred along the top edge of the component
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.CentreBottom">
+            <summary>
+            The text sits centred along the bottom edge of the component
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.TopRight">
+            <summary>
+            The text sits at the top right corner of the component
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.CentreRight">
+            <summary>
+            The text sits centred along the right edge of the component
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.BottomRight">
+            <summary>
+            The text sits at the bottom right corner of the component
+            </summary>
+        </member>
         <member name="T:DoodleEmpires.Engine.Net.FoundServerEvent">
             <summary>
             Called when a new server has been found
@@ -2942,6 +3094,11 @@
             A list of all local servers, only populated if an IP and port were not specified
             </summary>
         </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._serverTimers">
+            <summary>
+            A dictionary containg the time when a server IP was last pinged
+            </summary>
+        </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._players">
             <summary>
             A list of all other players currently connected
@@ -2950,6 +3107,36 @@
         <member name="F:DoodleEmpires.Engine.Net.NetGame._myPlayer">
             <summary>
             Represents the client-controlled player
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._view">
+            <summary>
+            The camera to use
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._cameraController">
+            <summary>
+            The camera's controller instance
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._cameraPostEffect">
+            <summary>
+            The post processing effect for the camera to use
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._effectTechnique">
+            <summary>
+            The ID of the current post processing technique to use
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._seed">
+            <summary>
+            A time based seed between 0 and 1 for the post processing effect to use
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._blockAtlas">
+            <summary>
+            The block lookup atlas to use
             </summary>
         </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._map">
@@ -2962,24 +3149,9 @@
             The tile manager to use
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._blockAtlas">
-            <summary>
-            The block lookup atlas to use
-            </summary>
-        </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._soundEngine">
             <summary>
             The sound engine to use
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._view">
-            <summary>
-            The camera to use
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._cameraController">
-            <summary>
-            The camera's controller instance
             </summary>
         </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._prevKeyState">
@@ -3000,41 +3172,6 @@
         <member name="F:DoodleEmpires.Engine.Net.NetGame._rand">
             <summary>
             a random number generator used for some events
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._mainControl">
-            <summary>
-            The main games's GUI controller
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._menuControl">
-            <summary>
-            The main menu's GUI controller
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._serverListControl">
-            <summary>
-            The server list GUI controller
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._fpsLabel">
-            <summary>
-            A label displaying the FPS
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._cameraPostEffect">
-            <summary>
-            The post processing effect for the camera to use
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._effectTechnique">
-            <summary>
-            The ID of the current post processing technique to use
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.NetGame._seed">
-            <summary>
-            A time based seed between 0 and 1 for the post processing effect to use
             </summary>
         </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._editType">
@@ -3062,6 +3199,31 @@
             The game's current state
             </summary>
         </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._mainControl">
+            <summary>
+            The main games's GUI controller
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._menuControl">
+            <summary>
+            The main menu's GUI controller
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._serverListControl">
+            <summary>
+            The server list GUI controller
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._fpsLabel">
+            <summary>
+            A label displaying the FPS
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._textInput">
+            <summary>
+            An event handler for event based text input
+            </summary>
+        </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._paperTex">
             <summary>
             A paper texture for drawing to the background
@@ -3087,11 +3249,6 @@
             Initializes the game
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.PollForServers">
-            <summary>
-            Checks for local servers. Later, this will poll the central server for servers
-            </summary>
-        </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.LoadContent">
             <summary>
             Loads the content for this game
@@ -3102,11 +3259,6 @@
             Updates this game
             </summary>
             <param name="gameTime">The current time stamp</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.UpdateNetworking">
-            <summary>
-            Updates this network handler, should be threaded
-            </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.Draw(Microsoft.Xna.Framework.GameTime)">
             <summary>
@@ -3129,11 +3281,6 @@
             Draws the server list
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.ExitToMenu">
-            <summary>
-            Exits this game to the main menu
-            </summary>
-        </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.MousePressed(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
             <summary>
             Called when a mouse button is pressed
@@ -3152,12 +3299,30 @@
             </summary>
             <param name="args">The current mouse arguments</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.singlePlayerButton_OnPressed">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.MouseEvent(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
+            <summary>
+            Invoked when a mouse button state has changed
+            </summary>
+            <param name="state">A snapshot of mouse values</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.Window_TextInput(System.Object,Microsoft.Xna.Framework.TextInputEventArgs)">
+            <summary>
+            Called when text has been entered via the keyboard
+            </summary>
+            <param name="sender">The object to raise this event</param>
+            <param name="e">The text event arguments containing the character pressed</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnCampaignButtonPressed">
+            <summary>
+            Called when the campaign button was pressed
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnSinglePlayerButtonPressed">
             <summary>
             Called when the single player button in the main menu is pressed
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.LANButton_OnPressed">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnLANButtonPressed">
             <summary>
             Called when the LAN button in the main menu is pressed
             </summary>
@@ -3183,18 +3348,15 @@
             <param name="sender">The object to raise the event</param>
             <param name="item">The newly selected item</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.MouseEvent(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnLoadButtonPressed">
             <summary>
-            Invoked when a mouse button state has changed
+            Called when the load button is pressed in singleplayer
             </summary>
-            <param name="state">A snapshot of mouse values</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnExiting(System.Object,System.EventArgs)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnSaveButtonPressed">
             <summary>
-            Called when the application is exiting
+            Called when the save button is pressed in singleplayer
             </summary>
-            <param name="sender">The object to raise the event</param>
-            <param name="args">The event args sent to this event</param>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.SaveGame(System.String)">
             <summary>
@@ -3208,11 +3370,46 @@
             </summary>
             <param name="fName">The relative file name to load from</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame._OnJoinedServer(DoodleEmpires.Engine.Net.ServerInfo)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.ExitToMenu">
+            <summary>
+            Exits this game to the main menu
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnExiting(System.Object,System.EventArgs)">
+            <summary>
+            Called when the application is exiting
+            </summary>
+            <param name="sender">The object to raise the event</param>
+            <param name="args">The event args sent to this event</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.PollTimerElapsed(System.Object,System.Timers.ElapsedEventArgs)">
+            <summary>
+            Called when it is time to poll for more servers and to update server states
+            </summary>
+            <param name="sender">The object to raise the event</param>
+            <param name="e">The timer elapsed argument</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.PollForServers">
+            <summary>
+            Checks for local servers. Later, this will poll the central server for servers
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.NetGame_OnFoundServer(DoodleEmpires.Engine.Net.ServerInfo)">
+            <summary>
+            Called when a new server has been discovered
+            </summary>
+            <param name="serverInfo">The info of the newly discovered server</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnJoinedServer(DoodleEmpires.Engine.Net.ServerInfo)">
             <summary>
             Invoked when we have joined a server
             </summary>
             <param name="info">The info for the server we are connecting to</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.UpdateNetworking">
+            <summary>
+            Updates this network handler, should be threaded
+            </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.OnShouldPingServers(System.Object,System.Timers.ElapsedEventArgs)">
             <summary>
@@ -3311,6 +3508,36 @@
             </summary>
             <param name="m"></param>
         </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnFoundServerEvent">
+            <summary>
+            Called when a server has been discovered
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnJoinedServerEvent">
+            <summary>
+            Called when this client connects to a server
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnPlayerJoinedEvent">
+            <summary>
+            Called when a player has joined
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnPlayerLeftEvent">
+            <summary>
+            Called when a player has left
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnTerrainSetEvent">
+            <summary>
+            Called when the server sent a tile set message
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnConnectionFailedEvent">
+            <summary>
+            Called when a server connection was unsucessful
+            </summary>
+        </member>
         <member name="P:DoodleEmpires.Engine.Net.NetGame.WorldWidth">
             <summary>
             Gets the underlying world width for this net game
@@ -3324,36 +3551,6 @@
         <member name="P:DoodleEmpires.Engine.Net.NetGame.AvailableServers">
             <summary>
             Gets the list of available servers
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnFoundServer">
-            <summary>
-            Called when a server has been discovered
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnJoinedServer">
-            <summary>
-            Called when this client connects to a server
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnPlayerJoined">
-            <summary>
-            Called when a player has joined
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnPlayerLeft">
-            <summary>
-            Called when a player has left
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnTerrainSet">
-            <summary>
-            Called when the server sent a tile set message
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnConnectionFailed">
-            <summary>
-            Called when a server connection was unsucessful
             </summary>
         </member>
         <member name="P:DoodleEmpires.Engine.Net.NetGame.SinglePlayer">
@@ -5851,12 +6048,12 @@
             Gets or sets the seed to use
             </summary>
         </member>
-        <member name="T:DoodleEmpires.Engine.Utilities.RandomExtensions">
+        <member name="T:DoodleEmpires.Engine.RandomExtensions">
             <summary>
             A static class holding some random extensions
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.RandomExtensions.ToVector2(Microsoft.Xna.Framework.Point)">
+        <member name="M:DoodleEmpires.Engine.RandomExtensions.ToVector2(Microsoft.Xna.Framework.Point)">
             <summary>
             Converts this point to a Vector2
             </summary>

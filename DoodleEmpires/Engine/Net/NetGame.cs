@@ -40,6 +40,7 @@ using DoodleEmpires.Engine.Sound;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 using MouseEventArgs = DoodleEmpires.Engine.Utilities.MouseEventArgs;
+using System.Reflection;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -75,6 +76,10 @@ namespace DoodleEmpires.Engine.Net
         /// A list of all local servers, only populated if an IP and port were not specified
         /// </summary>
         List<ServerInfo> _availableServers = new List<ServerInfo>();
+        /// <summary>
+        /// A dictionary containg the time when a server IP was last pinged
+        /// </summary>
+        Dictionary<IPEndPoint, DateTime> _serverTimers = new Dictionary<IPEndPoint, DateTime>();
 
         /// <summary>
         /// A list of all other players currently connected
@@ -86,6 +91,43 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         PlayerInfo _myPlayer;
 
+        int _prevReqX = -1;
+        int _prevReqY = -1;
+        int _prevReqDelX = -1;
+        int _prevReqDelY = -1;
+
+        #region Events
+
+        /// <summary>
+        /// Called when a server has been discovered
+        /// </summary>
+        public event FoundServerEvent OnFoundServerEvent;
+        /// <summary>
+        /// Called when this client connects to a server
+        /// </summary>
+        public event JoinedServerEvent OnJoinedServerEvent;
+        /// <summary>
+        /// Called when a player has joined
+        /// </summary>
+        public event PlayerJoinedEvent OnPlayerJoinedEvent;
+        /// <summary>
+        /// Called when a player has left
+        /// </summary>
+        public event PlayerLeftEvent OnPlayerLeftEvent;
+        /// <summary>
+        /// Called when the server sent a tile set message
+        /// </summary>
+        public event TerrainSetEvent OnTerrainSetEvent;
+        /// <summary>
+        /// Called when a server connection was unsucessful
+        /// </summary>
+        public event ServerConnectionFailed OnConnectionFailedEvent;
+
+        #endregion
+
+        System.Timers.Timer _serverRefreshTimer = new System.Timers.Timer(GlobalNetVars.SERVER_POLLING_RATE * 1000);
+        System.Timers.Timer _serverPingTimer = new System.Timers.Timer(GlobalNetVars.SERVER_PING_RATE * 1000);
+        
         /// <summary>
         /// Gets the underlying world width for this net game
         /// </summary>
@@ -108,69 +150,14 @@ namespace DoodleEmpires.Engine.Net
             get { return _availableServers; }
         }
 
-        int _prevReqX = -1;
-        int _prevReqY = -1;
-        int _prevReqDelX = -1;
-        int _prevReqDelY = -1;
-
-        #region Events
-
-        /// <summary>
-        /// Called when a server has been discovered
-        /// </summary>
-        public event FoundServerEvent OnFoundServer;
-        /// <summary>
-        /// Called when this client connects to a server
-        /// </summary>
-        public event JoinedServerEvent OnJoinedServer;
-        /// <summary>
-        /// Called when a player has joined
-        /// </summary>
-        public event PlayerJoinedEvent OnPlayerJoined;
-        /// <summary>
-        /// Called when a player has left
-        /// </summary>
-        public event PlayerLeftEvent OnPlayerLeft;
-        /// <summary>
-        /// Called when the server sent a tile set message
-        /// </summary>
-        public event TerrainSetEvent OnTerrainSet;
-        /// <summary>
-        /// Called when a server connection was unsucessful
-        /// </summary>
-        public event ServerConnectionFailed OnConnectionFailed;
-
-        #endregion
-
-        System.Timers.Timer _serverRefreshTimer = new System.Timers.Timer(GlobalNetVars.SERVER_POLLING_RATE * 1000);
-        System.Timers.Timer _serverPingTimer = new System.Timers.Timer(GlobalNetVars.SERVER_PING_RATE * 1000);
-
         #endregion
 
         #region Game Vars
 
-        Dictionary<IPEndPoint, DateTime> _serverTimers = new Dictionary<IPEndPoint, DateTime>();
-
+        #region Graphics
+        
         GraphicsDeviceManager graphicsManager;
         SpriteFont _debugFont;
-
-        /// <summary>
-        /// This games map
-        /// </summary>
-        protected SPMap _map;
-        /// <summary>
-        /// The tile manager to use
-        /// </summary>
-        protected TileManager _tileManager;
-        /// <summary>
-        /// The block lookup atlas to use
-        /// </summary>
-        protected TextureAtlas _blockAtlas;
-
-        /// <summary>
-        /// The sound engine to use
-        /// </summary>
-        protected SoundEngine _soundEngine;
 
         /// <summary>
         /// The camera to use
@@ -181,6 +168,42 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected CameraControl _cameraController;
 
+        /// <summary>
+        /// The post processing effect for the camera to use
+        /// </summary>
+        protected Effect _cameraPostEffect;
+        /// <summary>
+        /// The ID of the current post processing technique to use
+        /// </summary>
+        protected int _effectTechnique = 0;
+        /// <summary>
+        /// A time based seed between 0 and 1 for the post processing effect to use
+        /// </summary>
+        protected float _seed = 0.01f;
+
+        /// <summary>
+        /// The block lookup atlas to use
+        /// </summary>
+        protected TextureAtlas _blockAtlas;
+
+        #endregion
+
+        #region Gameplay
+
+        /// <summary>
+        /// This games map
+        /// </summary>
+        protected SPMap _map;
+        /// <summary>
+        /// The tile manager to use
+        /// </summary>
+        protected TileManager _tileManager;
+
+        /// <summary>
+        /// The sound engine to use
+        /// </summary>
+        protected SoundEngine _soundEngine;
+        
         /// <summary>
         /// The previous keyboard state
         /// </summary>
@@ -198,42 +221,7 @@ namespace DoodleEmpires.Engine.Net
         /// a random number generator used for some events
         /// </summary>
         protected Random _rand;
-
-        /// <summary>
-        /// The main games's GUI controller
-        /// </summary>
-        protected GUIContainer _mainControl;
-        /// <summary>
-        /// The main menu's GUI controller
-        /// </summary>
-        protected GUIContainer _menuControl;
-        /// <summary>
-        /// The server list GUI controller
-        /// </summary>
-        protected GUIContainer _serverListControl;
-        /// <summary>
-        /// A label displaying the FPS
-        /// </summary>
-        protected GUILabel _fpsLabel;
-
-        /// <summary>
-        /// The post processing effect for the camera to use
-        /// </summary>
-        protected Effect _cameraPostEffect;
-        /// <summary>
-        /// The ID of the current post processing technique to use
-        /// </summary>
-        protected int _effectTechnique = 0;
-        /// <summary>
-        /// A time based seed between 0 and 1 for the post processing effect to use
-        /// </summary>
-        protected float _seed = 0.01f;
-
-        GUIButton _saveButton;
-        GUIButton _loadButton;
-        GUIListView _serverList;
-        GUIGridView _zoneView;
-        
+                
         /// <summary>
         /// The type of block to place
         /// </summary>
@@ -256,28 +244,6 @@ namespace DoodleEmpires.Engine.Net
         /// The game's current state
         /// </summary>
         protected GameState _gameState = GameState.MainMenu;
-
-        #endregion
-
-        #region Content
-
-        Texture2D _mainMenuBackdrop;
-        Texture2D _serverListBackdrop;
-
-        /// <summary>
-        /// A paper texture for drawing to the background
-        /// </summary>
-        protected Texture2D _paperTex;
-        /// <summary>
-        /// A list of block textures loaded from the atlas
-        /// </summary>
-        protected Texture2D[] _blockTexs;
-        /// <summary>
-        /// The font to use in GUI rendering
-        /// </summary>
-        protected SpriteFont _guiFont;
-
-        #endregion
 
         bool _singlePlayer = true;
         /// <summary>
@@ -335,7 +301,7 @@ namespace DoodleEmpires.Engine.Net
                     _client = new NetClient(config);
                     _client.Start();
 
-                    OnJoinedServer += _OnJoinedServer;
+                    OnJoinedServerEvent += OnJoinedServer;
 
                     PollForServers();
                     
@@ -343,6 +309,61 @@ namespace DoodleEmpires.Engine.Net
                 }
             }
         }
+
+        #endregion
+
+        #region UI
+
+        /// <summary>
+        /// The main games's GUI controller
+        /// </summary>
+        protected GUIContainer _mainControl;
+        /// <summary>
+        /// The main menu's GUI controller
+        /// </summary>
+        protected GUIContainer _menuControl;
+        /// <summary>
+        /// The server list GUI controller
+        /// </summary>
+        protected GUIContainer _serverListControl;
+        /// <summary>
+        /// A label displaying the FPS
+        /// </summary>
+        protected GUILabel _fpsLabel;
+
+        GUIButton _saveButton;
+        GUIButton _loadButton;
+        GUIListView _serverList;
+        GUIGridView _zoneView;
+
+        /// <summary>
+        /// An event handler for event based text input
+        /// </summary>
+        protected EventHandler<TextInputEventArgs> _textInput;
+
+        #endregion
+
+        #endregion
+
+        #region Content
+
+        Texture2D _mainMenuBackdrop;
+        Texture2D _serverListBackdrop;
+
+        /// <summary>
+        /// A paper texture for drawing to the background
+        /// </summary>
+        protected Texture2D _paperTex;
+        /// <summary>
+        /// A list of block textures loaded from the atlas
+        /// </summary>
+        protected Texture2D[] _blockTexs;
+        /// <summary>
+        /// The font to use in GUI rendering
+        /// </summary>
+        protected SpriteFont _guiFont;
+
+        #endregion
 
         /// <summary>
         /// Creates a new instance of a networked game
@@ -362,9 +383,11 @@ namespace DoodleEmpires.Engine.Net
 
             _myPlayer = new PlayerInfo(userName);
 
-            OnFoundServer += new FoundServerEvent(NetGame_OnFoundServer);
+            Window.TextInput += Window_TextInput;
+
+            OnFoundServerEvent += new FoundServerEvent(NetGame_OnFoundServer);
         }
-        
+                
         /// <summary>
         /// Initializes the game
         /// </summary>
@@ -377,7 +400,7 @@ namespace DoodleEmpires.Engine.Net
             _guiFont = Content.Load<SpriteFont>("GUIFont");
             _guiFont.FixFont();
 
-            _serverRefreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(_serverRefreshTimer_Elapsed);
+            _serverRefreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(PollTimerElapsed);
             _serverPingTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnShouldPingServers);
                         
             if (_singlePlayer)
@@ -397,23 +420,7 @@ namespace DoodleEmpires.Engine.Net
             
             base.Initialize();
         }
-
-        void _serverRefreshTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            PollForServers();
-        }
-
-        /// <summary>
-        /// Checks for local servers. Later, this will poll the central server for servers
-        /// </summary>
-        private void PollForServers()
-        {
-            for (int i = GlobalNetVars.MIN_PORT; i <= GlobalNetVars.MAX_PORT; i++)
-                _client.DiscoverLocalPeers(i);
-
-            _client.DiscoverKnownPeer("192.0.247.228", 14245);
-        }
-
+                
         /// <summary>
         /// Loads the content for this game
         /// </summary>
@@ -423,6 +430,7 @@ namespace DoodleEmpires.Engine.Net
             _paperTex = Content.Load<Texture2D>("Paper");
 
             _debugFont = Content.Load<SpriteFont>("debugFont");
+            _debugFont.FixFont();
 
             _soundEngine = new SoundEngine();
 
@@ -444,7 +452,7 @@ namespace DoodleEmpires.Engine.Net
             _mainControl.Bounds = new Rectangle(0, 0, 120, 285);
 
             _menuControl = new GUIPanel(GraphicsDevice, null);
-            _menuControl.Bounds = new Rectangle(0, 0, 120, 165);
+            _menuControl.Bounds = new Rectangle(0, 0, 120, 175);
             _menuControl.X = GraphicsDevice.Viewport.Width / 2 - _menuControl.Bounds.Width / 2;
             _menuControl.Y = GraphicsDevice.Viewport.Height / 2 - _menuControl.Bounds.Height / 2;
             _menuControl.BackColor = Color.White;
@@ -468,20 +476,20 @@ namespace DoodleEmpires.Engine.Net
             GUIButton campaignButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
             campaignButton.Bounds = new Rectangle(20, 20, 80, 20);
             campaignButton.Text = "Campaign";
-            campaignButton.OnMousePressed += campaignButton_OnMousePressed;
+            campaignButton.OnMousePressed += OnCampaignButtonPressed;
             campaignButton.BackColor = Color.LightGray;
             campaignButton.Enabled = false;
 
             GUIButton singlePlayerButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
             singlePlayerButton.Bounds = new Rectangle(20, campaignButton.Bounds.Bottom + 5, 80, 20);
             singlePlayerButton.Text = "Singleplayer";
-            singlePlayerButton.OnMousePressed += singlePlayerButton_OnPressed;
+            singlePlayerButton.OnMousePressed += OnSinglePlayerButtonPressed;
             singlePlayerButton.BackColor = Color.LightGray;
 
             GUIButton LANButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
             LANButton.Bounds = new Rectangle(20, singlePlayerButton.Bounds.Bottom + 5, 80, 20);
             LANButton.Text = "LAN";
-            LANButton.OnMousePressed += LANButton_OnPressed;
+            LANButton.OnMousePressed += OnLANButtonPressed;
             LANButton.BackColor = Color.LightGray;
 
             GUIButton QuitButton = new GUIButton(GraphicsDevice, _guiFont, _menuControl);
@@ -490,21 +498,33 @@ namespace DoodleEmpires.Engine.Net
             QuitButton.OnMousePressed += Exit;
             QuitButton.BackColor = Color.LightGray;
 
+            GUITextPane TestTexPane = new GUITextPane(GraphicsDevice, _guiFont, _menuControl);
+            TestTexPane.Bounds = new Rectangle(10, QuitButton.Bounds.Bottom + 5, 100, 45);
+            TestTexPane.Invalidating = true;
+            TestTexPane.Alignment = TextAlignment.CentreLeft;
+            _textInput += TestTexPane.OnTextEntered;
+
+            //GUITextBox TestTex = new GUITextBox(GraphicsDevice, _guiFont, _menuControl);
+            //TestTex.Bounds = new Rectangle(10, QuitButton.Bounds.Bottom + 5, 100, 20);
+            //_textInput += TestTex.OnTextEntered;
+
+            //GUITextBox TestPassword = new GUITextBox(GraphicsDevice, _guiFont, _menuControl);
+            //TestPassword.Bounds = new Rectangle(10, TestTex.Bounds.Bottom + 5, 100, 20);
+            //TestPassword.PasswordChar = '*';
+            //_textInput += TestPassword.OnTextEntered;
+
             singlePlayerButton.Invalidating = true;
-
-            _fpsLabel = new GUILabel(GraphicsDevice, _guiFont, _mainControl);
-            _fpsLabel.Text = "";
-
+            
             _saveButton = new GUIButton(GraphicsDevice, _guiFont, _mainControl);
             _saveButton.Text = "Save";
             _saveButton.Bounds = new Rectangle(5, 140, 40, 20);
-            _saveButton.OnMousePressed += new Action(saveButton_OnMousePressed);
+            _saveButton.OnMousePressed += new Action(OnSaveButtonPressed);
             _saveButton.Visible = false;
 
             _loadButton = new GUIButton(GraphicsDevice, _guiFont, _mainControl);
             _loadButton.Text = "Load";
             _loadButton.Bounds = new Rectangle(50, 140, 40, 20);
-            _loadButton.OnMousePressed += new Action(loadButton_OnMousePressed);
+            _loadButton.OnMousePressed += new Action(OnLoadButtonPressed);
             _loadButton.Visible = false;
 
             GUIGridView gridView = new GUIGridView(GraphicsDevice, _mainControl);
@@ -545,12 +565,7 @@ namespace DoodleEmpires.Engine.Net
             }
         }
 
-        void campaignButton_OnMousePressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        #region Standard Game
+        #region Update and Draw
 
         /// <summary>
         /// Updates this game
@@ -570,6 +585,17 @@ namespace DoodleEmpires.Engine.Net
 
             //#endif
 
+            KeyboardState keyState = Keyboard.GetState();
+
+            if (keyState.IsKeyDown(Keys.Back) && _prevKeyState.IsKeyUp(Keys.Back))
+            {
+                _textInput.Invoke(this, new TextInputEventArgs('\b'));
+            }
+            if (keyState.IsKeyDown(Keys.Enter) && _prevKeyState.IsKeyUp(Keys.Enter))
+            {
+                _textInput.Invoke(this, new TextInputEventArgs('\r'));
+            }
+
             switch (_gameState)
             {
                 case GameState.MainMenu:
@@ -584,8 +610,6 @@ namespace DoodleEmpires.Engine.Net
 
                     _cameraController.Update(gameTime);
                     _view.Update(gameTime);
-
-                    KeyboardState keyState = Keyboard.GetState();
 
                     _mainControl.Update();
 
@@ -630,7 +654,6 @@ namespace DoodleEmpires.Engine.Net
                         Window.Title = "Doodle Empires | " + _cameraPostEffect.CurrentTechnique.Name;
                     }
 
-                    _prevKeyState = keyState;
 
                     _cameraPostEffect.Parameters["seed"].SetValue(_seed);
                     _seed += 0.01f;
@@ -643,145 +666,11 @@ namespace DoodleEmpires.Engine.Net
             if (!_singlePlayer)
                 UpdateNetworking();
 
+            _prevKeyState = keyState;
+
             base.Update(gameTime);
         }
-
-        /// <summary>
-        /// Updates this network handler, should be threaded
-        /// </summary>
-        public void UpdateNetworking()
-        {
-            // read messages
-            NetIncomingMessage msg;
-            while ((msg = _client.ReadMessage()) != null)
-            {
-                switch (msg.MessageType)
-                {
-                    case NetIncomingMessageType.DiscoveryResponse:
-
-                        ServerInfo info = ServerInfo.ReadFromPacket(msg);
-                        info.EndPoint = msg.SenderEndpoint;
-
-                        if (!_availableServers.Contains(info))
-                        {
-                            _availableServers.Add(info);
-
-                            if (OnFoundServer != null)
-                                OnFoundServer(info);
-                        }
-                        else
-                        {
-                            ServerInfo currentInfo = _availableServers.Find(X => X.EndPoint == info.EndPoint);
-                            int ID = _availableServers.IndexOf(currentInfo);
-                            _availableServers[ID] = info;
-                            ((ServerInfoListItem)_serverList.Items.Find(X => currentInfo.Equals(X.Tag))).Info = info;
-                            _serverList.Invalidating = true;
-                        }
-
-                        break;
-
-                    case NetIncomingMessageType.ConnectionLatencyUpdated:
-                        ServerInfo inInfo = _availableServers.Find(X => X.EndPoint == msg.SenderEndpoint);
-                        if (inInfo.EndPoint != null)
-                            inInfo.Ping = msg.ReadSingle();
-                        break;
-
-                    case NetIncomingMessageType.DiscoveryRequest:
-                        NetOutgoingMessage outMsg = _client.CreateMessage();
-                        outMsg.Write("Hello");
-                        _client.SendDiscoveryResponse(outMsg, msg.SenderEndpoint);
-                        break;
-
-                    case NetIncomingMessageType.StatusChanged:
-                        NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
-                        if (status == NetConnectionStatus.Connected)
-                        {
-                            Console.WriteLine("Connected to server, joining game");
-                            RequestJoin();
-                        }
-                        else if (status == NetConnectionStatus.Disconnected)
-                        {
-                            System.Diagnostics.Debug.WriteLine("Lost Connection \"{0}\"", msg.ReadString());
-                            _gameState = GameState.MainMenu;
-                        }
-                        break;
-
-                    case NetIncomingMessageType.Data: //data was received
-                        NetPacketType packetType = (NetPacketType)msg.ReadByte(8); //get the packet ID
-                        #if DEBUG
-                        AccountedDownload ++;
-                        #endif
-
-                        switch (packetType) //toggle based on packet state
-                        {
-                            case NetPacketType.AcceptedJoin: //server has accepted join
-                                HandleJoin(msg);
-                                break;
-
-                            case NetPacketType.PlayerJoined: //another player has joined
-                                PlayerJoined(msg);
-                                break;
-
-                            case NetPacketType.PlayerLeft: //another player has left the game
-                                PlayerLeft(msg);
-                                break;
-
-                            case NetPacketType.BlockUpdate: //another player's info has updated
-                                HandleBlockChanged(msg);
-                                break;
-
-                            case NetPacketType.ConnectionFailed: //the connection attempt has failed
-                                HandleConnectionFailed(msg);
-                                break;
-
-                            case NetPacketType.ZoneAdded:
-                                HandleZoneAdded(msg);
-                                break;
-
-                            case NetPacketType.ZoneRemoved:
-                                HandleZoneDel(msg);
-                                break;
-
-                            case NetPacketType.MapChanged:
-                                HandleMapChanged(msg);
-                                break;
-                                
-                            default:
-                                Console.WriteLine("Unknown packet type {0} received!", packetType);
-                                _client.Disconnect("You sent shitty data!");
-                                break;
-                        }
-                        break;
-
-                    case NetIncomingMessageType.UnconnectedData:
-                        
-                        NetPacketType packetType2 = (NetPacketType)msg.ReadByte(8); //get the packet ID
-                        #if DEBUG
-                        AccountedDownload ++;
-                        #endif
-
-                        switch (packetType2) //toggle based on packet state
-                        {
-                            case NetPacketType.PingMessage:
-                                HandlePingResponse(msg);
-                                break;
-                        }
-                        break;
-
-                    case NetIncomingMessageType.WarningMessage:
-                    case NetIncomingMessageType.DebugMessage:
-                    case NetIncomingMessageType.ErrorMessage:
-                        Console.WriteLine(msg.ReadString());
-                        break;
-
-                    default:
-                        Console.WriteLine("received unhandled packet: " + msg.MessageType);
-                        break;
-                }
-                _client.Recycle(msg);
-            }
-        }
-
+        
         /// <summary>
         /// Draws this game
         /// </summary>
@@ -866,24 +755,9 @@ namespace DoodleEmpires.Engine.Net
             _serverListControl.Draw();
         }
 
-        /// <summary>
-        /// Exits this game to the main menu
-        /// </summary>
-        protected virtual void ExitToMenu()
-        {
-            _gameState = GameState.MainMenu;
-            _serverRefreshTimer.Stop();
-            _availableServers.Clear();
-            _serverTimers.Clear();
+        #endregion
 
-            _serverList.Items = new List<GUI.ListViewItem>();
-            _serverList.Invalidating = true;
-
-            if (_client != null)
-            {
-                ExitGame("Quit to menu");
-            }
-        }
+        #region Input
 
         /// <summary>
         /// Called when a mouse button is pressed
@@ -1027,9 +901,50 @@ namespace DoodleEmpires.Engine.Net
         }
 
         /// <summary>
+        /// Invoked when a mouse button state has changed
+        /// </summary>
+        /// <param name="state">A snapshot of mouse values</param>
+        protected override void MouseEvent(MouseEventArgs state)
+        {
+            if (state.LeftButton == ButtonChangeState.Pressed ||
+                state.RightButton == ButtonChangeState.Pressed ||
+                state.RightButton == ButtonChangeState.Pressed)
+                MousePressed(state);
+
+            if (state.LeftButton == ButtonChangeState.Released ||
+                state.RightButton == ButtonChangeState.Released ||
+                state.RightButton == ButtonChangeState.Released)
+                MouseReleased(state);
+
+            base.MouseEvent(state);
+        }
+
+        #endregion
+
+        #region UI Event handlers
+
+        /// <summary>
+        /// Called when text has been entered via the keyboard
+        /// </summary>
+        /// <param name="sender">The object to raise this event</param>
+        /// <param name="e">The text event arguments containing the character pressed</param>
+        void Window_TextInput(object sender, TextInputEventArgs e)
+        {
+            _textInput.Invoke(sender, e);
+        }
+
+        /// <summary>
+        /// Called when the campaign button was pressed
+        /// </summary>
+        private void OnCampaignButtonPressed()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Called when the single player button in the main menu is pressed
         /// </summary>
-        void singlePlayerButton_OnPressed()
+        private void OnSinglePlayerButtonPressed()
         {
             SinglePlayer = true;
             _gameState = GameState.InGame;
@@ -1038,25 +953,10 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// Called when the LAN button in the main menu is pressed
         /// </summary>
-        void LANButton_OnPressed()
+        private void OnLANButtonPressed()
         {
             SinglePlayer = false;
             _gameState = GameState.ServerList;
-        }
-
-        void NetGame_OnFoundServer(ServerInfo serverInfo)
-        {
-            ServerInfoListItem item = new ServerInfoListItem(serverInfo);
-            item.MousePressed += new EventHandler<GUI.ListViewItem>(OnServerInfoMousePressed);
-
-            _serverTimers.Add(serverInfo.EndPoint, DateTime.Now);
-
-            NetOutgoingMessage msg = _client.CreateMessage();
-            msg.Write((byte)NetPacketType.PingMessage, 8);
-            _client.SendUnconnectedMessage(msg, serverInfo.EndPoint);
-
-            _serverList.AddItem(item);
-            _serverList.Invalidating = true;
         }
 
         /// <summary>
@@ -1096,44 +996,9 @@ namespace DoodleEmpires.Engine.Net
         }
 
         /// <summary>
-        /// Invoked when a mouse button state has changed
+        /// Called when the load button is pressed in singleplayer
         /// </summary>
-        /// <param name="state">A snapshot of mouse values</param>
-        protected override void MouseEvent(MouseEventArgs state)
-        {
-            if (state.LeftButton == ButtonChangeState.Pressed ||
-                state.RightButton == ButtonChangeState.Pressed ||
-                state.RightButton == ButtonChangeState.Pressed)
-                MousePressed(state);
-
-            if (state.LeftButton == ButtonChangeState.Released ||
-                state.RightButton == ButtonChangeState.Released ||
-                state.RightButton == ButtonChangeState.Released)
-                MouseReleased(state);
-
-            base.MouseEvent(state);
-        }
-
-        /// <summary>
-        /// Called when the application is exiting
-        /// </summary>
-        /// <param name="sender">The object to raise the event</param>
-        /// <param name="args">The event args sent to this event</param>
-        protected override void OnExiting(object sender, EventArgs args)
-        {
-            base.OnExiting(sender, args);
-
-            if (_client != null)
-            {
-                ExitGame("Quit game");
-            }
-        }
-
-        #endregion
-
-        #region SP Side
-
-        void loadButton_OnMousePressed()
+        private void OnLoadButtonPressed()
         {
             OpenFileDialog loadDialog = new OpenFileDialog();
             loadDialog.Filter = "Doodle Empires Map|*.dem";
@@ -1145,7 +1010,10 @@ namespace DoodleEmpires.Engine.Net
                 LoadGame(loadDialog.FileName.Replace(".dem", ""));
         }
 
-        void saveButton_OnMousePressed()
+        /// <summary>
+        /// Called when the save button is pressed in singleplayer
+        /// </summary>
+        private void OnSaveButtonPressed()
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
             saveDialog.Filter = "Doodle Empires Map|*.dem";
@@ -1156,6 +1024,10 @@ namespace DoodleEmpires.Engine.Net
             if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
                 SaveGame(saveDialog.FileName);
         }
+        
+        #endregion
+
+        #region SP Side
         
         /// <summary>
         /// Saves this game to a given file
@@ -1186,18 +1058,228 @@ namespace DoodleEmpires.Engine.Net
             }
         }
 
+        /// <summary>
+        /// Exits this game to the main menu
+        /// </summary>
+        protected virtual void ExitToMenu()
+        {
+            _gameState = GameState.MainMenu;
+            _serverRefreshTimer.Stop();
+            _availableServers.Clear();
+            _serverTimers.Clear();
+
+            _serverList.Items = new List<GUI.ListViewItem>();
+            _serverList.Invalidating = true;
+
+            if (_client != null)
+            {
+                ExitGame("Quit to menu");
+            }
+        }
+
+        /// <summary>
+        /// Called when the application is exiting
+        /// </summary>
+        /// <param name="sender">The object to raise the event</param>
+        /// <param name="args">The event args sent to this event</param>
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+
+            if (_client != null)
+            {
+                ExitGame("Quit game");
+            }
+        }
+
         #endregion
+        
+        #region Networking
+
+        /// <summary>
+        /// Called when it is time to poll for more servers and to update server states
+        /// </summary>
+        /// <param name="sender">The object to raise the event</param>
+        /// <param name="e">The timer elapsed argument</param>
+        void PollTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            PollForServers();
+        }
+
+        /// <summary>
+        /// Checks for local servers. Later, this will poll the central server for servers
+        /// </summary>
+        private void PollForServers()
+        {
+            for (int i = GlobalNetVars.MIN_PORT; i <= GlobalNetVars.MAX_PORT; i++)
+                _client.DiscoverLocalPeers(i);
+
+            _client.DiscoverKnownPeer("192.0.247.228", 14245);
+        }
+
+        /// <summary>
+        /// Called when a new server has been discovered
+        /// </summary>
+        /// <param name="serverInfo">The info of the newly discovered server</param>
+        void NetGame_OnFoundServer(ServerInfo serverInfo)
+        {
+            ServerInfoListItem item = new ServerInfoListItem(serverInfo);
+            item.MousePressed += new EventHandler<GUI.ListViewItem>(OnServerInfoMousePressed);
+
+            _serverTimers.Add(serverInfo.EndPoint, DateTime.Now);
+
+            NetOutgoingMessage msg = _client.CreateMessage();
+            msg.Write((byte)NetPacketType.PingMessage, 8);
+            _client.SendUnconnectedMessage(msg, serverInfo.EndPoint);
+
+            _serverList.AddItem(item);
+            _serverList.Invalidating = true;
+        }
 
         /// <summary>
         /// Invoked when we have joined a server
         /// </summary>
         /// <param name="info">The info for the server we are connecting to</param>
-        void _OnJoinedServer(ServerInfo info)
+        void OnJoinedServer(ServerInfo info)
         {
             _gameState = GameState.InGame;
         }
 
-        #region Networking
+        /// <summary>
+        /// Updates this network handler, should be threaded
+        /// </summary>
+        public void UpdateNetworking()
+        {
+            // read messages
+            NetIncomingMessage msg;
+            while ((msg = _client.ReadMessage()) != null)
+            {
+                switch (msg.MessageType)
+                {
+                    case NetIncomingMessageType.DiscoveryResponse:
+
+                        ServerInfo info = ServerInfo.ReadFromPacket(msg);
+                        info.EndPoint = msg.SenderEndpoint;
+
+                        if (!_availableServers.Contains(info))
+                        {
+                            _availableServers.Add(info);
+
+                            if (OnFoundServerEvent != null)
+                                OnFoundServerEvent(info);
+                        }
+                        else
+                        {
+                            ServerInfo currentInfo = _availableServers.Find(X => X.EndPoint == info.EndPoint);
+                            int ID = _availableServers.IndexOf(currentInfo);
+                            _availableServers[ID] = info;
+                            ((ServerInfoListItem)_serverList.Items.Find(X => currentInfo.Equals(X.Tag))).Info = info;
+                            _serverList.Invalidating = true;
+                        }
+
+                        break;
+
+                    case NetIncomingMessageType.ConnectionLatencyUpdated:
+                        ServerInfo inInfo = _availableServers.Find(X => X.EndPoint == msg.SenderEndpoint);
+                        if (inInfo.EndPoint != null)
+                            inInfo.Ping = msg.ReadSingle();
+                        break;
+
+                    case NetIncomingMessageType.DiscoveryRequest:
+                        NetOutgoingMessage outMsg = _client.CreateMessage();
+                        outMsg.Write("Hello");
+                        _client.SendDiscoveryResponse(outMsg, msg.SenderEndpoint);
+                        break;
+
+                    case NetIncomingMessageType.StatusChanged:
+                        NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
+                        if (status == NetConnectionStatus.Connected)
+                        {
+                            Console.WriteLine("Connected to server, joining game");
+                            RequestJoin();
+                        }
+                        else if (status == NetConnectionStatus.Disconnected)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Lost Connection \"{0}\"", msg.ReadString());
+                            _gameState = GameState.MainMenu;
+                        }
+                        break;
+
+                    case NetIncomingMessageType.Data: //data was received
+                        NetPacketType packetType = (NetPacketType)msg.ReadByte(8); //get the packet ID
+                        #if DEBUG
+                        AccountedDownload ++;
+                        #endif
+
+                        switch (packetType) //toggle based on packet state
+                        {
+                            case NetPacketType.AcceptedJoin: //server has accepted join
+                                HandleJoin(msg);
+                                break;
+
+                            case NetPacketType.PlayerJoined: //another player has joined
+                                PlayerJoined(msg);
+                                break;
+
+                            case NetPacketType.PlayerLeft: //another player has left the game
+                                PlayerLeft(msg);
+                                break;
+
+                            case NetPacketType.BlockUpdate: //another player's info has updated
+                                HandleBlockChanged(msg);
+                                break;
+
+                            case NetPacketType.ConnectionFailed: //the connection attempt has failed
+                                HandleConnectionFailed(msg);
+                                break;
+
+                            case NetPacketType.ZoneAdded:
+                                HandleZoneAdded(msg);
+                                break;
+
+                            case NetPacketType.ZoneRemoved:
+                                HandleZoneDel(msg);
+                                break;
+
+                            case NetPacketType.MapChanged:
+                                HandleMapChanged(msg);
+                                break;
+                                
+                            default:
+                                Console.WriteLine("Unknown packet type {0} received!", packetType);
+                                _client.Disconnect("You sent shitty data!");
+                                break;
+                        }
+                        break;
+
+                    case NetIncomingMessageType.UnconnectedData:
+                        
+                        NetPacketType packetType2 = (NetPacketType)msg.ReadByte(8); //get the packet ID
+                        #if DEBUG
+                        AccountedDownload ++;
+                        #endif
+
+                        switch (packetType2) //toggle based on packet state
+                        {
+                            case NetPacketType.PingMessage:
+                                HandlePingResponse(msg);
+                                break;
+                        }
+                        break;
+
+                    case NetIncomingMessageType.WarningMessage:
+                    case NetIncomingMessageType.DebugMessage:
+                    case NetIncomingMessageType.ErrorMessage:
+                        Console.WriteLine(msg.ReadString());
+                        break;
+
+                    default:
+                        Console.WriteLine("received unhandled packet: " + msg.MessageType);
+                        break;
+                }
+                _client.Recycle(msg);
+            }
+        }
 
         /// <summary>
         /// Called when the ping for all available servers should be calculated
@@ -1365,8 +1447,8 @@ namespace DoodleEmpires.Engine.Net
             string reason = m.ReadString();
             _client.Disconnect(string.Format("Could not connect due to \"{0}\"", reason));
 
-            if (OnConnectionFailed != null)
-                OnConnectionFailed.Invoke(reason);
+            if (OnConnectionFailedEvent != null)
+                OnConnectionFailedEvent.Invoke(reason);
 
             Console.WriteLine(string.Format("Connection failed due to \"{0}\"", reason));
         }
@@ -1405,8 +1487,8 @@ namespace DoodleEmpires.Engine.Net
 
             _view.Focus = _cameraController;
 
-            if (OnJoinedServer != null)
-                OnJoinedServer.Invoke(serverInfo);
+            if (OnJoinedServerEvent != null)
+                OnJoinedServerEvent.Invoke(serverInfo);
 
             Console.WriteLine("Joined a game with {0} players as '{1}'", playerCount, _myPlayer.UserName);
         }
@@ -1423,8 +1505,8 @@ namespace DoodleEmpires.Engine.Net
 
             _map[x, y] = newID;
 
-            if (OnTerrainSet != null)
-                OnTerrainSet.Invoke(x, y, newID);
+            if (OnTerrainSetEvent != null)
+                OnTerrainSetEvent.Invoke(x, y, newID);
 
 #if DEBUG
             AccountedDownload += m.LengthBytes;
@@ -1473,8 +1555,8 @@ namespace DoodleEmpires.Engine.Net
             if (pInfo.PlayerIndex != _myPlayer.PlayerIndex)
             {
                 _players.Add(pInfo);
-                if (OnPlayerJoined != null)
-                    OnPlayerJoined.Invoke(pInfo);
+                if (OnPlayerJoinedEvent != null)
+                    OnPlayerJoinedEvent.Invoke(pInfo);
 
                 Console.WriteLine("{0} has joined the game.", pInfo.UserName);
             }
@@ -1499,8 +1581,8 @@ namespace DoodleEmpires.Engine.Net
                 _players.Remove(player);
                 Console.WriteLine("{0} has left the game.", player.UserName);
 
-                if (OnPlayerLeft != null)
-                    OnPlayerLeft.Invoke(pInfo);
+                if (OnPlayerLeftEvent != null)
+                    OnPlayerLeftEvent.Invoke(pInfo);
             }
             else
             {

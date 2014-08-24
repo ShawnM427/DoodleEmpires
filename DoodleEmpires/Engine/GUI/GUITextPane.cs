@@ -21,6 +21,10 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         protected string _drawnText;
         /// <summary>
+        /// The alignment of text within this control
+        /// </summary>
+        protected TextAlignment _alignment = TextAlignment.Centred;
+        /// <summary>
         /// The font to draw text in
         /// </summary>
         protected SpriteFont _font; 
@@ -28,10 +32,6 @@ namespace DoodleEmpires.Engine.GUI
         /// The margin from either side of the bounds
         /// </summary>
         protected float _margin = 2.0f;
-        /// <summary>
-        /// The text's position in the frame
-        /// </summary>
-        protected Vector2 _textPos = new Vector2(2.0f, 2.0f);
 
         /// <summary>
         /// The bounds relative to the parent container
@@ -54,7 +54,7 @@ namespace DoodleEmpires.Engine.GUI
             }
         }
         /// <summary>
-        /// Gets or sets the text for this label
+        /// Gets or sets the text for this pane
         /// </summary>
         public virtual string Text
         {
@@ -76,9 +76,16 @@ namespace DoodleEmpires.Engine.GUI
             {
                 _margin = value;
                 _drawnText = _text.Wrap(_font, _bounds.Width - 2.0f * _margin);
-                _textPos.X = value;
                 Invalidating = true;
             }
+        }
+        /// <summary>
+        /// Gets or sets the text alignment for this control
+        /// </summary>
+        public virtual TextAlignment Alignment
+        {
+            get { return _alignment; }
+            set { _alignment = value; }
         }
 
         /// <summary>
@@ -92,10 +99,8 @@ namespace DoodleEmpires.Engine.GUI
         {
             _font = font;
             _text = "";
+            _drawnText = "";
             BackColor = Color.White;
-
-            _bounds.Width = (int)_font.MeasureString(_text).X;
-            _bounds.Height = (int)_font.MeasureString(_text).Y;
         }
 
         /// <summary>
@@ -118,7 +123,60 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         protected override void Invalidate()
         {
-            _spriteBatch.DrawString(_font, _drawnText, _textPos, _foreColor);
+            string[] lines = _drawnText.Split('\r');
+            float y = _margin;
+
+            foreach (string line in lines)
+            {
+                Vector2 textPos = Vector2.Zero;
+                Vector2 textSize = _font.MeasureString(line);
+                Vector2 centre = new Vector2(_bounds.Width / 2, y + textSize.Y / 2);
+
+                switch (_alignment)
+                {
+                    case TextAlignment.Centred:
+                        textPos = centre - textSize / 2;
+                        break;
+                    case TextAlignment.CentreLeft:
+                        textPos = new Vector2(_margin, centre.Y - textSize.Y / 2);
+                        break;
+                    case TextAlignment.CentreRight:
+                        textPos = new Vector2(_bounds.Width - textSize.X - _margin, centre.Y - textSize.Y / 2);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+                textPos.X = (int)textPos.X;
+                textPos.Y = (int)textPos.Y;
+
+                _spriteBatch.DrawString(_font, line, textPos, _foreColor);
+
+                y += _font.LineSpacing;
+            }
+        }
+
+        /// <summary>
+        /// Called when text has been entered via the keyboard
+        /// </summary>
+        /// <param name="sender">The object to invoke the event</param>
+        /// <param name="e">The text input event arguments</param>
+        public virtual void OnTextEntered(object sender, TextInputEventArgs e)
+        {
+            if (Focused)
+            {
+                switch (e.Character)
+                {
+                    case '\b':
+                        if (_text.Length > 0)
+                            Text = _text.Remove(_text.Length - 1, 1);
+                        break;
+                    default:
+                        Text += e.Character;
+                        break;
+                }
+
+                Invalidating = true;
+            }
         }
     }
 }

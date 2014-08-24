@@ -17,6 +17,10 @@ namespace DoodleEmpires.Engine.GUI
         private bool _invalidating = true;
 
         /// <summary>
+        /// Gets or sets whether this object is in focus or not
+        /// </summary>
+        protected bool _isFocused = false;
+        /// <summary>
         /// The graphics device used to draw within this component
         /// </summary>
         protected GraphicsDevice _graphics;
@@ -168,6 +172,18 @@ namespace DoodleEmpires.Engine.GUI
                 Invalidating = true;
             }
         }
+        /// <summary>
+        /// Gets or sets whether this control has focus
+        /// </summary>
+        public bool Focused
+        {
+            get { return _isFocused; }
+            set
+            {
+                _isFocused = value;
+                Invalidating = true;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the left bound of the client rectangle
@@ -311,7 +327,17 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         /// <param name="e">The mouse event arguments</param>
         /// <returns>True if the input was handled</returns>
-        public virtual void MousePressed(MouseEventArgs e) { }
+        public virtual void MousePressed(MouseEventArgs e) 
+        { 
+            if (ScreenBounds.Contains(e.Position))
+            {
+                Focused = true;
+            }
+            else
+            {
+                Focused = false;
+            }
+        }
 
         /// <summary>
         /// Called when this component has been resized

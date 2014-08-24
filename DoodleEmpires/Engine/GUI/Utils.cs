@@ -39,7 +39,7 @@ namespace DoodleEmpires.Engine.GUI
 
             foreach (string word in words)
             {
-                string checker = word.Replace("\n","");
+                string checker = word.Replace("\r","");
                 Vector2 size = font.MeasureString(checker);
 
                 if (lineWidth + size.X < width)
@@ -49,7 +49,7 @@ namespace DoodleEmpires.Engine.GUI
                 }
                 else
                 {
-                    sb.Append("\n" + word + " ");
+                    sb.Append("\r" + word + " ");
                     lineWidth = size.X + spaceWidth;
                 }
             }
@@ -134,6 +134,49 @@ namespace DoodleEmpires.Engine.GUI
         {
             g.DrawLine(new Vector2(x, y), new Vector2(x2, y2), color);
         }
+    }
+
+    /// <summary>
+    /// Represents the alignment of text in a GUI component that displays text
+    /// </summary>
+    public enum TextAlignment
+    {
+        /// <summary>
+        /// The text is centred in the component
+        /// </summary>
+        Centred,
+        /// <summary>
+        /// The text sits at the top left corner of the component
+        /// </summary>
+        TopLeft,
+        /// <summary>
+        /// The text sits centred along the left edge of the component
+        /// </summary>
+        CentreLeft,
+        /// <summary>
+        /// The text sits at the bottom left corner of the component
+        /// </summary>
+        BottomLeft,
+        /// <summary>
+        /// The text sits centred along the top edge of the component
+        /// </summary>
+        CentreTop,
+        /// <summary>
+        /// The text sits centred along the bottom edge of the component
+        /// </summary>
+        CentreBottom,
+        /// <summary>
+        /// The text sits at the top right corner of the component
+        /// </summary>
+        TopRight,
+        /// <summary>
+        /// The text sits centred along the right edge of the component
+        /// </summary>
+        CentreRight,
+        /// <summary>
+        /// The text sits at the bottom right corner of the component
+        /// </summary>
+        BottomRight
     }
 }
 
