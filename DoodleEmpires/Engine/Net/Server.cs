@@ -64,16 +64,25 @@ namespace DoodleEmpires.Engine.Net
         public void Run(string[] args)
         {
             int port = GlobalNetVars.DEFAULT_PORT;
-            _serverInfo = 
-                new ServerInfo(args.Length > 0 ? args[0] : GlobalNetVars.DEFAULT_SERVERNAME);
 
+            _serverInfo = new ServerInfo(args.Length > 0 ? args[0] : GlobalNetVars.DEFAULT_SERVER_NAME);
             if (args.Length > 1)
                 port = int.Parse(args[1]);
+            _serverInfo.Message = args.Length > 2 ? args[2] : GlobalNetVars.DEFAULT_SERVER_MESSAGE;
+            if (args.Length > 3)
+            {
+                int playercount = 4;
+                int.TryParse(args[3], out playercount);
+
+                _players = new NetPlayer[playercount];
+                _serverInfo.MaxPlayerCount = playercount;
+            }
             
             Console.WriteLine("Opening server");
             Console.WriteLine("Server name set to \"{0}\"", _serverInfo.Name);
             NetPeerConfiguration config = new NetPeerConfiguration("DoodleEmpires");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
             config.Port = port;
             config.EnableUPnP = true;
             //config.LocalAddress = IPAddress.Parse("25.11.245.37");
@@ -118,7 +127,6 @@ namespace DoodleEmpires.Engine.Net
                             _serverInfo.WriteToPacket(om);
                             _server.SendDiscoveryResponse(om, msg.SenderEndpoint);
 
-                            Console.WriteLine("Pinged discovery request");
                             break;
                             
                         case NetIncomingMessageType.StatusChanged: //a client's status has changed
@@ -137,6 +145,7 @@ namespace DoodleEmpires.Engine.Net
                                     _players[pID] = null;
                                     _playerConnections.Remove(msg.SenderConnection);
 
+                                    _serverInfo.PlayerCount = Players.Length;
                                 }
 
                                 Console.WriteLine("Lost connection to {0} for {1}", msg.SenderEndpoint, reason);
@@ -172,6 +181,20 @@ namespace DoodleEmpires.Engine.Net
 
                                 case NetPacketType.ReqZoneRemoved:
                                     HandleReqDelZone(msg);
+                                    break;
+                            }
+                            break;
+
+                        case NetIncomingMessageType.UnconnectedData:
+                            
+                            NetPacketType pType2 = (NetPacketType)msg.ReadByte();
+
+                            switch (pType2)
+                            {
+                                case NetPacketType.PingMessage:
+                                    NetOutgoingMessage pingMSG = _server.CreateMessage();
+                                    pingMSG.Write((byte)NetPacketType.PingMessage, 8);
+                                    _server.SendUnconnectedMessage(pingMSG, msg.SenderEndpoint);
                                     break;
                             }
                             break;
@@ -217,7 +240,7 @@ namespace DoodleEmpires.Engine.Net
 
             sbyte ID = -1;
 
-            for (sbyte i = 0; i < 4; i++)
+            for (sbyte i = 0; i < _players.Length; i++)
                 if (_players[i] == null)
                 {
                     ID = i;
@@ -254,6 +277,8 @@ namespace DoodleEmpires.Engine.Net
                 SendPlayerJoined(pInfo);
 
                 _players[rID] = new NetPlayer(pInfo, msg.SenderConnection);
+
+                _serverInfo.PlayerCount = Players.Length;
             }
             else
             {
@@ -341,7 +366,7 @@ namespace DoodleEmpires.Engine.Net
         private void SendPlayerJoined(PlayerInfo newPlayer)
         {
             Console.WriteLine("Accepting join request from \"{0}\"", newPlayer.UserName);
-
+            
             NetOutgoingMessage message = _server.CreateMessage();
             message.Write((byte)NetPacketType.PlayerJoined, 8);
             newPlayer.WriteToPacket(message);

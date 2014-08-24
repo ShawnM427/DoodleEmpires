@@ -19,7 +19,9 @@ namespace DoodleEmpires.Engine.Net
         IPEndPoint _endPoint;
         string _name;
         string _message;
-        float _ping;
+        double _ping;
+        int _playerCount;
+        int _maxPlayerCount;
 
         /// <summary>
         /// Gets the IP of this server, represented as a string
@@ -54,10 +56,26 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// Gets or sets the ping to the server in seconds
         /// </summary>
-        public float Ping
+        public double Ping
         {
             get { return _ping; }
             set { _ping = value; }
+        }
+        /// <summary>
+        /// Gets or sets the player count for this info
+        /// </summary>
+        public int PlayerCount
+        {
+            get { return _playerCount; }
+            set { _playerCount = value; }
+        }
+        /// <summary>
+        /// Gets or sets the maximum player count for this info
+        /// </summary>
+        public int MaxPlayerCount
+        {
+            get { return _maxPlayerCount; }
+            set { _maxPlayerCount = value; }
         }
         
         /// <summary>
@@ -65,6 +83,7 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         /// <param name="name">The name of the server</param>
         /// <param name="endpoint">The server's endpoint</param>
+        /// <param name="message">The message for this server to display</param>
         public ServerInfo(string name, IPEndPoint endpoint, string message = "")
         {
             _ip = endpoint.Address;
@@ -72,12 +91,15 @@ namespace DoodleEmpires.Engine.Net
             _endPoint = endpoint;
             _ping = 0;
             _message = message;
+            _playerCount = 0;
+            _maxPlayerCount = 4;
         }
 
         /// <summary>
         /// Creates a new server info
         /// </summary>
         /// <param name="name">The name of the server</param>
+        /// <param name="message">The message for this server to display</param>
         public ServerInfo(string name, string message = "")
         {
             _ip = NetUtility.Resolve("localhost");
@@ -85,6 +107,8 @@ namespace DoodleEmpires.Engine.Net
             _name = name;
             _ping = 0;
             _message = message;
+            _playerCount = 0;
+            _maxPlayerCount = 4;
         }
 
         /// <summary>
@@ -95,6 +119,8 @@ namespace DoodleEmpires.Engine.Net
         {
             message.Write(Name);
             message.Write(Message);
+            message.Write(PlayerCount);
+            message.Write(MaxPlayerCount);
             message.Write(EndPoint);
         }
 
@@ -107,9 +133,14 @@ namespace DoodleEmpires.Engine.Net
         {
             string name = message.ReadString();
             string serverMessage = message.ReadString();
+            int playerCount = message.ReadInt32();
+            int maxPlayerCount = message.ReadInt32();
             IPEndPoint endpoint = message.ReadIPEndpoint();
 
-            return new ServerInfo(name, endpoint, serverMessage);
+            ServerInfo ret = new ServerInfo(name, endpoint, serverMessage);
+            ret.PlayerCount = playerCount;
+            ret.MaxPlayerCount = maxPlayerCount;
+            return ret;
         }
 
         /// <summary>
@@ -163,6 +194,12 @@ namespace DoodleEmpires.Engine.Net
             batch.DrawString(font, _serverInfo.Name,bounds.Location.ToVector2() + new Vector2(5, 4), _textColor);
             batch.DrawString(font, _serverInfo.EndPoint.ToString(), bounds.Location.ToVector2() + new Vector2(5, 4 + font.MeasureString(" ").Y), _textColor);
             batch.DrawString(font, _serverInfo.Message, bounds.Location.ToVector2() + new Vector2(5, 4 + font.MeasureString(" ").Y * 2), _textColor);
+
+            string text = _serverInfo.Ping.ToString("0.##") + " ms";
+            batch.DrawString(font, text, bounds.Location.ToVector2() + new Vector2(bounds.Width - font.MeasureString(text).X - 5, 4), _textColor);
+
+            text = _serverInfo.PlayerCount + "/" + _serverInfo.MaxPlayerCount;
+            batch.DrawString(font, text, bounds.Location.ToVector2() + new Vector2(bounds.Width - font.MeasureString(text).X - 5, 4 + font.MeasureString(" ").Y), _textColor);
         }
     }
 }

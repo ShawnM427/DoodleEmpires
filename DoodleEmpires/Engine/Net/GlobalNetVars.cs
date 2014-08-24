@@ -29,10 +29,18 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// The default name for an unnamed server
         /// </summary>
-        public const string DEFAULT_SERVERNAME = "<noName>";
+        public const string DEFAULT_SERVER_NAME = "<noName>";
         /// <summary>
-        /// Time delay between polling for servers
+        /// The default message for a server
+        /// </summary>
+        public const string DEFAULT_SERVER_MESSAGE = "Welcome!";
+        /// <summary>
+        /// Time delay between polling for servers (seconds)
         /// </summary>
         public const double SERVER_POLLING_RATE = 5.0;
+        /// <summary>
+        /// Time delay between fetching new pings for servers (seconds)
+        /// </summary>
+        public const double SERVER_PING_RATE = 2.5;
     }
 }

@@ -2843,14 +2843,24 @@
             The maximum port
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.Net.GlobalNetVars.DEFAULT_SERVERNAME">
+        <member name="F:DoodleEmpires.Engine.Net.GlobalNetVars.DEFAULT_SERVER_NAME">
             <summary>
             The default name for an unnamed server
             </summary>
         </member>
+        <member name="F:DoodleEmpires.Engine.Net.GlobalNetVars.DEFAULT_SERVER_MESSAGE">
+            <summary>
+            The default message for a server
+            </summary>
+        </member>
         <member name="F:DoodleEmpires.Engine.Net.GlobalNetVars.SERVER_POLLING_RATE">
             <summary>
-            Time delay between polling for servers
+            Time delay between polling for servers (seconds)
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.GlobalNetVars.SERVER_PING_RATE">
+            <summary>
+            Time delay between fetching new pings for servers (seconds)
             </summary>
         </member>
         <member name="P:DoodleEmpires.Engine.Net.GlobalTileManager.TileManager">
@@ -3204,6 +3214,11 @@
             </summary>
             <param name="info">The info for the server we are connecting to</param>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnShouldPingServers(System.Object,System.Timers.ElapsedEventArgs)">
+            <summary>
+            Called when the ping for all available servers should be calculated
+            </summary>
+        </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.ConnectToServer(DoodleEmpires.Engine.Net.ServerInfo)">
             <summary>
             Connects the internal client to a specified game server
@@ -3241,6 +3256,12 @@
             Called when we should leave the game
             </summary>
             <param name="reason"></param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.HandlePingResponse(Lidgren.Network.NetIncomingMessage)">
+            <summary>
+            Handles responding to an incoming ping response
+            </summary>
+            <param name="msg">The message to parse</param>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.HandleMapChanged(Lidgren.Network.NetIncomingMessage)">
             <summary>
@@ -3462,12 +3483,14 @@
             </summary>
             <param name="name">The name of the server</param>
             <param name="endpoint">The server's endpoint</param>
+            <param name="message">The message for this server to display</param>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.ServerInfo.#ctor(System.String,System.String)">
             <summary>
             Creates a new server info
             </summary>
             <param name="name">The name of the server</param>
+            <param name="message">The message for this server to display</param>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.ServerInfo.WriteToPacket(Lidgren.Network.NetOutgoingMessage)">
             <summary>
@@ -3512,6 +3535,16 @@
         <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Ping">
             <summary>
             Gets or sets the ping to the server in seconds
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.PlayerCount">
+            <summary>
+            Gets or sets the player count for this info
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.MaxPlayerCount">
+            <summary>
+            Gets or sets the maximum player count for this info
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.ServerInfoListItem">

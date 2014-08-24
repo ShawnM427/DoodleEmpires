@@ -143,12 +143,13 @@ namespace DoodleEmpires.Engine.Net
         #endregion
 
         System.Timers.Timer _serverRefreshTimer = new System.Timers.Timer(GlobalNetVars.SERVER_POLLING_RATE * 1000);
+        System.Timers.Timer _serverPingTimer = new System.Timers.Timer(GlobalNetVars.SERVER_PING_RATE * 1000);
 
         #endregion
 
         #region Game Vars
 
-        Dictionary<IPEndPoint, double> _serverTimers = new Dictionary<IPEndPoint, double>();
+        Dictionary<IPEndPoint, DateTime> _serverTimers = new Dictionary<IPEndPoint, DateTime>();
 
         GraphicsDeviceManager graphicsManager;
         SpriteFont _debugFont;
@@ -317,6 +318,7 @@ namespace DoodleEmpires.Engine.Net
                 else
                 {
                     _serverRefreshTimer.Start();
+                    _serverPingTimer.Start();
 
                     _port = _port.HasValue ? _port.Value : GlobalNetVars.DEFAULT_PORT;
 
@@ -324,6 +326,7 @@ namespace DoodleEmpires.Engine.Net
                     config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
                     config.EnableMessageType(NetIncomingMessageType.StatusChanged);
                     config.EnableMessageType(NetIncomingMessageType.Data);
+                    config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
                     config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
                     config.ConnectionTimeout = 10F;
                     //config.LocalAddress = IPAddress.Parse("");
@@ -375,6 +378,7 @@ namespace DoodleEmpires.Engine.Net
             _guiFont.FixFont();
 
             _serverRefreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(_serverRefreshTimer_Elapsed);
+            _serverPingTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnShouldPingServers);
                         
             if (_singlePlayer)
             {
@@ -704,6 +708,9 @@ namespace DoodleEmpires.Engine.Net
 
                     case NetIncomingMessageType.Data: //data was received
                         NetPacketType packetType = (NetPacketType)msg.ReadByte(8); //get the packet ID
+                        #if DEBUG
+                        AccountedDownload ++;
+                        #endif
 
                         switch (packetType) //toggle based on packet state
                         {
@@ -742,6 +749,21 @@ namespace DoodleEmpires.Engine.Net
                             default:
                                 Console.WriteLine("Unknown packet type {0} received!", packetType);
                                 _client.Disconnect("You sent shitty data!");
+                                break;
+                        }
+                        break;
+
+                    case NetIncomingMessageType.UnconnectedData:
+                        
+                        NetPacketType packetType2 = (NetPacketType)msg.ReadByte(8); //get the packet ID
+                        #if DEBUG
+                        AccountedDownload ++;
+                        #endif
+
+                        switch (packetType2) //toggle based on packet state
+                        {
+                            case NetPacketType.PingMessage:
+                                HandlePingResponse(msg);
                                 break;
                         }
                         break;
@@ -852,6 +874,7 @@ namespace DoodleEmpires.Engine.Net
             _gameState = GameState.MainMenu;
             _serverRefreshTimer.Stop();
             _availableServers.Clear();
+            _serverTimers.Clear();
 
             _serverList.Items = new List<GUI.ListViewItem>();
             _serverList.Invalidating = true;
@@ -1026,6 +1049,12 @@ namespace DoodleEmpires.Engine.Net
             ServerInfoListItem item = new ServerInfoListItem(serverInfo);
             item.MousePressed += new EventHandler<GUI.ListViewItem>(OnServerInfoMousePressed);
 
+            _serverTimers.Add(serverInfo.EndPoint, DateTime.Now);
+
+            NetOutgoingMessage msg = _client.CreateMessage();
+            msg.Write((byte)NetPacketType.PingMessage, 8);
+            _client.SendUnconnectedMessage(msg, serverInfo.EndPoint);
+
             _serverList.AddItem(item);
             _serverList.Invalidating = true;
         }
@@ -1170,9 +1199,23 @@ namespace DoodleEmpires.Engine.Net
 
         #region Networking
 
-        void OnPingUpdated()
+        /// <summary>
+        /// Called when the ping for all available servers should be calculated
+        /// </summary>
+        void OnShouldPingServers(object sender, System.Timers.ElapsedEventArgs e)
         {
+            foreach (ServerInfo sInfo in _availableServers)
+            {
+                _serverTimers[sInfo.EndPoint] = DateTime.Now;
 
+                NetOutgoingMessage pingMSG = _client.CreateMessage();
+                pingMSG.Write((byte)NetPacketType.PingMessage, 8);
+                _client.SendUnconnectedMessage(pingMSG, sInfo.EndPoint);
+
+                #if DEBUG
+                AccountedUpload += pingMSG.LengthBytes;
+                #endif
+            }
         }
 
         #region Outgoing
@@ -1283,6 +1326,24 @@ namespace DoodleEmpires.Engine.Net
         #endregion
 
         #region Incoming
+
+        /// <summary>
+        /// Handles responding to an incoming ping response
+        /// </summary>
+        /// <param name="msg">The message to parse</param>
+        private void HandlePingResponse(NetIncomingMessage msg)
+        {
+            if (_serverTimers.ContainsKey(msg.SenderEndpoint))
+            {
+                ServerInfo sInfo = _availableServers.Find(s => s.EndPoint == msg.SenderEndpoint);
+                int ID = _availableServers.IndexOf(sInfo);
+                sInfo.Ping = (DateTime.Now - _serverTimers[msg.SenderEndpoint]).TotalMilliseconds;
+                _availableServers[ID] = sInfo;
+
+                ((ServerInfoListItem)_serverList.Items.Find(X => sInfo.Equals(X.Tag))).Info = sInfo;
+                _serverList.Invalidating = true;
+            }
+        }
 
         /// <summary>
         /// Called when the server has changed maps

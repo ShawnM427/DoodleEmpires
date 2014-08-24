@@ -20,12 +20,12 @@ namespace DoodleEmpires
         [STAThread]
         static void Main(string[] args)
         {
-            bool singlePlayer = false;
+            string playerName = "unknown";
 
             if (args.Length > 0)
-                bool.TryParse(args[0], out singlePlayer);
-
-            using (var game = new NetGame())
+                playerName = args[0];
+            
+            using (var game = new NetGame(playerName))
                 game.Run();
         }
 
