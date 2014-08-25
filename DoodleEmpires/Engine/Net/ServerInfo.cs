@@ -16,7 +16,8 @@ namespace DoodleEmpires.Engine.Net
     public struct ServerInfo
     {
         IPAddress _ip;
-        IPEndPoint _endPoint;
+        IPEndPoint _internalEndPoint;
+        IPEndPoint _externalEndPoint;
         string _name;
         string _message;
         double _ping;
@@ -33,10 +34,18 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// The network endpoint for this server
         /// </summary>
-        public IPEndPoint EndPoint
+        public IPEndPoint InternalEndPoint
         {
-            get { return _endPoint; }
-            set { _endPoint = value; }
+            get { return _internalEndPoint; }
+            set { _internalEndPoint = value; }
+        }
+        /// <summary>
+        /// The external endpoint for this server
+        /// </summary>
+        public IPEndPoint ExternalEndPoint
+        {
+            get { return _externalEndPoint; }
+            set { _externalEndPoint = value; }
         }
         /// <summary>
         /// The name of this server
@@ -82,13 +91,14 @@ namespace DoodleEmpires.Engine.Net
         /// Creates a new server info
         /// </summary>
         /// <param name="name">The name of the server</param>
-        /// <param name="endpoint">The server's endpoint</param>
+        /// <param name="internalEndpoint">The server's endpoint</param>
         /// <param name="message">The message for this server to display</param>
-        public ServerInfo(string name, IPEndPoint endpoint, string message = "")
+        public ServerInfo(string name, IPEndPoint internalEndpoint, string message = "")
         {
-            _ip = endpoint.Address;
+            _ip = internalEndpoint.Address;
             _name = name;
-            _endPoint = endpoint;
+            _internalEndPoint = internalEndpoint;
+            _externalEndPoint = null;
             _ping = 0;
             _message = message;
             _playerCount = 0;
@@ -103,7 +113,8 @@ namespace DoodleEmpires.Engine.Net
         public ServerInfo(string name, string message = "")
         {
             _ip = NetUtility.Resolve("localhost");
-            _endPoint = new IPEndPoint(_ip, GlobalNetVars.DEFAULT_PORT);
+            _internalEndPoint = new IPEndPoint(_ip, GlobalNetVars.DEFAULT_PORT);
+            _externalEndPoint = null;
             _name = name;
             _ping = 0;
             _message = message;
@@ -121,7 +132,7 @@ namespace DoodleEmpires.Engine.Net
             message.Write(Message);
             message.Write(PlayerCount);
             message.Write(MaxPlayerCount);
-            message.Write(EndPoint);
+            message.Write(InternalEndPoint);
         }
 
         /// <summary>
@@ -153,7 +164,16 @@ namespace DoodleEmpires.Engine.Net
             if (obj.GetType() != typeof(ServerInfo))
                 return false;
             else
-                return _endPoint == ((ServerInfo)obj)._endPoint;
+                return _name == ((ServerInfo)obj)._name;
+        }
+
+        /// <summary>
+        /// Returns the hash code for this instance
+        /// </summary>
+        /// <returns>The hash code for this instance</returns>
+        public override int GetHashCode()
+        {
+            return _name.GetHashCode();
         }
     }
 
@@ -192,7 +212,7 @@ namespace DoodleEmpires.Engine.Net
         public override void Render(SpriteBatch batch, SpriteFont font, Rectangle bounds)
         {
             batch.DrawString(font, _serverInfo.Name,bounds.Location.ToVector2() + new Vector2(5, 4), _textColor);
-            batch.DrawString(font, _serverInfo.EndPoint.ToString(), bounds.Location.ToVector2() + new Vector2(5, 4 + font.MeasureString(" ").Y), _textColor);
+            batch.DrawString(font, _serverInfo.InternalEndPoint.ToString(), bounds.Location.ToVector2() + new Vector2(5, 4 + font.MeasureString(" ").Y), _textColor);
             batch.DrawString(font, _serverInfo.Message, bounds.Location.ToVector2() + new Vector2(5, 4 + font.MeasureString(" ").Y * 2), _textColor);
 
             string text = _serverInfo.Ping.ToString("0.##") + " ms";

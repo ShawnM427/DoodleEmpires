@@ -70,7 +70,7 @@ namespace DoodleServer
 
         private void StartServer()
         {
-            _server.Run(new string[]{txt_serverName.Text, nud_port.Value.ToString()});
+            _server.Run(new string[]{txt_serverName.Text, nud_port.Value.ToString(), "", ((int)(nib_maxPlayers.Value)).ToString()});
         }
 
         private void btn_perform_Click(object sender, EventArgs e)

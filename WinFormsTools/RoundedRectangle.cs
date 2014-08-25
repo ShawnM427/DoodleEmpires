@@ -5,7 +5,7 @@ using System.Text;
 using System.Drawing.Drawing2D;
 using System.Drawing;
 
-namespace DoodleAnims
+namespace WinFormsTools
 {
     /// <summary>
     /// Used to draw rounded rectangles

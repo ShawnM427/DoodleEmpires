@@ -9,7 +9,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Runtime.InteropServices;
 using System.Drawing.Drawing2D;
 
-namespace DoodleAnims
+namespace WinFormsTools
 {
     /// <summary>
     /// Represents a combo box where individual items can be enabled and disabled with check boxes

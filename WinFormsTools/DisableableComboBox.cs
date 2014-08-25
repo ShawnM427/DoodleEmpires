@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Windows.Forms.Design;
 
-namespace DoodleAnims
+namespace WinFormsTools
 {
     /// <summary>
     /// Represents a combo box where individual items can be enabled and disabled

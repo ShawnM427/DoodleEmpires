@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DoodleAnims
+namespace WinFormsTools
 {
     /// <summary>
     /// A panel that uses double buffering

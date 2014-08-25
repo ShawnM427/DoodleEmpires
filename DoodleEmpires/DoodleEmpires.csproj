@@ -11,6 +11,8 @@
     <RootNamespace>DoodleEmpires</RootNamespace>
     <AssemblyName>DoodleEmpires</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -22,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>doc.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -32,6 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>doc.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
@@ -108,6 +112,7 @@
     <Compile Include="Engine\Net\SPMap.cs" />
     <Compile Include="Engine\Terrain\VoxelMap.cs" />
     <Compile Include="Engine\Utilities\AdvancedGame.cs" />
+    <Compile Include="Engine\Utilities\Encryption.cs" />
     <Compile Include="Engine\Utilities\EventExtensions.cs" />
     <Compile Include="Engine\Utilities\FPSManager.cs" />
     <Compile Include="Engine\Utilities\Noise.cs" />
@@ -164,6 +169,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
+    <None Include="app.config" />
     <None Include="OpenTK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -2985,6 +2985,11 @@
             The port of the master server
             </summary>
         </member>
+        <member name="F:DoodleEmpires.Engine.Net.GlobalNetVars.MASTER_SERVER_IP">
+            <summary>
+            A string representation of the master server's IP adress
+            </summary>
+        </member>
         <member name="F:DoodleEmpires.Engine.Net.GlobalNetVars.MIN_PORT">
             <summary>
             The minimum port
@@ -3382,6 +3387,11 @@
             <param name="sender">The object to raise the event</param>
             <param name="args">The event args sent to this event</param>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.UpdateNetworking">
+            <summary>
+            Updates this network handler, should be threaded
+            </summary>
+        </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.PollTimerElapsed(System.Object,System.Timers.ElapsedEventArgs)">
             <summary>
             Called when it is time to poll for more servers and to update server states
@@ -3405,11 +3415,6 @@
             Invoked when we have joined a server
             </summary>
             <param name="info">The info for the server we are connecting to</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.UpdateNetworking">
-            <summary>
-            Updates this network handler, should be threaded
-            </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.OnShouldPingServers(System.Object,System.Timers.ElapsedEventArgs)">
             <summary>
@@ -3679,7 +3684,7 @@
             Creates a new server info
             </summary>
             <param name="name">The name of the server</param>
-            <param name="endpoint">The server's endpoint</param>
+            <param name="internalEndpoint">The server's endpoint</param>
             <param name="message">The message for this server to display</param>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.ServerInfo.#ctor(System.String,System.String)">
@@ -3709,14 +3714,25 @@
             <param name="obj">The object to check against</param>
             <returns>True if this object is equal to the given one</returns>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.ServerInfo.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+            <returns>The hash code for this instance</returns>
+        </member>
         <member name="P:DoodleEmpires.Engine.Net.ServerInfo.IP">
             <summary>
             Gets the IP of this server, represented as a string
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.EndPoint">
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.InternalEndPoint">
             <summary>
             The network endpoint for this server
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.ExternalEndPoint">
+            <summary>
+            The external endpoint for this server
             </summary>
         </member>
         <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Name">
@@ -3766,31 +3782,6 @@
         <member name="P:DoodleEmpires.Engine.Net.ServerInfoListItem.Info">
             <summary>
             Gets or sets the server info associated with this item
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Net.PlayerID">
-            <summary>
-            Represents the player's ID
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.PlayerID.One">
-            <summary>
-            The first player
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.PlayerID.Two">
-            <summary>
-            The second player
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.PlayerID.Three">
-            <summary>
-            The third player
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Net.PlayerID.Four">
-            <summary>
-            The fourth player
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.NetPacketType">
@@ -3866,6 +3857,11 @@
         <member name="F:DoodleEmpires.Engine.Net.NetPacketType.PingMessage">
             <summary>
             Represents a packet used for pinging servers or clients
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetPacketType.ServerInfoChanged">
+            <summary>
+            Called when a server's information has updated
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.GameState">

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using DoodleAnims.Lib.Anim;
 using System.Drawing;
-using DoodleAnims.Utils;
 using System.Drawing.Drawing2D;
 using System.Timers;
+using WinFormsTools;
 
 namespace DoodleAnims
 {

@@ -14,7 +14,7 @@ namespace DoodleEmpires.Engine.Net
     {
         string _userName;
         Color _flagColor;
-        PlayerID _playerID;
+        byte _playerID;
         NetConnection _connection;
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace DoodleEmpires.Engine.Net
         public byte PlayerIndex
         {
             get { return (byte)_playerID; }
-            set { _playerID = (PlayerID)value; }
+            set { _playerID = value; }
         }
         /// <summary>
         /// Gets this player's name

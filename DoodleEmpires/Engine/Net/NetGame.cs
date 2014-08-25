@@ -1097,55 +1097,6 @@ namespace DoodleEmpires.Engine.Net
         #region Networking
 
         /// <summary>
-        /// Called when it is time to poll for more servers and to update server states
-        /// </summary>
-        /// <param name="sender">The object to raise the event</param>
-        /// <param name="e">The timer elapsed argument</param>
-        void PollTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            PollForServers();
-        }
-
-        /// <summary>
-        /// Checks for local servers. Later, this will poll the central server for servers
-        /// </summary>
-        private void PollForServers()
-        {
-            for (int i = GlobalNetVars.MIN_PORT; i <= GlobalNetVars.MAX_PORT; i++)
-                _client.DiscoverLocalPeers(i);
-
-            _client.DiscoverKnownPeer("192.0.247.228", 14245);
-        }
-
-        /// <summary>
-        /// Called when a new server has been discovered
-        /// </summary>
-        /// <param name="serverInfo">The info of the newly discovered server</param>
-        void NetGame_OnFoundServer(ServerInfo serverInfo)
-        {
-            ServerInfoListItem item = new ServerInfoListItem(serverInfo);
-            item.MousePressed += new EventHandler<GUI.ListViewItem>(OnServerInfoMousePressed);
-
-            _serverTimers.Add(serverInfo.EndPoint, DateTime.Now);
-
-            NetOutgoingMessage msg = _client.CreateMessage();
-            msg.Write((byte)NetPacketType.PingMessage, 8);
-            _client.SendUnconnectedMessage(msg, serverInfo.EndPoint);
-
-            _serverList.AddItem(item);
-            _serverList.Invalidating = true;
-        }
-
-        /// <summary>
-        /// Invoked when we have joined a server
-        /// </summary>
-        /// <param name="info">The info for the server we are connecting to</param>
-        void OnJoinedServer(ServerInfo info)
-        {
-            _gameState = GameState.InGame;
-        }
-
-        /// <summary>
         /// Updates this network handler, should be threaded
         /// </summary>
         public void UpdateNetworking()
@@ -1157,31 +1108,12 @@ namespace DoodleEmpires.Engine.Net
                 switch (msg.MessageType)
                 {
                     case NetIncomingMessageType.DiscoveryResponse:
-
-                        ServerInfo info = ServerInfo.ReadFromPacket(msg);
-                        info.EndPoint = msg.SenderEndpoint;
-
-                        if (!_availableServers.Contains(info))
-                        {
-                            _availableServers.Add(info);
-
-                            if (OnFoundServerEvent != null)
-                                OnFoundServerEvent(info);
-                        }
-                        else
-                        {
-                            ServerInfo currentInfo = _availableServers.Find(X => X.EndPoint == info.EndPoint);
-                            int ID = _availableServers.IndexOf(currentInfo);
-                            _availableServers[ID] = info;
-                            ((ServerInfoListItem)_serverList.Items.Find(X => currentInfo.Equals(X.Tag))).Info = info;
-                            _serverList.Invalidating = true;
-                        }
-
+                        HandleServerInfoReceived(msg);
                         break;
 
                     case NetIncomingMessageType.ConnectionLatencyUpdated:
-                        ServerInfo inInfo = _availableServers.Find(X => X.EndPoint == msg.SenderEndpoint);
-                        if (inInfo.EndPoint != null)
+                        ServerInfo inInfo = _availableServers.Find(X => X.InternalEndPoint == msg.SenderEndpoint);
+                        if (inInfo.InternalEndPoint != null)
                             inInfo.Ping = msg.ReadSingle();
                         break;
 
@@ -1264,6 +1196,10 @@ namespace DoodleEmpires.Engine.Net
                             case NetPacketType.PingMessage:
                                 HandlePingResponse(msg);
                                 break;
+
+                            case NetPacketType.MASTER_SentHostInfo:
+                                HandleServerInfoReceived(msg);
+                                break;
                         }
                         break;
 
@@ -1282,17 +1218,65 @@ namespace DoodleEmpires.Engine.Net
         }
 
         /// <summary>
+        /// Called when it is time to poll for more servers and to update server states
+        /// </summary>
+        /// <param name="sender">The object to raise the event</param>
+        /// <param name="e">The timer elapsed argument</param>
+        void PollTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            PollForServers();
+        }
+
+        /// <summary>
+        /// Checks for local servers. Later, this will poll the central server for servers
+        /// </summary>
+        private void PollForServers()
+        {
+            NetOutgoingMessage msg = _client.CreateMessage();
+            msg.Write((byte)NetPacketType.MASTER_RequestHostList);
+            _client.SendUnconnectedMessage(msg, GlobalNetVars.MASTER_SERVER_IP, GlobalNetVars.MASTER_SERVER_PORT);
+        }
+
+        /// <summary>
+        /// Called when a new server has been discovered
+        /// </summary>
+        /// <param name="serverInfo">The info of the newly discovered server</param>
+        void NetGame_OnFoundServer(ServerInfo serverInfo)
+        {
+            ServerInfoListItem item = new ServerInfoListItem(serverInfo);
+            item.MousePressed += new EventHandler<GUI.ListViewItem>(OnServerInfoMousePressed);
+
+            _serverTimers.Add(serverInfo.ExternalEndPoint, DateTime.Now);
+
+            NetOutgoingMessage msg = _client.CreateMessage();
+            msg.Write((byte)NetPacketType.PingMessage, 8);
+            _client.SendUnconnectedMessage(msg, serverInfo.ExternalEndPoint);
+
+            _serverList.AddItem(item);
+            _serverList.Invalidating = true;
+        }
+
+        /// <summary>
+        /// Invoked when we have joined a server
+        /// </summary>
+        /// <param name="info">The info for the server we are connecting to</param>
+        void OnJoinedServer(ServerInfo info)
+        {
+            _gameState = GameState.InGame;
+        }
+
+        /// <summary>
         /// Called when the ping for all available servers should be calculated
         /// </summary>
         void OnShouldPingServers(object sender, System.Timers.ElapsedEventArgs e)
         {
             foreach (ServerInfo sInfo in _availableServers)
             {
-                _serverTimers[sInfo.EndPoint] = DateTime.Now;
+                _serverTimers[sInfo.InternalEndPoint] = DateTime.Now;
 
                 NetOutgoingMessage pingMSG = _client.CreateMessage();
                 pingMSG.Write((byte)NetPacketType.PingMessage, 8);
-                _client.SendUnconnectedMessage(pingMSG, sInfo.EndPoint);
+                _client.SendUnconnectedMessage(pingMSG, sInfo.InternalEndPoint);
 
                 #if DEBUG
                 AccountedUpload += pingMSG.LengthBytes;
@@ -1308,7 +1292,7 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="server">The server to connect to</param>
         public void ConnectToServer(ServerInfo server)
         {
-            _client.Connect(server.EndPoint);
+            _client.Connect(server.InternalEndPoint);
         }
 
         /// <summary>
@@ -1409,6 +1393,32 @@ namespace DoodleEmpires.Engine.Net
 
         #region Incoming
 
+        private void HandleServerInfoReceived(NetIncomingMessage msg)
+        {
+            ServerInfo info = ServerInfo.ReadFromPacket(msg);
+            info.ExternalEndPoint = msg.ReadIPEndpoint();
+
+            if (!_availableServers.Contains(info))
+            {
+                _availableServers.Add(info);
+
+                if (OnFoundServerEvent != null)
+                    OnFoundServerEvent(info);
+            }
+            else
+            {
+                ServerInfo currentInfo = _availableServers.Find(X => X.Name == info.Name);
+                int ID = _availableServers.IndexOf(currentInfo);
+                _availableServers[ID] = info;
+                ((ServerInfoListItem)_serverList.Items.Find(X => currentInfo.Equals(X.Tag))).Info = info;
+                _serverList.Invalidating = true;
+            }
+
+#if DEBUG
+            AccountedUpload += msg.LengthBytes;
+#endif
+        }
+
         /// <summary>
         /// Handles responding to an incoming ping response
         /// </summary>
@@ -1417,13 +1427,17 @@ namespace DoodleEmpires.Engine.Net
         {
             if (_serverTimers.ContainsKey(msg.SenderEndpoint))
             {
-                ServerInfo sInfo = _availableServers.Find(s => s.EndPoint == msg.SenderEndpoint);
-                int ID = _availableServers.IndexOf(sInfo);
-                sInfo.Ping = (DateTime.Now - _serverTimers[msg.SenderEndpoint]).TotalMilliseconds;
-                _availableServers[ID] = sInfo;
+                ServerInfo sInfo = _availableServers.Find(s => s.InternalEndPoint == msg.SenderEndpoint);
 
-                ((ServerInfoListItem)_serverList.Items.Find(X => sInfo.Equals(X.Tag))).Info = sInfo;
-                _serverList.Invalidating = true;
+                if (sInfo.InternalEndPoint != null)
+                {
+                    int ID = _availableServers.IndexOf(sInfo);
+                    sInfo.Ping = (DateTime.Now - _serverTimers[msg.SenderEndpoint]).TotalMilliseconds;
+                    _availableServers[ID] = sInfo;
+
+                    ((ServerInfoListItem)_serverList.Items.Find(X => sInfo.Equals(X.Tag))).Info = sInfo;
+                    _serverList.Invalidating = true;
+                }
             }
         }
 

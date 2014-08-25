@@ -1,4 +1,6 @@
-﻿namespace DoodleAnims
+﻿using WinFormsTools;
+
+namespace DoodleAnims
 {
     partial class SettingsDialog
     {
@@ -33,20 +35,20 @@
             this.btn_cancel = new System.Windows.Forms.Button();
             this.lbl_endpointSize = new System.Windows.Forms.Label();
             this.grp_endpoint = new System.Windows.Forms.GroupBox();
-            this.cdd_enpointColor = new DoodleAnims.ColorDropDown();
+            this.cdd_enpointColor = new WinFormsTools.ColorDropDown();
             this.lbl_endpointColor = new System.Windows.Forms.Label();
-            this.nib_endpointSize = new DoodleAnims.NumericInputBox();
+            this.nib_endpointSize = new WinFormsTools.NumericInputBox();
             this.cmb_endpointType = new System.Windows.Forms.ComboBox();
             this.lbl_endPointType = new System.Windows.Forms.Label();
             this.grp_orgin = new System.Windows.Forms.GroupBox();
-            this.cdd_orginColor = new DoodleAnims.ColorDropDown();
+            this.cdd_orginColor = new WinFormsTools.ColorDropDown();
             this.lbl_orginColor = new System.Windows.Forms.Label();
-            this.nib_orginSize = new DoodleAnims.NumericInputBox();
+            this.nib_orginSize = new WinFormsTools.NumericInputBox();
             this.cmb_orginType = new System.Windows.Forms.ComboBox();
             this.lbl_orginType = new System.Windows.Forms.Label();
             this.lbl_orginSize = new System.Windows.Forms.Label();
             this.lbl_backgroundColor = new System.Windows.Forms.Label();
-            this.cdd_backgroundColor = new DoodleAnims.ColorDropDown();
+            this.cdd_backgroundColor = new WinFormsTools.ColorDropDown();
             this.grp_endpoint.SuspendLayout();
             this.grp_orgin.SuspendLayout();
             this.SuspendLayout();

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using DoodleAnims.Lib.Anim;
 using System.IO;
+using WinFormsTools;
 
 namespace DoodleAnims
 {

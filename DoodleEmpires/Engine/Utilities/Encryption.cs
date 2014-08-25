@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace MasterServer
+namespace DoodleEmpires.Engine.Utilities
 {
-    public static class Encryption
+    internal static class Encryption
     {
         internal static string _privateKey;
         internal static string _publicKey;
         private static UnicodeEncoding _encoder = new UnicodeEncoding();
-        
+
         internal static void Initialize()
         {
             var rsa = new RSACryptoServiceProvider();

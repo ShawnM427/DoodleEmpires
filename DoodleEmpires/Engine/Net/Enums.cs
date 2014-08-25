@@ -5,27 +5,8 @@ using System.Text;
 
 namespace DoodleEmpires.Engine.Net
 {
-    /// <summary>
-    /// Represents the player's ID
-    /// </summary>
-    public enum PlayerID : byte
+    public enum MasterServerMessageType : byte
     {
-        /// <summary>
-        /// The first player
-        /// </summary>
-        One,
-        /// <summary>
-        /// The second player
-        /// </summary>
-        Two,
-        /// <summary>
-        /// The third player
-        /// </summary>
-        Three,
-        /// <summary>
-        /// The fourth player
-        /// </summary>
-        Four
     }
 
     /// <summary>
@@ -88,7 +69,25 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// Represents a packet used for pinging servers or clients
         /// </summary>
-        PingMessage = 13
+        PingMessage = 13,
+        /// <summary>
+        /// Called when a server's information has updated
+        /// </summary>
+        ServerInfoChanged = 14,
+
+        MASTER_HostEnded = 243,
+        MASTER_ReturnPublicKey = 244,
+        MASTER_RequestPublicKey = 245,
+        MASTER_RegisterHost = 246,
+        MASTER_RequestHostList = 247,
+        MASTER_SentHostInfo = 248,
+        MASTER_RequestIntroduction = 249,
+        MASTER_RequestRegister = 250,
+        MASTER_RequestLogin = 251,
+        MASTER_SuccesfullRegistration = 252,
+        MASTER_FailedRegistration = 253,
+        MASTER_SuccesfullLogin = 254,
+        MASTER_FailedLogin = 255
     }
 
     /// <summary>

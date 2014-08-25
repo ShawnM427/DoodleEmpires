@@ -36,6 +36,8 @@
             this.nud_port = new System.Windows.Forms.NumericUpDown();
             this.txt_commandIn = new System.Windows.Forms.TextBox();
             this.btn_perform = new System.Windows.Forms.Button();
+            this.lbl_maxPlayers = new System.Windows.Forms.Label();
+            this.nib_maxPlayers = new WinFormsTools.NumericInputBox();
             ((System.ComponentModel.ISupportInitialize)(this.nud_port)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,15 +46,15 @@
             this.rtb_output.Location = new System.Drawing.Point(13, 40);
             this.rtb_output.Name = "rtb_output";
             this.rtb_output.ReadOnly = true;
-            this.rtb_output.Size = new System.Drawing.Size(538, 376);
+            this.rtb_output.Size = new System.Drawing.Size(620, 376);
             this.rtb_output.TabIndex = 0;
             this.rtb_output.Text = "";
             // 
             // btn_launch
             // 
-            this.btn_launch.Location = new System.Drawing.Point(476, 12);
+            this.btn_launch.Location = new System.Drawing.Point(507, 11);
             this.btn_launch.Name = "btn_launch";
-            this.btn_launch.Size = new System.Drawing.Size(75, 23);
+            this.btn_launch.Size = new System.Drawing.Size(126, 23);
             this.btn_launch.TabIndex = 1;
             this.btn_launch.Text = "Launch";
             this.btn_launch.UseVisualStyleBackColor = true;
@@ -109,13 +111,13 @@
             // 
             this.txt_commandIn.Location = new System.Drawing.Point(15, 422);
             this.txt_commandIn.Name = "txt_commandIn";
-            this.txt_commandIn.Size = new System.Drawing.Size(455, 20);
+            this.txt_commandIn.Size = new System.Drawing.Size(537, 20);
             this.txt_commandIn.TabIndex = 6;
             this.txt_commandIn.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txt_commandIn_KeyUp);
             // 
             // btn_perform
             // 
-            this.btn_perform.Location = new System.Drawing.Point(476, 422);
+            this.btn_perform.Location = new System.Drawing.Point(558, 420);
             this.btn_perform.Name = "btn_perform";
             this.btn_perform.Size = new System.Drawing.Size(75, 23);
             this.btn_perform.TabIndex = 7;
@@ -123,11 +125,32 @@
             this.btn_perform.UseVisualStyleBackColor = true;
             this.btn_perform.Click += new System.EventHandler(this.btn_perform_Click);
             // 
+            // lbl_maxPlayers
+            // 
+            this.lbl_maxPlayers.AutoSize = true;
+            this.lbl_maxPlayers.Location = new System.Drawing.Point(339, 17);
+            this.lbl_maxPlayers.Name = "lbl_maxPlayers";
+            this.lbl_maxPlayers.Size = new System.Drawing.Size(93, 13);
+            this.lbl_maxPlayers.TabIndex = 8;
+            this.lbl_maxPlayers.Text = "Max Player Count:";
+            // 
+            // nib_maxPlayers
+            // 
+            this.nib_maxPlayers.Integer = false;
+            this.nib_maxPlayers.Location = new System.Drawing.Point(438, 13);
+            this.nib_maxPlayers.Name = "nib_maxPlayers";
+            this.nib_maxPlayers.Size = new System.Drawing.Size(50, 20);
+            this.nib_maxPlayers.TabIndex = 9;
+            this.nib_maxPlayers.Text = "4";
+            this.nib_maxPlayers.Value = 4F;
+            // 
             // frm_main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(563, 456);
+            this.ClientSize = new System.Drawing.Size(645, 456);
+            this.Controls.Add(this.nib_maxPlayers);
+            this.Controls.Add(this.lbl_maxPlayers);
             this.Controls.Add(this.btn_perform);
             this.Controls.Add(this.txt_commandIn);
             this.Controls.Add(this.nud_port);
@@ -154,6 +177,8 @@
         private System.Windows.Forms.TextBox txt_commandIn;
         private System.Windows.Forms.Button btn_perform;
         public System.Windows.Forms.RichTextBox rtb_output;
+        private System.Windows.Forms.Label lbl_maxPlayers;
+        private WinFormsTools.NumericInputBox nib_maxPlayers;
     }
 }
 

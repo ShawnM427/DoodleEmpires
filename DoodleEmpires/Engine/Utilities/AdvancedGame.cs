@@ -53,44 +53,47 @@ namespace DoodleEmpires.Engine.Utilities
         {
             _mouseState = Mouse.GetState();
 
-            if (_mouseState.LeftButton != _prevMouseState.LeftButton ||
-                _mouseState.MiddleButton != _prevMouseState.MiddleButton ||
-                _mouseState.RightButton != _prevMouseState.RightButton)
-                MouseEvent(new MouseEventArgs(_mouseState.X, _mouseState.Y, 
-                    (_mouseState.LeftButton == ButtonState.Released && _prevMouseState.LeftButton == ButtonState.Pressed) ?
-                    ButtonChangeState.Released : 
-                    (_mouseState.LeftButton == ButtonState.Pressed && _prevMouseState.LeftButton == ButtonState.Released) ?
-                    ButtonChangeState.Pressed : ButtonChangeState.None,
-
-                    (_mouseState.MiddleButton == ButtonState.Released && _prevMouseState.MiddleButton == ButtonState.Pressed) ?
-                    ButtonChangeState.Released : 
-                    (_mouseState.MiddleButton == ButtonState.Pressed && _prevMouseState.MiddleButton == ButtonState.Released) ?
-                    ButtonChangeState.Pressed : ButtonChangeState.None,
-
-                    (_mouseState.RightButton == ButtonState.Released && _prevMouseState.RightButton == ButtonState.Pressed) ?
-                    ButtonChangeState.Released : 
-                    (_mouseState.RightButton == ButtonState.Pressed && _prevMouseState.RightButton == ButtonState.Released) ?
-                    ButtonChangeState.Pressed : ButtonChangeState.None));
-
-            if (_mouseState.LeftButton == ButtonState.Pressed && _prevMouseState.LeftButton == ButtonState.Pressed ||
-                _mouseState.RightButton == ButtonState.Pressed && _prevMouseState.RightButton == ButtonState.Pressed ||
-                _prevMouseState.MiddleButton == ButtonState.Pressed && _prevMouseState.MiddleButton == ButtonState.Pressed)
+            if (IsActive)
             {
-                MouseDown(new MouseEventArgs(_mouseState.X, _mouseState.Y,
-                    (_mouseState.LeftButton == ButtonState.Released && _prevMouseState.LeftButton == ButtonState.Pressed) ?
-                    ButtonChangeState.Released :
-                    (_mouseState.LeftButton == ButtonState.Pressed) ?
-                    ButtonChangeState.Pressed : ButtonChangeState.None,
+                if (_mouseState.LeftButton != _prevMouseState.LeftButton ||
+                    _mouseState.MiddleButton != _prevMouseState.MiddleButton ||
+                    _mouseState.RightButton != _prevMouseState.RightButton)
+                    MouseEvent(new MouseEventArgs(_mouseState.X, _mouseState.Y,
+                        (_mouseState.LeftButton == ButtonState.Released && _prevMouseState.LeftButton == ButtonState.Pressed) ?
+                        ButtonChangeState.Released :
+                        (_mouseState.LeftButton == ButtonState.Pressed && _prevMouseState.LeftButton == ButtonState.Released) ?
+                        ButtonChangeState.Pressed : ButtonChangeState.None,
 
-                    (_mouseState.MiddleButton == ButtonState.Released && _prevMouseState.MiddleButton == ButtonState.Pressed) ?
-                    ButtonChangeState.Released :
-                    (_mouseState.MiddleButton == ButtonState.Pressed) ?
-                    ButtonChangeState.Pressed : ButtonChangeState.None,
+                        (_mouseState.MiddleButton == ButtonState.Released && _prevMouseState.MiddleButton == ButtonState.Pressed) ?
+                        ButtonChangeState.Released :
+                        (_mouseState.MiddleButton == ButtonState.Pressed && _prevMouseState.MiddleButton == ButtonState.Released) ?
+                        ButtonChangeState.Pressed : ButtonChangeState.None,
 
-                    (_mouseState.RightButton == ButtonState.Released && _prevMouseState.RightButton == ButtonState.Pressed) ?
-                    ButtonChangeState.Released :
-                    (_mouseState.RightButton == ButtonState.Pressed) ?
-                    ButtonChangeState.Pressed : ButtonChangeState.None));
+                        (_mouseState.RightButton == ButtonState.Released && _prevMouseState.RightButton == ButtonState.Pressed) ?
+                        ButtonChangeState.Released :
+                        (_mouseState.RightButton == ButtonState.Pressed && _prevMouseState.RightButton == ButtonState.Released) ?
+                        ButtonChangeState.Pressed : ButtonChangeState.None));
+
+                if (_mouseState.LeftButton == ButtonState.Pressed && _prevMouseState.LeftButton == ButtonState.Pressed ||
+                    _mouseState.RightButton == ButtonState.Pressed && _prevMouseState.RightButton == ButtonState.Pressed ||
+                    _prevMouseState.MiddleButton == ButtonState.Pressed && _prevMouseState.MiddleButton == ButtonState.Pressed)
+                {
+                    MouseDown(new MouseEventArgs(_mouseState.X, _mouseState.Y,
+                        (_mouseState.LeftButton == ButtonState.Released && _prevMouseState.LeftButton == ButtonState.Pressed) ?
+                        ButtonChangeState.Released :
+                        (_mouseState.LeftButton == ButtonState.Pressed) ?
+                        ButtonChangeState.Pressed : ButtonChangeState.None,
+
+                        (_mouseState.MiddleButton == ButtonState.Released && _prevMouseState.MiddleButton == ButtonState.Pressed) ?
+                        ButtonChangeState.Released :
+                        (_mouseState.MiddleButton == ButtonState.Pressed) ?
+                        ButtonChangeState.Pressed : ButtonChangeState.None,
+
+                        (_mouseState.RightButton == ButtonState.Released && _prevMouseState.RightButton == ButtonState.Pressed) ?
+                        ButtonChangeState.Released :
+                        (_mouseState.RightButton == ButtonState.Pressed) ?
+                        ButtonChangeState.Pressed : ButtonChangeState.None));
+                }
             }
 
            _prevMouseState = Mouse.GetState();

@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DoodleAnims</RootNamespace>
     <AssemblyName>DoodleAnims</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -24,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>doc.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -34,6 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>doc.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility">
@@ -53,11 +56,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Trinangle.cs" />
-    <Compile Include="Utils\RoundedRectangle.cs" />
-    <Compile Include="Utils\AnimController.cs">
+    <Compile Include="AnimController.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="AnimControllerFiles.Designer.cs">
+      <DependentUpon>AnimControllerFiles.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Trinangle.cs" />
     <Compile Include="BinaryExtensions.cs" />
     <Compile Include="BoolDialog.cs">
       <SubType>Form</SubType>
@@ -65,33 +77,15 @@
     <Compile Include="BoolDialog.Designer.cs">
       <DependentUpon>BoolDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\AnimControllerFiles.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AnimControllerFiles.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\CheckList.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Utils\DisableableComboBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Utils\ColorDropDown.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Lib\Anim\Animation.cs" />
     <Compile Include="Lib\Anim\AnimKeyFrame.cs" />
     <Compile Include="Lib\Anim\AnimState.cs" />
     <Compile Include="Lib\Anim\Skeleton.cs" />
-    <Compile Include="MathExtensions.cs" />
     <Compile Include="SettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\DoubleBufferedPanel.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -100,11 +94,13 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Lib\Anim\Limb.cs" />
-    <Compile Include="Utils\NumericInputBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AnimControllerFiles.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AnimControllerFiles.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="BoolDialog.resx">
       <DependentUpon>BoolDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -113,20 +109,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="SettingsDialog.resx">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Utils\AnimControllerFiles.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AnimControllerFiles.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -140,34 +127,40 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\plus.png" />
+    <ProjectReference Include="..\..\WinFormsTools\WinFormsTools.csproj">
+      <Project>{4c33f469-6e0c-4039-b1a3-f20813f911a3}</Project>
+      <Name>WinFormsTools</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\minus.png" />
+    <EmbeddedResource Include="Resources\minus.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\PanLeft.png" />
+    <EmbeddedResource Include="Resources\PanLeft.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\PanRight.png" />
+    <EmbeddedResource Include="Resources\PanRight.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\PauseButton.png" />
+    <EmbeddedResource Include="Resources\PauseButton.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\PlayButton.png" />
+    <EmbeddedResource Include="Resources\PlayButton.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ReverseButton.png" />
+    <EmbeddedResource Include="Resources\plus.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\StopButton.png" />
+    <EmbeddedResource Include="Resources\ReverseButton.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ZoomIn.png" />
+    <EmbeddedResource Include="Resources\StopButton.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ZoomOut.png" />
+    <EmbeddedResource Include="Resources\ZoomIn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ZoomOut.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

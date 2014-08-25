@@ -19,6 +19,10 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         public const int MASTER_SERVER_PORT = 14556;
         /// <summary>
+        /// A string representation of the master server's IP adress
+        /// </summary>
+        public const string MASTER_SERVER_IP = "localhost";
+        /// <summary>
         /// The minimum port
         /// </summary>
         public const int MIN_PORT = 14240;

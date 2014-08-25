@@ -33,7 +33,7 @@
         {
             this.mainWindow = new System.Windows.Forms.SplitContainer();
             this.amc_animControl = new DoodleAnims.AnimController();
-            this.dbpnl_renderScreen = new DoodleAnims.DoubleBufferedPanel();
+            this.dbpnl_renderScreen = new WinFormsTools.DoubleBufferedPanel();
             this.ts_main = new System.Windows.Forms.ToolStrip();
             this.tsi_file = new System.Windows.Forms.ToolStripMenuItem();
             this.tsi_new = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,14 +49,14 @@
             this.tsl_mode = new System.Windows.Forms.ToolStripLabel();
             this.trv_limbBrowser = new System.Windows.Forms.TreeView();
             this.grp_properties = new System.Windows.Forms.GroupBox();
-            this.chklst_test = new DoodleAnims.CheckList();
-            this.cdd_limbColor = new DoodleAnims.ColorDropDown();
+            this.chklst_test = new WinFormsTools.CheckList();
+            this.cdd_limbColor = new WinFormsTools.ColorDropDown();
             this.chk_yFlip = new System.Windows.Forms.CheckBox();
             this.chk_xFlip = new System.Windows.Forms.CheckBox();
-            this.nib_imageAngle = new DoodleAnims.NumericInputBox();
+            this.nib_imageAngle = new WinFormsTools.NumericInputBox();
             this.lbl_imageAngle = new System.Windows.Forms.Label();
-            this.nib_offsetY = new DoodleAnims.NumericInputBox();
-            this.nib_offsetX = new DoodleAnims.NumericInputBox();
+            this.nib_offsetY = new WinFormsTools.NumericInputBox();
+            this.nib_offsetX = new WinFormsTools.NumericInputBox();
             this.lbl_offsetY = new System.Windows.Forms.Label();
             this.lbl_offsetX = new System.Windows.Forms.Label();
             this.btn_remove = new System.Windows.Forms.Button();
@@ -66,11 +66,11 @@
             this.txt_color = new System.Windows.Forms.Label();
             this.cmb_type = new System.Windows.Forms.ComboBox();
             this.lbl_type = new System.Windows.Forms.Label();
-            this.nib_length = new DoodleAnims.NumericInputBox();
+            this.nib_length = new WinFormsTools.NumericInputBox();
             this.lbl_length = new System.Windows.Forms.Label();
-            this.nib_scale = new DoodleAnims.NumericInputBox();
+            this.nib_scale = new WinFormsTools.NumericInputBox();
             this.txt_prop_scale = new System.Windows.Forms.Label();
-            this.nib_rotation = new DoodleAnims.NumericInputBox();
+            this.nib_rotation = new WinFormsTools.NumericInputBox();
             this.txt_name = new System.Windows.Forms.TextBox();
             this.lbl_rotation = new System.Windows.Forms.Label();
             this.lbl_name = new System.Windows.Forms.Label();
@@ -2305,12 +2305,12 @@
         private System.Windows.Forms.TextBox txt_name;
         private System.Windows.Forms.Label lbl_rotation;
         private System.Windows.Forms.Label lbl_name;
-        private NumericInputBox nib_rotation;
-        private NumericInputBox nib_scale;
+        private WinFormsTools.NumericInputBox nib_rotation;
+        private WinFormsTools.NumericInputBox nib_scale;
         private System.Windows.Forms.Label txt_prop_scale;
         private System.Windows.Forms.Label lbl_length;
-        private NumericInputBox nib_length;
-        private DoubleBufferedPanel dbpnl_renderScreen;
+        private WinFormsTools.NumericInputBox nib_length;
+        private WinFormsTools.DoubleBufferedPanel dbpnl_renderScreen;
         private System.Windows.Forms.ComboBox cmb_type;
         private System.Windows.Forms.Label lbl_type;
         private System.Windows.Forms.Label txt_color;
@@ -2322,13 +2322,13 @@
         private System.Windows.Forms.Button btn_remove;
         private System.Windows.Forms.SaveFileDialog fdl_saveSkeleton;
         private System.Windows.Forms.OpenFileDialog fdl_loadSkeleton;
-        private NumericInputBox nib_offsetY;
-        private NumericInputBox nib_offsetX;
+        private WinFormsTools.NumericInputBox nib_offsetY;
+        private WinFormsTools.NumericInputBox nib_offsetX;
         private System.Windows.Forms.Label lbl_offsetY;
         private System.Windows.Forms.Label lbl_offsetX;
         private System.Windows.Forms.CheckBox chk_yFlip;
         private System.Windows.Forms.CheckBox chk_xFlip;
-        private NumericInputBox nib_imageAngle;
+        private WinFormsTools.NumericInputBox nib_imageAngle;
         private System.Windows.Forms.Label lbl_imageAngle;
         private System.Windows.Forms.TreeView trv_limbBrowser;
         private System.Windows.Forms.ToolStrip ts_main;
@@ -2344,9 +2344,9 @@
         private System.Windows.Forms.ToolStripMenuItem tsi_settings;
         private System.Windows.Forms.ToolStripSeparator tss_1;
         private System.Windows.Forms.ToolStripLabel tsl_mode;
-        private ColorDropDown cdd_limbColor;
+        private WinFormsTools.ColorDropDown cdd_limbColor;
         private AnimController amc_animControl;
-        private CheckList chklst_test;
+        private WinFormsTools.CheckList chklst_test;
     }
 }
 

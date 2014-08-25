@@ -43,7 +43,12 @@ namespace DoodleEmpires.Engine.Net
         public string Message
         {
             get { return _serverInfo.Message; }
-            set { _serverInfo.Message = value; }
+            set
+            {
+                _serverInfo.Message = value;
+                SendServerInfoChanged();
+            }
+
         }
 
         ServerMap _map;
@@ -109,6 +114,11 @@ namespace DoodleEmpires.Engine.Net
             _map = new ServerMap(GlobalTileManager.TileManager, 800, 400);
             _map.OnTerrainSet += SendBlockChanged;
             _map.OnZoneAdded += SendZoneAdded;
+
+            NetOutgoingMessage helloMSG = _server.CreateMessage();
+            helloMSG.Write((byte)NetPacketType.MASTER_RegisterHost);
+            _serverInfo.WriteToPacket(helloMSG);
+            _server.SendUnconnectedMessage(helloMSG, GlobalNetVars.MASTER_SERVER_IP, GlobalNetVars.MASTER_SERVER_PORT);
             
             // schedule initial sending of position updates
             double nextSendUpdates = NetTime.Now;
@@ -146,6 +156,7 @@ namespace DoodleEmpires.Engine.Net
                                     _playerConnections.Remove(msg.SenderConnection);
 
                                     _serverInfo.PlayerCount = Players.Length;
+                                    SendServerInfoChanged();
                                 }
 
                                 Console.WriteLine("Lost connection to {0} for {1}", msg.SenderEndpoint, reason);
@@ -206,6 +217,11 @@ namespace DoodleEmpires.Engine.Net
                 Thread.Sleep(1);
             }
 
+            NetOutgoingMessage goodbyeMSG = _server.CreateMessage();
+            goodbyeMSG.Write((byte)NetPacketType.MASTER_HostEnded);
+            _serverInfo.WriteToPacket(goodbyeMSG);
+            _server.SendUnconnectedMessage(goodbyeMSG, GlobalNetVars.MASTER_SERVER_IP, GlobalNetVars.MASTER_SERVER_PORT);
+
             _server.Shutdown("app exiting");
         }
 
@@ -232,6 +248,15 @@ namespace DoodleEmpires.Engine.Net
             _map.OnZoneAdded += SendZoneAdded;
 
             SendMapChanged();
+        }
+
+        private void SendServerInfoChanged()
+        {
+            NetOutgoingMessage msg = _server.CreateMessage();
+            msg.Write((byte)NetPacketType.ServerInfoChanged);
+            msg.Write(_serverInfo.Name);
+            _serverInfo.WriteToPacket(msg);
+            _server.SendUnconnectedMessage(msg, GlobalNetVars.MASTER_SERVER_IP, GlobalNetVars.MASTER_SERVER_PORT);
         }
 
         private void HandlePlayerWantJoin(NetIncomingMessage msg)
@@ -279,6 +304,8 @@ namespace DoodleEmpires.Engine.Net
                 _players[rID] = new NetPlayer(pInfo, msg.SenderConnection);
 
                 _serverInfo.PlayerCount = Players.Length;
+
+                SendServerInfoChanged();
             }
             else
             {

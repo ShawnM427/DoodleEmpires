@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace DoodleAnims
+namespace WinFormsTools
 {
     /// <summary>
     /// A class for some basic math stuffs

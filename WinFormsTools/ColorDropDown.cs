@@ -6,12 +6,12 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
-namespace DoodleAnims
+namespace WinFormsTools
 {
     /// <summary>
     /// Represents a drop-down box for colors
     /// </summary>
-    class ColorDropDown : ComboBox
+    public class ColorDropDown : ComboBox
     {
         /// <summary>
         /// A list of all colors, exluding transparent
