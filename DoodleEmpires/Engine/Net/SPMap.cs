@@ -1373,6 +1373,7 @@ namespace DoodleEmpires.Engine.Net
                 DeltaMapChange m = new DeltaMapChange(message.ReadInt16(), message.ReadInt16(), message.ReadByte());
                 map._tiles[m.X, m.Y] = m.NewID;
                 map.UpdateVoxel(m.X, m.Y, true);
+                map.UpdatePathFinding(m.X, m.Y, true);
             }
 
             int zoneCount = message.ReadInt32();
