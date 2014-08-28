@@ -10,7 +10,7 @@ namespace DoodleEmpires.Engine.Render.Particle
     /// <summary>
     /// Represents a particle engine
     /// </summary>
-    public class ParticleEngine
+    public class ParticleEngine : IDisposable
     {
         const int MAX_PARTICLES = 100000;
 
@@ -100,6 +100,14 @@ namespace DoodleEmpires.Engine.Render.Particle
                     i--;
                 }
             }
+        }
+
+        /// <summary>
+        /// Disposes of this object and free's it's resources
+        /// </summary>
+        public void Dispose()
+        {
+            _spriteBatch.Dispose();
         }
     }
 }

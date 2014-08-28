@@ -1848,1078 +1848,6 @@
             This unit is dead
             </summary>
         </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUITextBox">
-            <summary>
-            A simple GUI element for drawing text
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUIElement">
-            <summary>
-            Represents a control used for games
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.IGUI">
-            <summary>
-            The base class for all GUI elements and containers
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._isFocused">
-            <summary>
-            Gets or sets whether this object is in focus or not
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._graphics">
-            <summary>
-            The graphics device used to draw within this component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._spriteBatch">
-            <summary>
-            The spritebatch used to draw within this component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._effect">
-            <summary>
-            The effect used to draw within this component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._renderTarget">
-            <summary>
-            The internal render target to render to
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._bounds">
-            <summary>
-            This component's bounds
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._screenBounds">
-            <summary>
-            This component's bounds on the screen
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._colorMultiplier">
-            <summary>
-            The Color multiplier to used when drawing this component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._backColor">
-            <summary>
-            The background color of this component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._parent">
-            <summary>
-            This components parent container
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._visible">
-            <summary>
-            True if this component is visible
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._enabled">
-            <summary>
-            True if this component is enabled
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.IGUI._cornerVerts">
-            <summary>
-            The corner vertices of this GUI peice
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.IGUI.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new GUI component
-            </summary>
-            <param name="graphics">The GraphicsDevice to bind to</param>
-            <param name="parent">The parent container</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.IGUI.BeginInvalidate">
-            <summary>
-            Begins the invalidation of this control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.IGUI.Invalidate">
-            <summary>
-            Renders this control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.IGUI.EndInvalidate">
-            <summary>
-            Ends the invalidation of the control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.IGUI.Draw">
-            <summary>
-            Draws this control to the screen
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.IGUI.Update">
-            <summary>
-            Updates this control, MUST BE CALLED IN OVERRIDEN CLASSES
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.IGUI.MousePressed(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
-            <summary>
-            Called when this control is clicked, returns true if the mouse input was handled
-            </summary>
-            <param name="e">The mouse event arguments</param>
-            <returns>True if the input was handled</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.IGUI.Resized">
-            <summary>
-            Called when this component has been resized
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Bounds">
-            <summary>
-            The bounds relative to the parent container
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.ScreenBounds">
-            <summary>
-            The bounds relative to the screen
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Image">
-            <summary>
-            Gets the image representation of this control
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Invalidating">
-            <summary>
-            Gets or sets whether this control should invalidate on the next update
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Visible">
-            <summary>
-            Gets or sets whether this control is visible
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Enabled">
-            <summary>
-            Gets or sets whether this control is visible
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Focused">
-            <summary>
-            Gets or sets whether this control has focus
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.X">
-            <summary>
-            Gets or sets the left bound of the client rectangle
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Y">
-            <summary>
-            Gets or sets the top bound of the client rectangle
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Width">
-            <summary>
-            Gets or sets the width of the client rectangle
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.IGUI.Height">
-            <summary>
-            Gets or sets the height of the client rectangle
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIElement._foreColor">
-            <summary>
-            The foreground color for graphical elements, such as text
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIElement.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new GUI element
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="parent">The parent container</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIElement.BackColor">
-            <summary>
-            Gets or sets the back color for this control
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIElement.ForeColor">
-            <summary>
-            Gets or sets the forecolor for this control
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._passwordChar">
-            <summary>
-            The character to hide text behind, null is no hiding
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._alignment">
-            <summary>
-            The alignment of text within this control
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._text">
-            <summary>
-            This label's text
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._font">
-            <summary>
-            This label's font
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextBox._margin">
-            <summary>
-            The edge margin to space text from the edge of this control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUITextBox.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteFont,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new instance of a GUI label
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="font">The font to use to render text</param>
-            <param name="parent">The parent GUI container</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUITextBox.BeginInvalidate">
-            <summary>
-            Begins the invalidation of this control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUITextBox.Invalidate">
-            <summary>
-            Called when this label needs to invalidate
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUITextBox.OnTextEntered(System.Object,Microsoft.Xna.Framework.TextInputEventArgs)">
-            <summary>
-            Called when text has been entered via the keyboard
-            </summary>
-            <param name="sender">The object to invoke the event</param>
-            <param name="e">The text input event arguments</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUITextBox.Text">
-            <summary>
-            Gets or sets the text for this label
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUITextBox.Alignment">
-            <summary>
-            Gets or sets the text alignment for this control
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUITextBox.Margin">
-            <summary>
-            Gets or sets the margin along the edges of this control
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUITextBox.PasswordChar">
-            <summary>
-            Gets or sets the character to hide text behind, null is no hiding
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUIListView">
-            <summary>
-            A GUI element that displays a scrollable list of items
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._headerTextPos">
-            <summary>
-            The position at which the header text is drawn
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._itemSize">
-            <summary>
-            A rectangle representing the size of one item
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._itemBounds">
-            <summary>
-            An array containing all the item bounds
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._internalItemBounds">
-            <summary>
-            The internal item bounds
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._headerSize">
-            <summary>
-            The height of the header
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._headerText">
-            <summary>
-            The string to draw in the header box
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._headerDrawnText">
-            <summary>
-            The actual string drawn in the header box
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._itemCount">
-            <summary>
-            The number of items in this list view
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._scroll">
-            <summary>
-            The amount that this panel is scrolled by
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIListView._selectedIndex">
-            <summary>
-            The currently selected item index
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIListView.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new GUI list view
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="parent">The parent control</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIListView.BuildItemBounds">
-            <summary>
-            Build the item bounds for this list
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIListView.AddItem(DoodleEmpires.Engine.GUI.ListViewItem)">
-            <summary>
-            Adds an item to this list view
-            </summary>
-            <param name="item">The item to add</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIListView.RemoveItem(DoodleEmpires.Engine.GUI.ListViewItem)">
-            <summary>
-            Removes an item from this list view
-            </summary>
-            <param name="item">The item to remove</param>
-            <returns>True if sucessful</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIListView.Invalidate">
-            <summary>
-            Called when this control invalidates
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIListView.EndInvalidate">
-            <summary>
-            Ends invalidation on this control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIListView.MousePressed(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
-            <summary>
-            Called when the mouse is pressed over this control
-            </summary>
-            <param name="e">The mouse arguments</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIListView.Font">
-            <summary>
-            Gets or sets the font for this control to use
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIListView.HeaderText">
-            <summary>
-            Gets or sets the header text
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIListView.HeaderSize">
-            <summary>
-            Gets or sets the size of the header
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIListView.Items">
-            <summary>
-            Gets or sets the internal list of items for this list view. This can be modified, but remember to call invalidate after
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIListView.Bounds">
-            <summary>
-            Gets or sets the client bounds for this control
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIListView.ShownItems">
-            <summary>
-            Gets or sets the number of items shown at once
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.ListViewItem">
-            <summary>
-            Represents an item in a list view
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._texture">
-            <summary>
-            The texture to use as a backdrop for this item
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._text">
-            <summary>
-            The text to draw in this item
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._tag">
-            <summary>
-            The object tag for this item
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._colorModifier">
-            <summary>
-            The modifier for the background texture
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._textColor">
-            <summary>
-            The color to draw text with
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._mousePressed">
-            <summary>
-            The event handler to invoke when clicked
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.ListViewItem._selected">
-            <summary>
-            Whether or not this item is selected
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.ListViewItem.Render(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Renders this list view item
-            </summary>
-            <param name="batch">The spritebatch to use for drawing</param>
-            <param name="font">The font to use for rendering text for this items</param>
-            <param name="bounds">The bounds to render in</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.Text">
-            <summary>
-            Gets or sets this item's text
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.MousePressed">
-            <summary>
-            Gets or sets this item's mouse cicked event
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.Tag">
-            <summary>
-            Gets or sets this item's tag
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.ColorModifier">
-            <summary>
-            Gets or sets this item's Color modifier
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.TextColor">
-            <summary>
-            Gets or sets this item's text color
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.Selected">
-            <summary>
-            Gets or sets whether this item is selected
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.ListViewItem.Texture">
-            <summary>
-            Gets or sets the texture for this item's icon
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUIButton">
-            <summary>
-            A GUI element representing a clickable button
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUILabel">
-            <summary>
-            A simple GUI element for drawing text
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUILabel._text">
-            <summary>
-            This label's text
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUILabel._font">
-            <summary>
-            This label's font
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUILabel.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteFont,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new instance of a GUI label
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="font">The font to use to render text</param>
-            <param name="parent">The parent GUI container</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUILabel.Invalidate">
-            <summary>
-            Called when this label needs to invalidate
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUILabel.Text">
-            <summary>
-            Gets or sets the text for this label
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIButton._margin">
-            <summary>
-            The margin from either side of the bounds
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIButton._alignment">
-            <summary>
-            The alignment of text within this control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIButton.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteFont,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new instance of a button
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="font">The font to render text with</param>
-            <param name="parent">The parent control</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIButton.Invalidate">
-            <summary>
-            Called when this control needs to invalidate
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIButton.MousePressed(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
-            <summary>
-            Called when this control has been pressed by the mouse
-            </summary>
-            <param name="e">The mouse arguments</param>
-            <returns>True if this control has handled the mouse</returns>
-        </member>
-        <member name="E:DoodleEmpires.Engine.GUI.GUIButton.OnMousePressed">
-            <summary>
-            Occurs when the mouse is pressed over this button
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIButton.Alignment">
-            <summary>
-            Gets or sets the text alignment for this control
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIButton.Margin">
-            <summary>
-            Gets or sets the horizontal margin within this control
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIButton.Text">
-            <summary>
-            Gets or sets the text on this button
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUIScrollPanel">
-            <summary>
-            Represents a scrollable GUI container
-            <b>STILL A W.I.P</b>
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUIContainer">
-            <summary>
-            Represents a control used for games
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIContainer._controls">
-            <summary>
-            A list of all controls that this container holds
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIContainer._margin">
-            <summary>
-            The spacing to the left/right/top/bottom to shift elements
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIContainer.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice)">
-            <summary>
-            Creates a new GUI container
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIContainer.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new GUI container
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="parent">The parent container</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIContainer.AddComponent(DoodleEmpires.Engine.GUI.IGUI)">
-            <summary>
-            Adds a new component to this GUI container
-            </summary>
-            <param name="component">The component to add</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIContainer.BeginInvalidate">
-            <summary>
-            Begins the invalidation of this control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIContainer.EndInvalidate">
-            <summary>
-            Ends the invalidation of the control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIContainer.Update">
-            <summary>
-            Updates this control, MUST BE CALLED IN OVERRIDEN CLASSES
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIContainer.MousePressed(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
-            <summary>
-            Called when this control is clicked, returns true if the mouse input was handled
-            </summary>
-            <param name="e">The mouse event arguments</param>
-            <returns>True if the input was handled</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIContainer.BorderColor">
-            <summary>
-            Gets or sets the color of the border
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIContainer.BackColor">
-            <summary>
-            Gets or sets the background color for this control
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIContainer.Margin">
-            <summary>
-            Gets or sets the margin
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIContainer.Controls">
-            <summary>
-            Gets an array containing all the controls in this container
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIScrollPanel._scrollBar">
-            <summary>
-            The render target for the scroll bar
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIScrollPanel._scrollHousing">
-            <summary>
-            The render target for the scroll bar housing
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIScrollPanel._internalTarget">
-            <summary>
-            The render target for the internal components
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIScrollPanel._scrollSize">
-            <summary>
-            The width of the scroll bar
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIScrollPanel._scrollHousingRect">
-            <summary>
-            The rectangle representing the scroll housing
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIScrollPanel._scrollValue">
-            <summary>
-            How far down this panel is scrolled
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIScrollPanel.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new GUI scroll panel
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="parent">The parent container</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIScrollPanel.Resized">
-            <summary>
-            Called when this scroll panel has been resized
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIScrollPanel.RenderScrollBar">
-            <summary>
-            Renders the scroll bar
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIScrollPanel.BeginInvalidate">
-            <summary>
-            Begins invalidation on this control
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIScrollPanel.Invalidate">
-            <summary>
-            Called when this control invalidates
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIScrollPanel.EndInvalidate">
-            <summary>
-            Ends invalidation on this control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIScrollPanel.MousePressed(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
-            <summary>
-            Called when this control is clicked, returns true if the mouse input was handled
-            </summary>
-            <param name="e">The mouse event arguments</param>
-            <returns>True if the input was handled</returns>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUITextPane">
-            <summary>
-            A GUI element for basic rendering of text
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextPane._text">
-            <summary>
-            The text passed to this component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextPane._drawnText">
-            <summary>
-            The text that is actually drawn
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextPane._alignment">
-            <summary>
-            The alignment of text within this control
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextPane._font">
-            <summary>
-            The font to draw text in
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUITextPane._margin">
-            <summary>
-            The margin from either side of the bounds
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUITextPane.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteFont,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new instance of a text pane
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="font">The font to use for text rendering</param>
-            <param name="parent">The parent container for this component</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUITextPane.BeginInvalidate">
-            <summary>
-            Begins the invalidation of this control
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUITextPane.Invalidate">
-            <summary>
-            Renders this control's main features to the screen
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUITextPane.OnTextEntered(System.Object,Microsoft.Xna.Framework.TextInputEventArgs)">
-            <summary>
-            Called when text has been entered via the keyboard
-            </summary>
-            <param name="sender">The object to invoke the event</param>
-            <param name="e">The text input event arguments</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUITextPane.Bounds">
-            <summary>
-            The bounds relative to the parent container
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUITextPane.Text">
-            <summary>
-            Gets or sets the text for this pane
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUITextPane.Margin">
-            <summary>
-            Gets or sets the horizontal margin within this control
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUITextPane.Alignment">
-            <summary>
-            Gets or sets the text alignment for this control
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUIPanel">
-            <summary>
-            A basic GUI panel
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIPanel.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new GUI panel
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="parent">The parent container</param>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GUIGridView">
-            <summary>
-            A GUI element that shows a grid of items
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._itemSize">
-            <summary>
-            A rectangle representing the size of one item
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._itemBounds">
-            <summary>
-            An array containing all the item bounds
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._internalItemBounds">
-            <summary>
-            The internal item bounds
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._headerSize">
-            <summary>
-            The height of the header
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._headerText">
-            <summary>
-            The string to draw in the header box
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._headerDrawnText">
-            <summary>
-            The actual string drawn in the header box
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._itemCount">
-            <summary>
-            The number of items in this list view
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._selectedIndex">
-            <summary>
-            The currently selected item index
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._xItems">
-            <summary>
-            The number of items along the x axis
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._yItems">
-            <summary>
-            The number of items along the y axis
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.GUIGridView._xOffset">
-            <summary>
-            The amount of items that this panel is scrolled by along the x axis
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIGridView.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,DoodleEmpires.Engine.GUI.GUIContainer)">
-            <summary>
-            Creates a new instance of a GUI grid view
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="parent">The parent container</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIGridView.AddItem(DoodleEmpires.Engine.GUI.GridViewItem)">
-            <summary>
-            Adds an item to this grid view
-            </summary>
-            <param name="item">The item to add</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIGridView.RemoveItem(DoodleEmpires.Engine.GUI.GridViewItem)">
-            <summary>
-            Removes an item from this grid view
-            </summary>
-            <param name="item">The item to remove</param>
-            <returns>True if this item was removed</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIGridView.Invalidate">
-            <summary>
-            Called when this component needs to invalidate
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIGridView.EndInvalidate">
-            <summary>
-            Called when this component ends it's invalidation
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GUIGridView.MousePressed(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
-            <summary>
-            Called when the mouse is pressed over this component
-            </summary>
-            <param name="e">The mouse event arguments</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIGridView.Font">
-            <summary>
-            Gets or sets the font to render text with
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIGridView.HeaderText">
-            <summary>
-            Gets or sets the header text
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIGridView.HeaderSize">
-            <summary>
-            Gets or sets the size of the header
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GUIGridView.Bounds">
-            <summary>
-            Gets or sets the bounds for this component
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GridViewItem">
-            <summary>
-            Represents an item in a grid view
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GridViewItem.Texture">
-            <summary>
-            The texture of the item
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GridViewItem.Text">
-            <summary>
-            The text to display on the item
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GridViewItem.MousePressed">
-            <summary>
-            The event to fire when this item is clicked
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GridViewItem.Tag">
-            <summary>
-            This items tag
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GridViewItem.ColorModifier">
-            <summary>
-            The color modifier for this item
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.GUI.GridViewItem.Selected">
-            <summary>
-            Gets or sets whether this item is selected
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.Utils">
-            <summary>
-            Some basic GUI utilities
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.Utils.FixFont(Microsoft.Xna.Framework.Graphics.SpriteFont)">
-            <summary>
-            Fixes the line spacing on a font to make it tighter
-            </summary>
-            <param name="font">The font to repair</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.Utils.Wrap(System.String,Microsoft.Xna.Framework.Graphics.SpriteFont,System.Single)">
-            <summary>
-            Wraps a peice of text to fit within a given width
-            </summary>
-            <param name="s">The string to wrap</param>
-            <param name="font">The font used for measuring</param>
-            <param name="width">The width to wrap to</param>
-            <returns>A string formatted to fit within the width</returns>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.GraphicsExtensions">
-            <summary>
-            Extends the graphics device with some basic, alebiet slow utilities
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GraphicsExtensions.DrawRect(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Fills a rectangle with this graphics device
-            </summary>
-            <param name="g">The graphics device to draw with</param>
-            <param name="rect">The rectangle to draw</param>
-            <param name="color">The color of the rectangle</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GraphicsExtensions.DrawRect(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.Single,System.Single,System.Single,System.Single,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Fills a rectangle with this graphics device
-            </summary>
-            <param name="g">The graphics device to draw with</param>
-            <param name="minX">The minimum x coord to fill from</param>
-            <param name="minY">The minimum y coord to fill from</param>
-            <param name="maxX">The maximum x coord to fill to</param>
-            <param name="maxY">The maximum y coord to fill to</param>
-            <param name="color">The color of the rectangle</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GraphicsExtensions.DrawLine(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Draws a line with this graphics device
-            </summary>
-            <param name="g">The graphics device to draw with</param>
-            <param name="point1">The first point to draw from</param>
-            <param name="point2">the point to draw to</param>
-            <param name="color">The color of the rectangle</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.GUI.GraphicsExtensions.DrawLine(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.Single,System.Single,System.Single,System.Single,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Draws a line with this graphics device
-            </summary>
-            <param name="g">The graphics device to draw with</param>
-            <param name="x">The x-coord of the point to draw from</param>
-            <param name="y">The y-coord of the point to draw from</param>
-            <param name="x2">The x-coord of the point to draw to</param>
-            <param name="y2">The y-coord of the point to draw to</param>
-            <param name="color">The color of the rectangle</param>
-        </member>
-        <member name="T:DoodleEmpires.Engine.GUI.TextAlignment">
-            <summary>
-            Represents the alignment of text in a GUI component that displays text
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.Centred">
-            <summary>
-            The text is centred in the component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.TopLeft">
-            <summary>
-            The text sits at the top left corner of the component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.CentreLeft">
-            <summary>
-            The text sits centred along the left edge of the component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.BottomLeft">
-            <summary>
-            The text sits at the bottom left corner of the component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.CentreTop">
-            <summary>
-            The text sits centred along the top edge of the component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.CentreBottom">
-            <summary>
-            The text sits centred along the bottom edge of the component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.TopRight">
-            <summary>
-            The text sits at the top right corner of the component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.CentreRight">
-            <summary>
-            The text sits centred along the right edge of the component
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.GUI.TextAlignment.BottomRight">
-            <summary>
-            The text sits at the bottom right corner of the component
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Net.FoundServerEvent">
             <summary>
             Called when a new server has been found
@@ -3062,13 +1990,13 @@
             </summary>
             <param name="gameTime">The current game time</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseEvent(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
+        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseEvent(MonoUI.MouseEventArgs)">
             <summary>
             Called when the state of the mouse has changed
             </summary>
             <param name="state"></param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseDown(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
+        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseDown(MonoUI.MouseEventArgs)">
             <summary>
             Called when the mouse is held down
             </summary>
@@ -3286,25 +2214,25 @@
             Draws the server list
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.MousePressed(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.MousePressed(MonoUI.MouseEventArgs)">
             <summary>
             Called when a mouse button is pressed
             </summary>
             <param name="args">The current mouse arguments</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.MouseDown(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.MouseDown(MonoUI.MouseEventArgs)">
             <summary>
             Called when a mouse button is held down
             </summary>
             <param name="args">The current mouse arguments</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.MouseReleased(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.MouseReleased(MonoUI.MouseEventArgs)">
             <summary>
             Called when a mouse button is released
             </summary>
             <param name="args">The current mouse arguments</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.MouseEvent(DoodleEmpires.Engine.Utilities.MouseEventArgs)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.MouseEvent(MonoUI.MouseEventArgs)">
             <summary>
             Invoked when a mouse button state has changed
             </summary>
@@ -3332,21 +2260,21 @@
             Called when the LAN button in the main menu is pressed
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnServerInfoMousePressed(System.Object,DoodleEmpires.Engine.GUI.ListViewItem)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnServerInfoMousePressed(System.Object,MonoUI.ListViewItem)">
             <summary>
             Called when the a server is selected from the server list
             </summary>
             <param name="sender">The object that raised the event, should be the server list control</param>
             <param name="e">The selected list view item</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnItemChanged(System.Object,DoodleEmpires.Engine.GUI.GridViewItem)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnItemChanged(System.Object,MonoUI.GridViewItem)">
             <summary>
             Called when an item in the block list is selected
             </summary>
             <param name="sender">The object to raise the event</param>
             <param name="item">The newly selected item</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnZoneChanged(System.Object,DoodleEmpires.Engine.GUI.GridViewItem)">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnZoneChanged(System.Object,MonoUI.GridViewItem)">
             <summary>
             Called when an item in the zone list is selected
             </summary>
@@ -3563,6 +2491,38 @@
             Gets or sets whether this game in singleplayer
             </summary>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetManager.#ctor(DoodleEmpires.Engine.Net.NetPacketIdentifierSize,Lidgren.Network.NetPeer)">
+            <summary>
+            Creates a new net manager
+            </summary>
+            <param name="idSize">The size of packet ID's to read/write</param>
+            <param name="peer">The peer to listen to</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetManager.Run">
+            <summary>
+            Starts running this net manager, note that this call will run the networking on a new thread
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetManager.PerformRun">
+            <summary>
+            The backend method for running the listener
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetManager.OnUnknowPacketReceived(Lidgren.Network.NetIncomingMessage)">
+            <summary>
+            Called when an unknown packet was received, default is to shut down the peer
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetManager.Dispose">
+            <summary>
+            Disposes this object
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.NetManager.Peer">
+            <summary>
+            Gets or sets the netpeer to listen to
+            </summary>
+        </member>
         <member name="T:DoodleEmpires.Engine.Net.NetPlayer">
             <summary>
             Represents a network instance of a player
@@ -3588,6 +2548,38 @@
         <member name="P:DoodleEmpires.Engine.Net.NetPlayer.NetConnection">
             <summary>
             Gets this player's network connection
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.IPacket.Handle(Lidgren.Network.NetIncomingMessage)">
+            <summary>
+            Handles an incoming network message
+            </summary>
+            <param name="msg">The message to handle</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.IPacket.Send(Lidgren.Network.NetOutgoingMessage)">
+            <summary>
+            Prepares an outgoing message
+            </summary>
+            <param name="msg">The message to write data to</param>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.IPacket.DeliveryMethod">
+            <summary>
+            gets or sets the delivery method to use for this packet type
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.IPacket.Reciepient">
+            <summary>
+            Gets or sets the target reciepient for this packet
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.IPacket.SendToAll">
+            <summary>
+            Gets or sets wheter this packet should be sent to all clients
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.IPacket.PacketID">
+            <summary>
+            Gets or sets the ID of the packet to handle
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.PlayerInfo">
@@ -3659,6 +2651,11 @@
             </summary>
             <param name="fileStream">The stream to load from</param>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.GameServer.Dispose">
+            <summary>
+            Disposes of this object and free's it's resources
+            </summary>
+        </member>
         <member name="P:DoodleEmpires.Engine.Net.GameServer.Players">
             <summary>
             Gets a list of all non-null player currently connected
@@ -3713,6 +2710,22 @@
             </summary>
             <param name="obj">The object to check against</param>
             <returns>True if this object is equal to the given one</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.ServerInfo.op_Equality(DoodleEmpires.Engine.Net.ServerInfo,DoodleEmpires.Engine.Net.ServerInfo)">
+            <summary>
+            Checks if two objects are equal to another
+            </summary>
+            <param name="a">The first item to check</param>
+            <param name="b">The item to check against</param>
+            <returns>True if the objects are equal</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.ServerInfo.op_Inequality(DoodleEmpires.Engine.Net.ServerInfo,DoodleEmpires.Engine.Net.ServerInfo)">
+            <summary>
+            Checks if two objects are not equal to another
+            </summary>
+            <param name="a">The first item to check</param>
+            <param name="b">The item to check against</param>
+            <returns>True if the objects are not equal</returns>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.ServerInfo.GetHashCode">
             <summary>
@@ -3892,6 +2905,26 @@
         <member name="F:DoodleEmpires.Engine.Net.GameState.InGame">
             <summary>
             The game is currently in the main game
+            </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Net.NetPacketIdentifierSize">
+            <summary>
+            Represents the size of a newtwork packet identifier, the value of this enum contains the max number of packet types
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetPacketIdentifierSize.Byte">
+            <summary>
+            The packet identifiers are 1 byte (8 bits)
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetPacketIdentifierSize.Short">
+            <summary>
+            The packet identifiers are 2 bytes read as a short (16 bits)
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetPacketIdentifierSize.Int">
+            <summary>
+            The packet identifiers are 4 bytes read as an int (32 bits)
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.ServerMap">
@@ -4207,6 +3240,11 @@
             </summary>
             <param name="message">The packet to write to</param>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.ServerMap.Dispose">
+            <summary>
+            Disposes of this object and free's it's resources
+            </summary>
+        </member>
         <member name="P:DoodleEmpires.Engine.Net.ServerMap.Item(System.Int32,System.Int32)">
             <summary>
             Gets or sets the voxel material at the given x and y
@@ -4487,6 +3525,11 @@
             <param name="x">The x coordinate to translate</param>
             <param name="y">The y coordinate to translete</param>
             <returns>The point in the world relating to the point on the screen</returns>
+        </member>
+        <member name="M:Camera2D.Dispose">
+            <summary>
+            Disposes of this object and free's it's resources
+            </summary>
         </member>
         <member name="P:Camera2D.PostEffect">
             <summary>
@@ -4842,6 +3885,11 @@
             </summary>
             <param name="gameTime">The current game time</param>
         </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Dispose">
+            <summary>
+            Disposes of this object and free's it's resources
+            </summary>
+        </member>
         <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Gravity">
             <summary>
             Gets or sets the gravity on this particle engine
@@ -4885,6 +3933,11 @@
         <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.Render">
             <summary>
             Renders this item using the underlying graphics device
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.Dispose">
+            <summary>
+            Disposes of this object and free's it's resources
             </summary>
         </member>
         <member name="P:DoodleEmpires.Engine.Render.RenderChunk`1.IndexBuffer">
@@ -5772,6 +4825,11 @@
             <param name="textureAtlas">The texture atlas to use</param>
             <returns>A map loaded from the message</returns>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.SPMap.Dispose">
+            <summary>
+            Disposes of this object and free's it's resources
+            </summary>
+        </member>
         <member name="P:DoodleEmpires.Engine.Net.SPMap.Item(System.Int32,System.Int32)">
             <summary>
             Gets or sets the voxel material at the given x and y
@@ -5863,71 +4921,6 @@
         <member name="F:DoodleEmpires.Engine.Net.MooreNeighbours.All">
             <summary>
             All 4 sides are set
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Utilities.MouseEventArgs">
-            <summary>
-            Provides a snapshot of mouse values
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.MouseEventArgs.X">
-            <summary>
-            The x-coordinate of the mouse relative to the top-left corner of the window
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.MouseEventArgs.Y">
-            <summary>
-            The y-coordinate of the mouse relative to the top-left corner of the window
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.MouseEventArgs.LeftButton">
-            <summary>
-            The state of the left mouse button relative to it's previous state
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.MouseEventArgs.MiddleButton">
-            <summary>
-            The state of the middle mouse button relative to it's previous state
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.MouseEventArgs.RightButton">
-            <summary>
-            The state of the right button relative to it's previous state
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.MouseEventArgs.#ctor(System.Int32,System.Int32,DoodleEmpires.Engine.Utilities.ButtonChangeState,DoodleEmpires.Engine.Utilities.ButtonChangeState,DoodleEmpires.Engine.Utilities.ButtonChangeState)">
-            <summary>
-            Creates a new mouse event argument
-            </summary>
-            <param name="x">The x position of the mouse</param>
-            <param name="y">The y position of the mouse</param>
-            <param name="left">The change in state of the left mouse button</param>
-            <param name="middle">The change in state of the middle mouse button</param>
-            <param name="right">The change in state of the right mouse button</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.MouseEventArgs.Position">
-            <summary>
-            The position of the mouse relative to the top left corner of the window
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Utilities.ButtonChangeState">
-            <summary>
-            Represents how the state of a button has changed since the previos check
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.ButtonChangeState.None">
-            <summary>
-            No change of state has occured
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.ButtonChangeState.Pressed">
-            <summary>
-            The button has been pressed since the last check
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.ButtonChangeState.Released">
-            <summary>
-            The button has been released since the last check
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Utilities.EventExtensions">
@@ -6043,18 +5036,6 @@
             <summary>
             Gets or sets the seed to use
             </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.RandomExtensions">
-            <summary>
-            A static class holding some random extensions
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.RandomExtensions.ToVector2(Microsoft.Xna.Framework.Point)">
-            <summary>
-            Converts this point to a Vector2
-            </summary>
-            <param name="point">The point to convert</param>
-            <returns>A Vector2 containing the point's data</returns>
         </member>
         <member name="T:DoodleEmpires.Engine.Utilities.RectangleF">
             <summary>

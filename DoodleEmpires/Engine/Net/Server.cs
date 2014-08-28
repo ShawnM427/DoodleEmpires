@@ -19,7 +19,7 @@ namespace DoodleEmpires.Engine.Net
     /// <summary>
     /// The main game server
     /// </summary>
-    public class GameServer
+    public class GameServer : IDisposable
     {
         NetServer _server;
         ServerInfo _serverInfo;
@@ -422,6 +422,14 @@ namespace DoodleEmpires.Engine.Net
 
             _server.SendMessage(message, _playerConnections.Keys.ToList(), NetDeliveryMethod.ReliableUnordered, 0);
 
+        }
+
+        /// <summary>
+        /// Disposes of this object and free's it's resources
+        /// </summary>
+        public void Dispose()
+        {
+            _map.Dispose();
         }
     }
 }

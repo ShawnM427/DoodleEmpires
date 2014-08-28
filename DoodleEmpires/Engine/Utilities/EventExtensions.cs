@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DoodleEmpires.Engine.GUI;
+using MonoUI;
 
 namespace DoodleEmpires.Engine.Utilities
 {

@@ -113,7 +113,7 @@ public interface ICamera2D
 /// <summary>
 /// Represents a 2-Dimensional camera
 /// </summary>
-public class Camera2D : ICamera2D
+public class Camera2D : ICamera2D, IDisposable
 {
     /// <summary>
     /// The internal texture to render to
@@ -368,5 +368,14 @@ public class Camera2D : ICamera2D
     {
         Vector3 temp = _graphics.Viewport.Unproject(new Vector3(new Vector2(x, y), 0), Projection, Transform, Matrix.Identity);
         return new Vector2(temp.X, temp.Y);
+    }
+
+    /// <summary>
+    /// Disposes of this object and free's it's resources
+    /// </summary>
+    public void Dispose()
+    {
+        _spriteBatch.Dispose();
+        _renderTarget.Dispose();
     }
 }

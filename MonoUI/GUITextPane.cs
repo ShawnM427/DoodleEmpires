@@ -5,29 +5,17 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace DoodleEmpires.Engine.GUI
+namespace MonoUI
 {
     /// <summary>
     /// A GUI element for basic rendering of text
     /// </summary>
-    public class GUITextPane : GUIElement
+    public class GUITextPane : GUITextElement
     {
-        /// <summary>
-        /// The text passed to this component
-        /// </summary>
-        protected string _text;
         /// <summary>
         /// The text that is actually drawn
         /// </summary>
         protected string _drawnText;
-        /// <summary>
-        /// The alignment of text within this control
-        /// </summary>
-        protected TextAlignment _alignment = TextAlignment.Centred;
-        /// <summary>
-        /// The font to draw text in
-        /// </summary>
-        protected SpriteFont _font; 
         /// <summary>
         /// The margin from either side of the bounds
         /// </summary>
@@ -56,7 +44,7 @@ namespace DoodleEmpires.Engine.GUI
         /// <summary>
         /// Gets or sets the text for this pane
         /// </summary>
-        public virtual string Text
+        public override string Text
         {
             get { return _text; }
             set
@@ -79,14 +67,6 @@ namespace DoodleEmpires.Engine.GUI
                 Invalidating = true;
             }
         }
-        /// <summary>
-        /// Gets or sets the text alignment for this control
-        /// </summary>
-        public virtual TextAlignment Alignment
-        {
-            get { return _alignment; }
-            set { _alignment = value; }
-        }
 
         /// <summary>
         /// Creates a new instance of a text pane
@@ -97,7 +77,7 @@ namespace DoodleEmpires.Engine.GUI
         public GUITextPane(GraphicsDevice graphics, SpriteFont font, GUIContainer parent)
             : base(graphics, parent)
         {
-            _font = font;
+            _font = font ?? _font;
             _text = "";
             _drawnText = "";
             BackColor = Color.White;

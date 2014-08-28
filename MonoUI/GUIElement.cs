@@ -5,9 +5,8 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using DoodleEmpires.Engine.Utilities;
 
-namespace DoodleEmpires.Engine.GUI
+namespace MonoUI
 {
     /// <summary>
     /// Represents a control used for games
@@ -19,6 +18,10 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         protected Color _foreColor = Color.Black;
         
+        /// <summary>
+        /// Occurs when the mouse is pressed over this element
+        /// </summary>
+        public event Action OnMousePressed;
         /// <summary>
         /// Gets or sets the back color for this control
         /// </summary>
@@ -52,6 +55,16 @@ namespace DoodleEmpires.Engine.GUI
         protected GUIElement(GraphicsDevice graphics, GUIContainer parent) : base(graphics, parent)
         {
             _backColor = Color.Transparent;
+        }
+
+        public override void MousePressed(MouseEventArgs e)
+        {
+            base.MousePressed(e);
+
+            if (OnMousePressed != null)
+            {
+                OnMousePressed.Invoke();
+            }
         }
     }
 }

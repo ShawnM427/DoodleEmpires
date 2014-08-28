@@ -33,13 +33,13 @@ using Lidgren.Network;
 using DoodleEmpires.Engine.Entities;
 using DoodleEmpires.Engine.Utilities;
 using DoodleEmpires.Engine.Terrain;
-using DoodleEmpires.Engine.GUI;
+using MonoUI;
 using DoodleEmpires.Engine.Economy;
 using DoodleEmpires.Engine.Sound;
 
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
-using MouseEventArgs = DoodleEmpires.Engine.Utilities.MouseEventArgs;
+using MouseEventArgs = MonoUI.MouseEventArgs;
 using System.Reflection;
 
 namespace DoodleEmpires.Engine.Net
@@ -498,11 +498,16 @@ namespace DoodleEmpires.Engine.Net
             QuitButton.OnMousePressed += Exit;
             QuitButton.BackColor = Color.LightGray;
 
-            GUITextPane TestTexPane = new GUITextPane(GraphicsDevice, _guiFont, _menuControl);
-            TestTexPane.Bounds = new Rectangle(10, QuitButton.Bounds.Bottom + 5, 100, 45);
-            TestTexPane.Invalidating = true;
-            TestTexPane.Alignment = TextAlignment.CentreLeft;
-            _textInput += TestTexPane.OnTextEntered;
+            GUILabel testLabel = new GUILabel(GraphicsDevice, null, _menuControl);
+            testLabel.Location = new Point(_menuControl.Width / 2, QuitButton.Bounds.Bottom + 15);
+            testLabel.Text = "testing123";
+            testLabel.Invalidating = true;
+
+            //GUITextPane TestTexPane = new GUITextPane(GraphicsDevice, _guiFont, _menuControl);
+            //TestTexPane.Bounds = new Rectangle(10, QuitButton.Bounds.Bottom + 5, 100, 45);
+            //TestTexPane.Invalidating = true;
+            //TestTexPane.Alignment = TextAlignment.CentreLeft;
+            //_textInput += TestTexPane.OnTextEntered;
 
             //GUITextBox TestTex = new GUITextBox(GraphicsDevice, _guiFont, _menuControl);
             //TestTex.Bounds = new Rectangle(10, QuitButton.Bounds.Bottom + 5, 100, 20);
@@ -964,7 +969,7 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         /// <param name="sender">The object that raised the event, should be the server list control</param>
         /// <param name="e">The selected list view item</param>
-        private void OnServerInfoMousePressed(object sender, GUI.ListViewItem e)
+        private void OnServerInfoMousePressed(object sender, MonoUI.ListViewItem e)
         {
             ServerInfo sInfo = (ServerInfo)e.Tag;
 
@@ -1068,7 +1073,7 @@ namespace DoodleEmpires.Engine.Net
             _availableServers.Clear();
             _serverTimers.Clear();
 
-            _serverList.Items = new List<GUI.ListViewItem>();
+            _serverList.Items = new List<MonoUI.ListViewItem>();
             _serverList.Invalidating = true;
 
             if (_client != null)
@@ -1244,7 +1249,7 @@ namespace DoodleEmpires.Engine.Net
         void NetGame_OnFoundServer(ServerInfo serverInfo)
         {
             ServerInfoListItem item = new ServerInfoListItem(serverInfo);
-            item.MousePressed += new EventHandler<GUI.ListViewItem>(OnServerInfoMousePressed);
+            item.MousePressed += new EventHandler<MonoUI.ListViewItem>(OnServerInfoMousePressed);
 
             _serverTimers.Add(serverInfo.ExternalEndPoint, DateTime.Now);
 

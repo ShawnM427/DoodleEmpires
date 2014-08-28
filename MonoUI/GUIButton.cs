@@ -4,37 +4,25 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using DoodleEmpires.Engine.Utilities;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
-namespace DoodleEmpires.Engine.GUI
+namespace MonoUI
 {
     /// <summary>
     /// A GUI element representing a clickable button
     /// </summary>
-    public class GUIButton : GUILabel
+    public class GUIButton : GUITextElement
     {
+        /// <summary>
+        /// The sound effect to play when this button is clicked
+        /// </summary>
+        protected SoundEffect _clickSound;
         /// <summary>
         /// The margin from either side of the bounds
         /// </summary>
         protected float _margin = 2.0f;
-        /// <summary>
-        /// The alignment of text within this control
-        /// </summary>
-        protected TextAlignment _alignment = TextAlignment.Centred;
 
-        /// <summary>
-        /// Occurs when the mouse is pressed over this button
-        /// </summary>
-        public event Action OnMousePressed;
-        /// <summary>
-        /// Gets or sets the text alignment for this control
-        /// </summary>
-        public virtual TextAlignment Alignment
-        {
-            get { return _alignment; }
-            set { _alignment = value; }
-        }
         /// <summary>
         /// Gets or sets the horizontal margin within this control
         /// </summary>
@@ -47,23 +35,15 @@ namespace DoodleEmpires.Engine.GUI
                 Invalidating = true;
             }
         }
-        
         /// <summary>
-        /// Gets or sets the text on this button
+        /// Gets or sets the click sound for this button
         /// </summary>
-        public override string Text
+        public virtual SoundEffect ClickSound
         {
-            get
-            {
-                return base.Text;
-            }
-            set
-            {
-                _text = value;
-                Invalidating = true;
-            }
+            get { return _clickSound; }
+            set { _clickSound = value; }
         }
-
+        
         /// <summary>
         /// Creates a new instance of a button
         /// </summary>
@@ -71,8 +51,9 @@ namespace DoodleEmpires.Engine.GUI
         /// <param name="font">The font to render text with</param>
         /// <param name="parent">The parent control</param>
         public GUIButton(GraphicsDevice graphics, SpriteFont font, GUIContainer parent)
-            : base(graphics, font, parent)
+            : base(graphics, parent)
         {
+            _font = font ?? _font;
         }
         
         /// <summary>
@@ -119,10 +100,8 @@ namespace DoodleEmpires.Engine.GUI
         {
             base.MousePressed(e);
 
-            if (OnMousePressed != null)
-            {
-                OnMousePressed.Invoke();
-            }
+            if (_clickSound != null)
+                _clickSound.Play();
         }
     }
 }

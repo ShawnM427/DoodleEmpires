@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using DoodleEmpires.Engine.Utilities;
+
 using Microsoft.Xna.Framework.Input;
 
-namespace DoodleEmpires.Engine.GUI
+namespace MonoUI
 {
     /// <summary>
     /// Represents a control used for games

@@ -5,55 +5,22 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace DoodleEmpires.Engine.GUI
+namespace MonoUI
 {
     /// <summary>
     /// A simple GUI element for drawing text
     /// </summary>
-    public class GUITextBox : GUIElement
+    public class GUITextBox : GUITextElement
     {
         /// <summary>
         /// The character to hide text behind, null is no hiding
         /// </summary>
         protected char? _passwordChar = null;
         /// <summary>
-        /// The alignment of text within this control
-        /// </summary>
-        protected TextAlignment _alignment = TextAlignment.Centred;
-        /// <summary>
-        /// This label's text
-        /// </summary>
-        protected string _text;
-        /// <summary>
-        /// This label's font
-        /// </summary>
-        protected SpriteFont _font;
-        /// <summary>
         /// The edge margin to space text from the edge of this control
         /// </summary>
         protected float _margin = 2.5f;
 
-        /// <summary>
-        /// Gets or sets the text for this label
-        /// </summary>
-        public virtual string Text
-        {
-            get { return _text; }
-            set
-            {
-                _text = value;
-                
-                Invalidating = true;
-            }
-        }
-        /// <summary>
-        /// Gets or sets the text alignment for this control
-        /// </summary>
-        public virtual TextAlignment Alignment
-        {
-            get { return _alignment; }
-            set { _alignment = value; }
-        }
         /// <summary>
         /// Gets or sets the margin along the edges of this control
         /// </summary>
@@ -80,11 +47,8 @@ namespace DoodleEmpires.Engine.GUI
         public GUITextBox(GraphicsDevice graphics, SpriteFont font, GUIContainer parent)
             : base(graphics, parent)
         {
-            _font = font;
+            _font = font ?? _font;
             _text = "";
-
-            _bounds.Width = (int)_font.MeasureString(_text).X;
-            _bounds.Height = (int)_font.MeasureString(_text).Y;
         }
         
         /// <summary>

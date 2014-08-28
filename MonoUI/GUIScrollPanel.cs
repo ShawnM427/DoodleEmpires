@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using DoodleEmpires.Engine.Utilities;
 using Microsoft.Xna.Framework.Input;
 
-namespace DoodleEmpires.Engine.GUI
+namespace MonoUI
 {
     /// <summary>
     /// Represents a scrollable GUI container
     /// <b>STILL A W.I.P</b>
     /// </summary>
-    public class GUIScrollPanel : GUIContainer
+    public class GUIScrollPanel : GUIContainer, IDisposable
     {
         /// <summary>
         /// The render target for the scroll bar
@@ -164,6 +163,16 @@ namespace DoodleEmpires.Engine.GUI
 
                 Invalidating = true;
             }
+        }
+
+        /// <summary>
+        /// Disposes of this object and free's it's resources
+        /// </summary>
+        public void Dispose()
+        {
+            _scrollBar.Dispose();
+            _scrollHousing.Dispose();
+            _internalTarget.Dispose();
         }
     }
 }

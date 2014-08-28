@@ -7,6 +7,7 @@ using Lidgren.Network;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DoodleEmpires.Engine.Utilities;
+using MonoUI;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -168,6 +169,28 @@ namespace DoodleEmpires.Engine.Net
         }
 
         /// <summary>
+        /// Checks if two objects are equal to another
+        /// </summary>
+        /// <param name="a">The first item to check</param>
+        /// <param name="b">The item to check against</param>
+        /// <returns>True if the objects are equal</returns>
+        public static bool operator ==(ServerInfo a, ServerInfo b)
+        {
+            return a.Equals(b);
+        }
+
+        /// <summary>
+        /// Checks if two objects are not equal to another
+        /// </summary>
+        /// <param name="a">The first item to check</param>
+        /// <param name="b">The item to check against</param>
+        /// <returns>True if the objects are not equal</returns>
+        public static bool operator !=(ServerInfo a, ServerInfo b)
+        {
+            return !a.Equals(b);
+        }
+
+        /// <summary>
         /// Returns the hash code for this instance
         /// </summary>
         /// <returns>The hash code for this instance</returns>
@@ -180,7 +203,7 @@ namespace DoodleEmpires.Engine.Net
     /// <summary>
     /// A ListViewItem for drawing server info
     /// </summary>
-    public class ServerInfoListItem : GUI.ListViewItem
+    public class ServerInfoListItem : ListViewItem
     {
         ServerInfo _serverInfo;
 

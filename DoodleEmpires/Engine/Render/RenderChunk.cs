@@ -10,7 +10,7 @@ namespace DoodleEmpires.Engine.Render
     /// Represents a chunk of cached graphics data
     /// </summary>
     /// <typeparam name="T">The vertex type for this chunk</typeparam>
-    public class RenderChunk<T> where T : struct, IVertexType
+    public class RenderChunk<T> : IDisposable where T : struct, IVertexType
     {
         GraphicsDevice _graphics;
         IndexBuffer _indexBuffer;
@@ -96,6 +96,15 @@ namespace DoodleEmpires.Engine.Render
             _graphics.SetVertexBuffer(_vertexBuffer);
             _graphics.Indices = _indexBuffer;
             _graphics.DrawPrimitives(_primitiveType, 0, _primitiveCount);
+        }
+
+        /// <summary>
+        /// Disposes of this object and free's it's resources
+        /// </summary>
+        public void Dispose()
+        {
+            _vertexBuffer.Dispose();
+            _indexBuffer.Dispose();
         }
     }
 }

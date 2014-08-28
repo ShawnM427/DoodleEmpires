@@ -116,4 +116,23 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         InGame
     }
+
+    /// <summary>
+    /// Represents the size of a newtwork packet identifier, the value of this enum contains the max number of packet types
+    /// </summary>
+    public enum NetPacketIdentifierSize : uint
+    {
+        /// <summary>
+        /// The packet identifiers are 1 byte (8 bits)
+        /// </summary>
+        Byte = byte.MaxValue,
+        /// <summary>
+        /// The packet identifiers are 2 bytes read as a short (16 bits)
+        /// </summary>
+        Short = ushort.MaxValue,
+        /// <summary>
+        /// The packet identifiers are 4 bytes read as an int (32 bits)
+        /// </summary>
+        Int = uint.MaxValue
+    }
 }

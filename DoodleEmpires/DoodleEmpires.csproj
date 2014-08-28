@@ -75,23 +75,14 @@
     <Compile Include="Engine\Entities\UnitBuff.cs" />
     <Compile Include="Engine\Economy\Zoning.cs" />
     <Compile Include="Engine\Entities\UnitState.cs" />
-    <Compile Include="Engine\GUI\GUITextBox.cs" />
-    <Compile Include="Engine\GUI\GUIListView.cs" />
-    <Compile Include="Engine\GUI\GUIButton.cs" />
-    <Compile Include="Engine\GUI\GUIScrollPanel.cs" />
-    <Compile Include="Engine\GUI\GUITextPane.cs" />
-    <Compile Include="Engine\GUI\GUIContainer.cs" />
-    <Compile Include="Engine\GUI\GUIElement.cs" />
-    <Compile Include="Engine\GUI\GUILabel.cs" />
-    <Compile Include="Engine\GUI\GUIPanel.cs" />
-    <Compile Include="Engine\GUI\IGUI.cs" />
-    <Compile Include="Engine\GUI\GUIGridView.cs" />
-    <Compile Include="Engine\GUI\Utils.cs" />
     <Compile Include="Engine\Net\Events.cs" />
     <Compile Include="Engine\Net\GlobalNetVars.cs" />
     <Compile Include="Engine\Net\GlobalTileManager.cs" />
+    <Compile Include="Engine\Net\IPacketSender.cs" />
     <Compile Include="Engine\Net\NetGame.cs" />
+    <Compile Include="Engine\Net\NetManager.cs" />
     <Compile Include="Engine\Net\NetPlayer.cs" />
+    <Compile Include="Engine\Net\PacketType.cs" />
     <Compile Include="Engine\Net\PlayerInfo.cs" />
     <Compile Include="Engine\Net\Server.cs" />
     <Compile Include="Engine\Net\ServerInfo.cs" />
@@ -117,7 +108,6 @@
     <Compile Include="Engine\Utilities\FPSManager.cs" />
     <Compile Include="Engine\Utilities\Noise.cs" />
     <Compile Include="Engine\Utilities\ObjectManager.cs" />
-    <Compile Include="Engine\Utilities\Random Extensions.cs" />
     <Compile Include="Engine\Utilities\RectangleF.cs" />
     <Compile Include="Engine\Utilities\TextureAtlas.cs" />
     <Compile Include="Program.cs" />
@@ -180,7 +170,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\MonoUI\MonoUI.csproj">
+      <Project>{3a81cb09-70d2-4f74-bcf4-ae4497aa61df}</Project>
+      <Name>MonoUI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="Content\debugFont.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -191,6 +186,9 @@
     <Content Include="Content\PostShaders.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Engine\GUI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

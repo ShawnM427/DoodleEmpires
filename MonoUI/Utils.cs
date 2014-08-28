@@ -5,12 +5,12 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace DoodleEmpires.Engine.GUI
+namespace MonoUI
 {
     /// <summary>
     /// Some basic GUI utilities
     /// </summary>
-    static class Utils
+    public static class Utils
     {
         /// <summary>
         /// Fixes the line spacing on a font to make it tighter
@@ -39,7 +39,7 @@ namespace DoodleEmpires.Engine.GUI
 
             foreach (string word in words)
             {
-                string checker = word.Replace("\r","");
+                string checker = word.Replace("\r", "");
                 Vector2 size = font.MeasureString(checker);
 
                 if (lineWidth + size.X < width)
@@ -55,6 +55,16 @@ namespace DoodleEmpires.Engine.GUI
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Converts this point to a Vector2
+        /// </summary>
+        /// <param name="point">The point to convert</param>
+        /// <returns>A Vector2 containing the point's data</returns>
+        public static Vector2 ToVector2(this Point point)
+        {
+            return new Vector2(point.X, point.Y);
         }
     }
 

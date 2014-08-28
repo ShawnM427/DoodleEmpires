@@ -5,14 +5,14 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using DoodleEmpires.Engine.Utilities;
 
-namespace DoodleEmpires.Engine.GUI
+
+namespace MonoUI
 {
     /// <summary>
     /// The base class for all GUI elements and containers
     /// </summary>
-    public abstract class IGUI
+    public abstract class IGUI : IDisposable
     {
         private bool _invalidating = true;
 
@@ -344,7 +344,17 @@ namespace DoodleEmpires.Engine.GUI
         /// </summary>
         protected virtual void Resized()
         {
+            
+        }
 
+        /// <summary>
+        /// Disposes of this object and free's it's resources
+        /// </summary>
+        public void Dispose()
+        {
+            _renderTarget.Dispose();
+            _spriteBatch.Dispose();
+            _effect.Dispose();
         }
     }
 }

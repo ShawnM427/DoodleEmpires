@@ -20,7 +20,7 @@ namespace DoodleEmpires.Engine.Net
     /// <summary>
     /// A terrain that is made up of small cubes, each having it's own texture and properties
     /// </summary>
-    public class SPMap : VoxelMap
+    public class SPMap : VoxelMap, IDisposable
     {
         /// <summary>
         /// Gets the width of a single voxel tile
@@ -1387,6 +1387,18 @@ namespace DoodleEmpires.Engine.Net
         }
 
         #endregion
+
+        /// <summary>
+        /// Disposes of this object and free's it's resources
+        /// </summary>
+        public void Dispose()
+        {
+            _spriteBatch.Dispose();
+            _basicEffect.Dispose();
+            _pixelTex.Dispose();
+            _updateThread.CancelAsync();
+            _updateThread.Dispose();
+        }
     }
 
     /// <summary>

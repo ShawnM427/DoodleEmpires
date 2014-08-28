@@ -5,10 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
-using DoodleEmpires.Engine.Utilities;
+
 using Microsoft.Xna.Framework.Input;
 
-namespace DoodleEmpires.Engine.GUI
+namespace MonoUI
 {
     /// <summary>
     /// A GUI element that displays a scrollable list of items
@@ -278,7 +278,7 @@ namespace DoodleEmpires.Engine.GUI
                     _selectedIndex = x;
                     _selectedItem = _items[x];
                     _headerDrawnText = _headerText + " " + _items[x].Text;
-                    _items[x].MousePressed.Raise(this, _items[x]);
+                    _items[x].MousePressed.Invoke(this, _items[x]);
                     Invalidating = true;
                 }
             }

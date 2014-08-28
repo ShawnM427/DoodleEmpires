@@ -20,7 +20,7 @@ namespace DoodleEmpires.Engine.Net
     /// <summary>
     /// The server's version of the voxel terrain
     /// </summary>
-    public class ServerMap : VoxelMap
+    public class ServerMap : VoxelMap, IDisposable
     {
         /// <summary>
         /// Gets the width of a single voxel tile
@@ -799,6 +799,15 @@ namespace DoodleEmpires.Engine.Net
         }
 
         #endregion
+
+        /// <summary>
+        /// Disposes of this object and free's it's resources
+        /// </summary>
+        public void Dispose()
+        {
+            _updateThread.CancelAsync();
+            _updateThread.Dispose();
+        }
     }
 
     /// <summary>
