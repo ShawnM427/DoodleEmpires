@@ -61,6 +61,7 @@ namespace MonoUI
         /// </summary>
         protected override void Invalidate()
         {
+            _effect.CurrentTechnique.Passes[0].Apply();
             _graphics.DrawRect(0, 0, _bounds.Width, _bounds.Height, Color.Black);
 
             Vector2 textPos = Vector2.Zero;

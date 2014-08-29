@@ -69,12 +69,7 @@ namespace MonoUI
         protected GUITextElement(GraphicsDevice graphics, GUIContainer parent)
             : base(graphics, parent)
         {
-            if (_font == null)
-            {
-                SimpleServiceProvider service = new SimpleServiceProvider(graphics);
-                ResourceContentManager manager = new ResourceContentManager(service, Resources.ResourceManager);
-                _font = manager.Load<SpriteFont>("BasicFont");
-            }
+            _font = StaticContentLoader.GetItem<SpriteFont>("Font_Arial_8");
             _text = "";
         }
     }

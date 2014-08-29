@@ -85,13 +85,10 @@ namespace MonoUI
             get { return _bounds; }
             set
             {
+                _effect.Projection = Matrix.CreateOrthographicOffCenter(0, value.Width, value.Height, 0, 1.0f, 1000.0f);
+
                 if (_bounds.Width != value.Width || _bounds.Height != value.Height)
                 {
-
-                    _effect.Projection = Matrix.CreateOrthographicOffCenter(0, value.Width, value.Height, 0,
-                        1.0f, 1000.0f);
-                    _effect.CurrentTechnique.Passes[0].Apply();
-
                     _cornerVerts[0].Position = new Vector3(0, 0, 0.5f);
                     _cornerVerts[1].Position = new Vector3(value.Width - 1, 0, 0.5f);
                     _cornerVerts[2].Position = new Vector3(value.Width - 1, value.Height - 1, 0.5f);
@@ -102,7 +99,6 @@ namespace MonoUI
                 }
 
                 _bounds = value;
-                Resized();
                 _screenBounds = _bounds;
 
                 if (_renderTarget != null)
@@ -110,13 +106,14 @@ namespace MonoUI
                     _renderTarget.Dispose();
                     _renderTarget = new RenderTarget2D(_graphics, _screenBounds.Width, _screenBounds.Height);
                 }
-
-
+                
                 if (_parent != null)
                 {
                     _screenBounds.X += _parent.ScreenBounds.X;
                     _screenBounds.Y += _parent.ScreenBounds.Y;
                 }
+
+                Resized();
             }
         }
         /// <summary>
@@ -241,6 +238,7 @@ namespace MonoUI
         /// <param name="parent">The parent container</param>
         protected IGUI(GraphicsDevice graphics, GUIContainer parent)
         {
+            Invalidating = true;
             _graphics = graphics;
             _spriteBatch = new SpriteBatch(graphics);
             _parent = parent;
@@ -323,20 +321,20 @@ namespace MonoUI
         }
         
         /// <summary>
-        /// Called when this control is clicked, returns true if the mouse input was handled
+        /// Called when this control is clicked with the mouse
         /// </summary>
         /// <param name="e">The mouse event arguments</param>
-        /// <returns>True if the input was handled</returns>
         public virtual void MousePressed(MouseEventArgs e) 
-        { 
-            if (ScreenBounds.Contains(e.Position))
-            {
-                Focused = true;
-            }
-            else
-            {
-                Focused = false;
-            }
+        {
+            Focused = true;
+        }
+
+        /// <summary>
+        /// Called when the left mouse button is held down over this control
+        /// </summary>
+        /// <param name="e">The mouse event arguments</param>
+        public virtual void MouseDown(MouseEventArgs e)
+        {
         }
 
         /// <summary>

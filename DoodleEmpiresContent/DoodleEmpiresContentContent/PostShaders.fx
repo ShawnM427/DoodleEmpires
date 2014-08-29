@@ -195,7 +195,7 @@ technique Simple
 {
     pass Pass1
     {
-        PixelShader = compile ps_3_0 SimplePS();
+        PixelShader = compile ps_4_0 SimplePS();
     }
 }
 
@@ -203,12 +203,12 @@ technique YeOlde
 {
 	pass Pass1
 	{
-		PixelShader = compile ps_3_0 SepiaPS();
+		PixelShader = compile ps_4_0 SepiaPS();
 	}
 
 	pass Pass2
 	{
-		PixelShader = compile ps_3_0 NoisePS();
+		PixelShader = compile ps_4_0 NoisePS();
 	}
 }
 
@@ -216,7 +216,7 @@ technique Noise
 {
 	pass Pass1
 	{
-		PixelShader = compile ps_3_0 NoisePS();
+		PixelShader = compile ps_4_0 NoisePS();
 	}
 }
 
@@ -224,7 +224,7 @@ technique BlackAndWhite
 {
     pass Pass1
     {
-        PixelShader = compile ps_3_0 BlackAndWhitePS();
+        PixelShader = compile ps_4_0 BlackAndWhitePS();
     }
 }
 
@@ -232,7 +232,7 @@ technique GrayScale
 {
     pass Pass1
     {
-        PixelShader = compile ps_3_0 GrayScalePS();
+        PixelShader = compile ps_4_0 GrayScalePS();
     }
 }
 
@@ -240,7 +240,7 @@ technique Sepia
 {
 	pass Pass1
 	{
-		PixelShader = compile ps_3_0 SepiaPS();
+		PixelShader = compile ps_4_0 SepiaPS();
 	}
 }
 
@@ -248,7 +248,7 @@ technique SimpleBlur
 {
 	pass Pass1
 	{
-		PixelShader = compile ps_3_0 SimpleBlurPS();
+		PixelShader = compile ps_4_0 SimpleBlurPS();
 	}
 }
 
@@ -256,7 +256,7 @@ technique SimpleEdge
 {
 	pass Pass1
 	{
-		PixelShader = compile ps_3_0 SimpleEdgePS();
+		PixelShader = compile ps_4_0 SimpleEdgePS();
 	}
 }
 
@@ -264,7 +264,7 @@ technique Sobel
 {
     pass Pass1
     {
-        PixelShader = compile ps_3_0 SobelPS();
+        PixelShader = compile ps_4_0 SobelPS();
     }
 }
 
@@ -272,12 +272,12 @@ technique Toon
 {
     pass Pass1
     {
-        PixelShader = compile ps_3_0 ToonPS();
+        PixelShader = compile ps_4_0 ToonPS();
     }
 
 	pass Pass2
 	{
-		PixelShader = compile ps_3_0 SimpleEdgePS();
+		PixelShader = compile ps_4_0 SimpleEdgePS();
 	}
 }
 
@@ -285,6 +285,6 @@ technique SinCity
 {
     pass Pass1
     {
-        PixelShader = compile ps_3_0 SinCityPS();
+        PixelShader = compile ps_4_0 SinCityPS();
     }
 }

@@ -36,8 +36,7 @@ namespace MonoUI
             get { return _cornerVerts[0].Color; }
             set
             {
-                _cornerVerts[0].Color = _cornerVerts[1].Color = _cornerVerts[2].Color =
-                    _cornerVerts[3].Color = _cornerVerts[4].Color = value;
+                _cornerVerts[0].Color = _cornerVerts[1].Color = _cornerVerts[2].Color = _cornerVerts[3].Color = _cornerVerts[4].Color = value;
             }
         }
         /// <summary>
@@ -87,6 +86,8 @@ namespace MonoUI
                 _pixelTex = new Texture2D(graphics, 1, 1);
                 _pixelTex.SetData<Color>(new Color[] { Color.White });
             }
+
+            StaticContentLoader.TryInitialize(graphics);
         }
 
         /// <summary>
@@ -152,16 +153,32 @@ namespace MonoUI
         /// <returns>True if the input was handled</returns>
         public override void MousePressed(MouseEventArgs e)
         {
-            base.MousePressed(e);
-
             if (_screenBounds.Contains(e.Position))
             {
+                base.MousePressed(e);
                 foreach (IGUI control in _controls)
                     if (control.Enabled)
                         if (control.ScreenBounds.Contains(e.Position))
                             control.MousePressed(e);
                         else
                             control.Focused = false;
+            }
+            else
+                Focused = false;
+        }
+
+        /// <summary>
+        /// Called when the left mouse button is held down over this control
+        /// </summary>
+        /// <param name="e">The mouse event arguments</param>
+        public virtual void MouseDown(MouseEventArgs e)
+        {
+            if (_screenBounds.Contains(e.Position))
+            {
+                foreach (IGUI control in _controls)
+                    if (control.Enabled)
+                        if (control.ScreenBounds.Contains(e.Position))
+                            control.MouseDown(e);
             }
         }
     }

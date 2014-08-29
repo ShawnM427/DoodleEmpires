@@ -63,9 +63,49 @@ namespace MonoUI {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] BasicFont {
+        internal static byte[] CheckBox_Checked {
             get {
-                object obj = ResourceManager.GetObject("BasicFont", resourceCulture);
+                object obj = ResourceManager.GetObject("CheckBox_Checked", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] CheckBox_Unchecked {
+            get {
+                object obj = ResourceManager.GetObject("CheckBox_Unchecked", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Font_Arial_10 {
+            get {
+                object obj = ResourceManager.GetObject("Font_Arial_10", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Font_Arial_12 {
+            get {
+                object obj = ResourceManager.GetObject("Font_Arial_12", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Font_Arial_8 {
+            get {
+                object obj = ResourceManager.GetObject("Font_Arial_8", resourceCulture);
                 return ((byte[])(obj));
             }
         }

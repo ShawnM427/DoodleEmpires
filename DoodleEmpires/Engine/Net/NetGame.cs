@@ -501,7 +501,11 @@ namespace DoodleEmpires.Engine.Net
             GUILabel testLabel = new GUILabel(GraphicsDevice, null, _menuControl);
             testLabel.Location = new Point(_menuControl.Width / 2, QuitButton.Bounds.Bottom + 15);
             testLabel.Text = "testing123";
-            testLabel.Invalidating = true;
+
+            GUICheckBox checkBox = new GUICheckBox(GraphicsDevice, null, _menuControl);
+            checkBox.Location = new Point(_menuControl.Width / 2, testLabel.Bounds.Bottom + 15);
+            checkBox.Text = "Checkmate";
+            checkBox.Font = StaticContentLoader.GetItem<SpriteFont>("Font_Arial_10");
 
             //GUITextPane TestTexPane = new GUITextPane(GraphicsDevice, _guiFont, _menuControl);
             //TestTexPane.Bounds = new Rectangle(10, QuitButton.Bounds.Bottom + 5, 100, 45);
@@ -773,31 +777,46 @@ namespace DoodleEmpires.Engine.Net
             switch (_gameState)
             {
                 case GameState.InGame:
-                    if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) & args.LeftButton == ButtonChangeState.Pressed)
+                    if (!_mainControl.ScreenBounds.Contains(args.Position))
                     {
-                        _isDefininingZone = true;
-                        _zoneStart = _view.PointToWorld(args.Position);
-                    }
-                    else if (args.RightButton == ButtonChangeState.Pressed)
-                    {
-                        Vector2 worldPos = _view.PointToWorld(args.Position);
-
-                        if (_singlePlayer)
+                        #region Handle Zone Definition
+                        if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) & args.LeftButton == ButtonChangeState.Pressed)
                         {
-                            foreach (Zoning z in _map.Zones)
+                            _isDefininingZone = true;
+                            _zoneStart = _view.PointToWorld(args.Position);
+                        }
+                        else if (args.RightButton == ButtonChangeState.Pressed)
+                        {
+                            Vector2 worldPos = _view.PointToWorld(args.Position);
+
+                            if (_singlePlayer)
                             {
-                                if (z.Bounds.Contains(worldPos))
+                                foreach (Zoning z in _map.Zones)
                                 {
-                                    _map.DeleteZone(z);
-                                    break;
+                                    if (z.Bounds.Contains(worldPos))
+                                    {
+                                        _map.DeleteZone(z);
+                                        break;
+                                    }
                                 }
                             }
+                            else
+                            {
+                                RequestDelZone((int)worldPos.X, (int)worldPos.Y);
+                            }
                         }
-                        else
-                        {
-                            RequestDelZone((int)worldPos.X, (int)worldPos.Y);
-                        }
+                        #endregion
                     }
+                    else
+                    {
+                        _mainControl.MousePressed(args);
+                    }
+                    break;
+                case GameState.MainMenu:
+                    _menuControl.MousePressed(args);
+                    break;
+                case GameState.ServerList:
+                    _serverListControl.MousePressed(args);
                     break;
             }
         }
@@ -811,10 +830,10 @@ namespace DoodleEmpires.Engine.Net
             switch (_gameState)
             {
                 case GameState.MainMenu:
-                    _menuControl.MousePressed(args);
+                    _menuControl.MouseDown(args);
                     break;
                 case GameState.ServerList:
-                    _serverListControl.MousePressed(args);
+                    _serverListControl.MouseDown(args);
                     break;
                 case GameState.InGame:
                     if (!_mainControl.ScreenBounds.Contains(args.Position))
@@ -858,7 +877,7 @@ namespace DoodleEmpires.Engine.Net
                     }
                     else
                     {
-                        _mainControl.MousePressed(args);
+                        _mainControl.MouseDown(args);
                     }
                     break;
             }

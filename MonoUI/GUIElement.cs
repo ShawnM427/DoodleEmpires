@@ -66,5 +66,15 @@ namespace MonoUI
                 OnMousePressed.Invoke();
             }
         }
+
+#if UI_DEBUG
+        protected override void EndInvalidate()
+        {
+            base.EndInvalidate();
+
+            _effect.CurrentTechnique.Passes[0].Apply();
+            _graphics.DrawRect(0, 0, _bounds.Width, _bounds.Height, Color.Red);
+        }
+#endif
     }
 }
