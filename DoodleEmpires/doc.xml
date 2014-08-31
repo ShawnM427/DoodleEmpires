@@ -2508,10 +2508,33 @@
             The backend method for running the listener
             </summary>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetManager.HandlePacket(Lidgren.Network.NetIncomingMessage)">
+            <summary>
+            Handles a packet by reading its packetID and passing it to the correct Packet handler
+            </summary>
+            <param name="msg">The incomming message to parse</param>
+        </member>
         <member name="M:DoodleEmpires.Engine.Net.NetManager.OnUnknowPacketReceived(Lidgren.Network.NetIncomingMessage)">
             <summary>
             Called when an unknown packet was received, default is to shut down the peer
             </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetManager.OnNoActionAvailable(Lidgren.Network.NetIncomingMessage)">
+            <summary>
+            Called when an action is not defined for the message type
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetManager.ImportPacketType(System.Type,System.EventHandler{DoodleEmpires.Engine.Net.IPacket})">
+            <summary>
+            Adds a packet to the list of packets to handle
+            </summary>
+            <param name="type">The packet to handle</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetManager.SendMessage(DoodleEmpires.Engine.Net.IPacket)">
+            <summary>
+            Sends a packet using this net manager
+            </summary>
+            <param name="packet">The packet to send</param>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.NetManager.Dispose">
             <summary>
@@ -2550,36 +2573,19 @@
             Gets this player's network connection
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.IPacket.Handle(Lidgren.Network.NetIncomingMessage)">
-            <summary>
-            Handles an incoming network message
-            </summary>
-            <param name="msg">The message to handle</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.IPacket.Send(Lidgren.Network.NetOutgoingMessage)">
-            <summary>
-            Prepares an outgoing message
-            </summary>
-            <param name="msg">The message to write data to</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.IPacket.DeliveryMethod">
+        <member name="P:DoodleEmpires.Engine.Net.PacketWriter.DeliveryMethod">
             <summary>
             gets or sets the delivery method to use for this packet type
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Net.IPacket.Reciepient">
+        <member name="P:DoodleEmpires.Engine.Net.PacketWriter.Reciepient">
             <summary>
             Gets or sets the target reciepient for this packet
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Net.IPacket.SendToAll">
+        <member name="P:DoodleEmpires.Engine.Net.PacketWriter.SendToAll">
             <summary>
             Gets or sets wheter this packet should be sent to all clients
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.IPacket.PacketID">
-            <summary>
-            Gets or sets the ID of the packet to handle
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.PlayerInfo">

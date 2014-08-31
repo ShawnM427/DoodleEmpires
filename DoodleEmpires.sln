@@ -23,6 +23,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoUI", "MonoUI\MonoUI.csp
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		AllDebug|Any CPU = AllDebug|Any CPU
+		AllDebug|Mixed Platforms = AllDebug|Mixed Platforms
+		AllDebug|x86 = AllDebug|x86
 		Android|Any CPU = Android|Any CPU
 		Android|Mixed Platforms = Android|Mixed Platforms
 		Android|x86 = Android|x86
@@ -52,6 +55,11 @@ Global
 		Windows8|x86 = Windows8|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.AllDebug|Any CPU.ActiveCfg = Debug|x86
+		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.AllDebug|Mixed Platforms.ActiveCfg = Debug|x86
+		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.AllDebug|Mixed Platforms.Build.0 = Debug|x86
+		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.AllDebug|x86.ActiveCfg = Debug|x86
+		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.AllDebug|x86.Build.0 = Debug|x86
 		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.Android|Any CPU.ActiveCfg = Release|x86
 		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.Android|Mixed Platforms.ActiveCfg = Release|x86
 		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.Android|Mixed Platforms.Build.0 = Release|x86
@@ -97,6 +105,9 @@ Global
 		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.Windows8|Mixed Platforms.Build.0 = Release|x86
 		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.Windows8|x86.ActiveCfg = Release|x86
 		{DC473E73-24B1-4BF4-874A-F8E8F9A1689F}.Windows8|x86.Build.0 = Release|x86
+		{82C64798-3EF1-452C-B783-21196A6DDDCD}.AllDebug|Any CPU.ActiveCfg = Android|Any CPU
+		{82C64798-3EF1-452C-B783-21196A6DDDCD}.AllDebug|Mixed Platforms.ActiveCfg = Android|Any CPU
+		{82C64798-3EF1-452C-B783-21196A6DDDCD}.AllDebug|x86.ActiveCfg = Android|Any CPU
 		{82C64798-3EF1-452C-B783-21196A6DDDCD}.Android|Any CPU.ActiveCfg = Android|Any CPU
 		{82C64798-3EF1-452C-B783-21196A6DDDCD}.Android|Any CPU.Build.0 = Android|Any CPU
 		{82C64798-3EF1-452C-B783-21196A6DDDCD}.Android|Mixed Platforms.ActiveCfg = Android|Any CPU
@@ -142,6 +153,9 @@ Global
 		{82C64798-3EF1-452C-B783-21196A6DDDCD}.Windows8|Mixed Platforms.ActiveCfg = Windows8|Any CPU
 		{82C64798-3EF1-452C-B783-21196A6DDDCD}.Windows8|Mixed Platforms.Build.0 = Windows8|Any CPU
 		{82C64798-3EF1-452C-B783-21196A6DDDCD}.Windows8|x86.ActiveCfg = Windows8|Any CPU
+		{1D00EAA4-744F-413B-A565-4B9A61F1C331}.AllDebug|Any CPU.ActiveCfg = Android|Any CPU
+		{1D00EAA4-744F-413B-A565-4B9A61F1C331}.AllDebug|Mixed Platforms.ActiveCfg = Android|Any CPU
+		{1D00EAA4-744F-413B-A565-4B9A61F1C331}.AllDebug|x86.ActiveCfg = Android|Any CPU
 		{1D00EAA4-744F-413B-A565-4B9A61F1C331}.Android|Any CPU.ActiveCfg = Android|Any CPU
 		{1D00EAA4-744F-413B-A565-4B9A61F1C331}.Android|Mixed Platforms.ActiveCfg = Android|Any CPU
 		{1D00EAA4-744F-413B-A565-4B9A61F1C331}.Android|x86.ActiveCfg = Android|Any CPU
@@ -169,6 +183,10 @@ Global
 		{1D00EAA4-744F-413B-A565-4B9A61F1C331}.Windows8|Any CPU.ActiveCfg = Windows8|Any CPU
 		{1D00EAA4-744F-413B-A565-4B9A61F1C331}.Windows8|Mixed Platforms.ActiveCfg = Windows8|Any CPU
 		{1D00EAA4-744F-413B-A565-4B9A61F1C331}.Windows8|x86.ActiveCfg = Windows8|Any CPU
+		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.AllDebug|Any CPU.ActiveCfg = Debug|x86
+		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.AllDebug|Mixed Platforms.ActiveCfg = Debug|x86
+		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.AllDebug|x86.ActiveCfg = Debug|x86
+		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.AllDebug|x86.Build.0 = Debug|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Android|Any CPU.ActiveCfg = Release|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Android|Mixed Platforms.ActiveCfg = Release|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Android|Mixed Platforms.Build.0 = Release|x86
@@ -176,7 +194,6 @@ Global
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Android|x86.Build.0 = Release|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Debug|x86.ActiveCfg = Debug|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Debug|x86.Build.0 = Debug|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.iOS|Any CPU.ActiveCfg = Release|x86
@@ -214,6 +231,11 @@ Global
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Windows8|Mixed Platforms.Build.0 = Release|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Windows8|x86.ActiveCfg = Release|x86
 		{9CF3B763-2C88-4CB8-83A9-5A72099AA989}.Windows8|x86.Build.0 = Release|x86
+		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.AllDebug|Any CPU.ActiveCfg = Debug|x86
+		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.AllDebug|Mixed Platforms.ActiveCfg = Debug|x86
+		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.AllDebug|Mixed Platforms.Build.0 = Debug|x86
+		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.AllDebug|x86.ActiveCfg = Debug|x86
+		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.AllDebug|x86.Build.0 = Debug|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Android|Any CPU.ActiveCfg = Release|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Android|Mixed Platforms.ActiveCfg = Release|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Android|Mixed Platforms.Build.0 = Release|x86
@@ -221,7 +243,6 @@ Global
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Android|x86.Build.0 = Release|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Debug|x86.ActiveCfg = Debug|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Debug|x86.Build.0 = Debug|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.iOS|Any CPU.ActiveCfg = Release|x86
@@ -259,6 +280,11 @@ Global
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Windows8|Mixed Platforms.Build.0 = Release|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Windows8|x86.ActiveCfg = Release|x86
 		{5EC84B6C-A435-4917-9068-72F3AE81BC17}.Windows8|x86.Build.0 = Release|x86
+		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.AllDebug|Any CPU.ActiveCfg = Debug|x86
+		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.AllDebug|Mixed Platforms.ActiveCfg = Debug|x86
+		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.AllDebug|Mixed Platforms.Build.0 = Debug|x86
+		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.AllDebug|x86.ActiveCfg = Debug|x86
+		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.AllDebug|x86.Build.0 = Debug|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Android|Any CPU.ActiveCfg = Release|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Android|Mixed Platforms.ActiveCfg = Release|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Android|Mixed Platforms.Build.0 = Release|x86
@@ -266,7 +292,6 @@ Global
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Android|x86.Build.0 = Release|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Debug|x86.ActiveCfg = Debug|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Debug|x86.Build.0 = Debug|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.iOS|Any CPU.ActiveCfg = Release|x86
@@ -304,6 +329,10 @@ Global
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Windows8|Mixed Platforms.Build.0 = Release|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Windows8|x86.ActiveCfg = Release|x86
 		{648F35E0-89EB-4173-B777-FA0B48CF6BB5}.Windows8|x86.Build.0 = Release|x86
+		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.AllDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.AllDebug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.AllDebug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.AllDebug|x86.ActiveCfg = Debug|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Android|Any CPU.ActiveCfg = Release|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Android|Any CPU.Build.0 = Release|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Android|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -312,7 +341,6 @@ Global
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.iOS|Any CPU.ActiveCfg = Release|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.iOS|Any CPU.Build.0 = Release|Any CPU
@@ -349,6 +377,10 @@ Global
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Windows8|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Windows8|Mixed Platforms.Build.0 = Release|Any CPU
 		{3BD77D5F-A656-401E-9B8D-354A7CA4F4A0}.Windows8|x86.ActiveCfg = Release|Any CPU
+		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.AllDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.AllDebug|Any CPU.Build.0 = Debug|Any CPU
+		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.AllDebug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.AllDebug|x86.ActiveCfg = Debug|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Android|Any CPU.ActiveCfg = Release|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Android|Any CPU.Build.0 = Release|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Android|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -357,7 +389,6 @@ Global
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.iOS|Any CPU.ActiveCfg = Release|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.iOS|Any CPU.Build.0 = Release|Any CPU
@@ -394,6 +425,10 @@ Global
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Windows8|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Windows8|Mixed Platforms.Build.0 = Release|Any CPU
 		{4C33F469-6E0C-4039-B1A3-F20813F911A3}.Windows8|x86.ActiveCfg = Release|Any CPU
+		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.AllDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.AllDebug|Any CPU.Build.0 = Debug|Any CPU
+		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.AllDebug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.AllDebug|x86.ActiveCfg = Debug|Any CPU
 		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.Android|Any CPU.ActiveCfg = Release|Any CPU
 		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.Android|Any CPU.Build.0 = Release|Any CPU
 		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.Android|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -402,7 +437,6 @@ Global
 		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.iOS|Any CPU.ActiveCfg = Release|Any CPU
 		{3A81CB09-70D2-4F74-BCF4-AE4497AA61DF}.iOS|Any CPU.Build.0 = Release|Any CPU

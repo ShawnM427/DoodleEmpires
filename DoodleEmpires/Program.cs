@@ -25,7 +25,7 @@ namespace DoodleEmpires
             if (args.Length > 0)
                 playerName = args[0];
             
-            using (var game = new NetGame(playerName))
+            using (var game = new Tests(playerName))
                 game.Run();
         }
 

@@ -78,11 +78,16 @@
     <Compile Include="Engine\Net\Events.cs" />
     <Compile Include="Engine\Net\GlobalNetVars.cs" />
     <Compile Include="Engine\Net\GlobalTileManager.cs" />
+    <Compile Include="Engine\Net\INetworkable.cs" />
+    <Compile Include="Engine\Net\IPacket.cs" />
     <Compile Include="Engine\Net\IPacketSender.cs" />
     <Compile Include="Engine\Net\NetGame.cs" />
     <Compile Include="Engine\Net\NetManager.cs" />
     <Compile Include="Engine\Net\NetPlayer.cs" />
-    <Compile Include="Engine\Net\PacketType.cs" />
+    <Compile Include="Engine\Net\PacketBase.cs" />
+    <Compile Include="Engine\Net\PacketHandlers\Packet_PlayerJoined.cs" />
+    <Compile Include="Engine\Net\PacketReader.cs" />
+    <Compile Include="Engine\Net\PacketWriter.cs" />
     <Compile Include="Engine\Net\PlayerInfo.cs" />
     <Compile Include="Engine\Net\Server.cs" />
     <Compile Include="Engine\Net\ServerInfo.cs" />
@@ -96,6 +101,9 @@
     <Compile Include="Engine\Render\Particle\ParticleEmitter.cs" />
     <Compile Include="Engine\Render\Particle\ParticleEngine.cs" />
     <Compile Include="Engine\Render\RenderChunk.cs" />
+    <Compile Include="Engine\Terrain\PixelBrush.cs" />
+    <Compile Include="Engine\Terrain\PixelRegion.cs" />
+    <Compile Include="Engine\Terrain\PixelTerrain.cs" />
     <Compile Include="Engine\Terrain\Tile.cs" />
     <Compile Include="Engine\Terrain\TileManager.cs" />
     <Compile Include="Engine\Terrain\TileType.cs" />
@@ -112,6 +120,7 @@
     <Compile Include="Engine\Utilities\TextureAtlas.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -136,6 +145,12 @@
   <ItemGroup>
     <Content Include="Content\Atlas.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SampleBrush.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SampleRegion.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Sounds\shell_01.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

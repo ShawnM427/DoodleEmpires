@@ -10,7 +10,7 @@ namespace DoodleEmpires.Engine.Net
     /// <summary>
     /// Represents a player's information
     /// </summary>
-    public class PlayerInfo
+    public class PlayerInfo : INetworkable
     {
         string _userName;
         Color _flagColor;
@@ -40,6 +40,10 @@ namespace DoodleEmpires.Engine.Net
             get { return _connection; }
         }
 
+        public PlayerInfo()
+        {
+        }
+        
         /// <summary>
         /// Creates a new player info
         /// </summary>
@@ -97,6 +101,16 @@ namespace DoodleEmpires.Engine.Net
             r.PlayerIndex = playerIndex;
 
             return r;
+        }
+
+        public INetworkable Read(NetIncomingMessage msg)
+        {
+            return ReadFromPacket(msg);
+        }
+
+        public void Write(NetOutgoingMessage msg)
+        {
+            WriteToPacket(msg);
         }
     }
 }
