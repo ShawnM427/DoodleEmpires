@@ -90,6 +90,10 @@ namespace DoodleEmpires.Engine.Net
         /// Represents the client-controlled player
         /// </summary>
         PlayerInfo _myPlayer;
+        /// <summary>
+        /// Gets or sets the server that the client is currently connected to
+        /// </summary>
+        ServerInfo _connectedServer;
 
         int _prevReqX = -1;
         int _prevReqY = -1;
@@ -327,6 +331,10 @@ namespace DoodleEmpires.Engine.Net
         /// </summary>
         protected GUIContainer _serverListControl;
         /// <summary>
+        /// The server lobby GUI controller
+        /// </summary>
+        protected GUIContainer _serverLobbyControl;
+        /// <summary>
         /// A label displaying the FPS
         /// </summary>
         protected GUILabel _fpsLabel;
@@ -335,6 +343,7 @@ namespace DoodleEmpires.Engine.Net
         GUIButton _loadButton;
         GUIListView _serverList;
         GUIGridView _zoneView;
+        GUIListView _lobbyPlayerList;
 
         /// <summary>
         /// An event handler for event based text input
@@ -467,7 +476,7 @@ namespace DoodleEmpires.Engine.Net
             _serverList.ShownItems = 6;
             _serverList.Font = _guiFont;
             _serverList.HeaderText = "Host: ";
-
+            
             GUIButton serverListBack = new GUIButton(GraphicsDevice, _guiFont, _serverListControl);
             serverListBack.Text = "< Back";
             serverListBack.Bounds = new Rectangle(3, _serverList.Bounds.Bottom + 2, 55, 15);
@@ -498,14 +507,14 @@ namespace DoodleEmpires.Engine.Net
             QuitButton.OnMousePressed += Exit;
             QuitButton.BackColor = Color.LightGray;
 
-            GUILabel testLabel = new GUILabel(GraphicsDevice, null, _menuControl);
-            testLabel.Location = new Point(_menuControl.Width / 2, QuitButton.Bounds.Bottom + 15);
-            testLabel.Text = "testing123";
+            //GUILabel testLabel = new GUILabel(GraphicsDevice, null, _menuControl);
+            //testLabel.Location = new Point(_menuControl.Width / 2, QuitButton.Bounds.Bottom + 15);
+            //testLabel.Text = "testing123";
 
-            GUICheckBox checkBox = new GUICheckBox(GraphicsDevice, null, _menuControl);
-            checkBox.Location = new Point(_menuControl.Width / 2, testLabel.Bounds.Bottom + 15);
-            checkBox.Text = "Checkmate";
-            checkBox.Font = StaticContentLoader.GetItem<SpriteFont>("Font_Arial_10");
+            //GUICheckBox checkBox = new GUICheckBox(GraphicsDevice, null, _menuControl);
+            //checkBox.Location = new Point(_menuControl.Width / 2, testLabel.Bounds.Bottom + 15);
+            //checkBox.Text = "Checkmate";
+            //checkBox.Font = StaticContentLoader.GetItem<SpriteFont>("Font_Arial_10");
 
             //GUITextPane TestTexPane = new GUITextPane(GraphicsDevice, _guiFont, _menuControl);
             //TestTexPane.Bounds = new Rectangle(10, QuitButton.Bounds.Bottom + 5, 100, 45);
@@ -513,9 +522,10 @@ namespace DoodleEmpires.Engine.Net
             //TestTexPane.Alignment = TextAlignment.CentreLeft;
             //_textInput += TestTexPane.OnTextEntered;
 
-            //GUITextBox TestTex = new GUITextBox(GraphicsDevice, _guiFont, _menuControl);
-            //TestTex.Bounds = new Rectangle(10, QuitButton.Bounds.Bottom + 5, 100, 20);
-            //_textInput += TestTex.OnTextEntered;
+            GUITextBox TestTex = new GUITextBox(GraphicsDevice, _guiFont, _menuControl);
+            TestTex.Bounds = new Rectangle(10, QuitButton.Bounds.Bottom + 5, 100, 20);
+            TestTex.BorderColor = Color.Red;
+            _textInput += TestTex.OnTextEntered;
 
             //GUITextBox TestPassword = new GUITextBox(GraphicsDevice, _guiFont, _menuControl);
             //TestPassword.Bounds = new Rectangle(10, TestTex.Bounds.Bottom + 5, 100, 20);
@@ -545,6 +555,21 @@ namespace DoodleEmpires.Engine.Net
             _zoneView.Bounds = new Rectangle(0, gridView.Bounds.Bottom + 5, 121, 120);
             _zoneView.Font = _guiFont;
             _zoneView.HeaderText = "Zone:";
+
+            _serverLobbyControl = new GUIPanel(GraphicsDevice, null);
+            _serverLobbyControl.Bounds = new Rectangle(0, 0, 120, 200);
+
+            _lobbyPlayerList = new GUIListView(GraphicsDevice, _serverLobbyControl);
+            _lobbyPlayerList.Bounds = new Rectangle(0, 0, 120, 175);
+            _lobbyPlayerList.ShownItems = 6;
+            _lobbyPlayerList.Font = _guiFont;
+            _lobbyPlayerList.HeaderText = "Players:";
+
+            GUIButton lobbyPlayButton = new GUIButton(GraphicsDevice, _guiFont, _serverLobbyControl);
+            lobbyPlayButton.Bounds = new Rectangle(20, 180, 80, 20);
+            lobbyPlayButton.Text = "Play";
+            lobbyPlayButton.OnMousePressed += OnPlayButtonPressed;
+            lobbyPlayButton.Enabled = false;
 
             foreach (ZoneInfo zone in GlobalZoneManager.Manager.Items)
             {
@@ -613,6 +638,10 @@ namespace DoodleEmpires.Engine.Net
                 case GameState.ServerList:
                     _serverListControl.Update();
                     break;
+                case GameState.Lobby:
+                    UpdateLobbyNetworking();
+                    _serverLobbyControl.Update();
+                    break;
                 case GameState.InGame:
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                         ExitToMenu();
@@ -673,7 +702,7 @@ namespace DoodleEmpires.Engine.Net
             }
 
             if (!_singlePlayer)
-                UpdateNetworking();
+                UpdateGameNetworking();
 
             _prevKeyState = keyState;
 
@@ -700,6 +729,9 @@ namespace DoodleEmpires.Engine.Net
                     break;
                 case GameState.InGame:
                     DrawMainGame();
+                    break;
+                case GameState.Lobby:
+                    DrawServerLobby();
                     break;
             }
         }
@@ -762,6 +794,20 @@ namespace DoodleEmpires.Engine.Net
             SpriteBatch.End();
 
             _serverListControl.Draw();
+        }
+
+        /// <summary>
+        /// Draws the server lobby
+        /// </summary>
+        protected virtual void DrawServerLobby()
+        {
+            GraphicsDevice.Clear(Color.White);
+
+            SpriteBatch.Begin();
+            SpriteBatch.Draw(_serverListBackdrop, GraphicsDevice.Viewport.Bounds, Color.White);
+            SpriteBatch.End();
+
+            _serverLobbyControl.Draw();
         }
 
         #endregion
@@ -943,10 +989,6 @@ namespace DoodleEmpires.Engine.Net
             base.MouseEvent(state);
         }
 
-        #endregion
-
-        #region UI Event handlers
-
         /// <summary>
         /// Called when text has been entered via the keyboard
         /// </summary>
@@ -955,6 +997,18 @@ namespace DoodleEmpires.Engine.Net
         void Window_TextInput(object sender, TextInputEventArgs e)
         {
             _textInput.Invoke(sender, e);
+        }
+
+        #endregion
+
+        #region UI Event handlers
+
+        /// <summary>
+        /// Called when the play button in the lobby was pressed
+        /// </summary>
+        private void OnPlayButtonPressed()
+        {
+            _gameState = GameState.InGame;
         }
 
         /// <summary>
@@ -1123,7 +1177,98 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// Updates this network handler, should be threaded
         /// </summary>
-        public void UpdateNetworking()
+        public void UpdateLobbyNetworking()
+        {
+            // read messages
+            NetIncomingMessage msg;
+            while ((msg = _client.ReadMessage()) != null)
+            {
+                switch (msg.MessageType)
+                {
+                    case NetIncomingMessageType.Data: //data was received
+                        NetPacketType packetType = (NetPacketType)msg.ReadByte(8); //get the packet ID
+#if DEBUG
+                        AccountedDownload++;
+#endif
+
+                        switch (packetType) //toggle based on packet state
+                        {
+                            case NetPacketType.PlayerJoined: //another player has joined
+                                PlayerJoined(msg);
+
+                                _lobbyPlayerList.Items.Clear();
+
+                                foreach(PlayerInfo pInfo in _players)
+                                {
+                                    _lobbyPlayerList.Items.Add(new PlayerInfoListItem(pInfo));
+                                }
+
+                                break;
+
+                            case NetPacketType.PlayerLeft: //another player has left the game
+                                PlayerLeft(msg);
+                                break;
+
+                            case NetPacketType.BlockUpdate: //another player's info has updated
+                                HandleBlockChanged(msg);
+                                break;
+
+                            case NetPacketType.ZoneAdded:
+                                HandleZoneAdded(msg);
+                                break;
+
+                            case NetPacketType.ZoneRemoved:
+                                HandleZoneDel(msg);
+                                break;
+
+                            case NetPacketType.MapChanged:
+                                HandleMapChanged(msg);
+                                break;
+
+                            default:
+                                Console.WriteLine("Unknown packet type {0} received!", packetType);
+                                //_client.Disconnect("You sent shitty data!");
+                                break;
+                        }
+                        break;
+
+                    case NetIncomingMessageType.UnconnectedData:
+
+                        NetPacketType packetType2 = (NetPacketType)msg.ReadByte(8); //get the packet ID
+#if DEBUG
+                        AccountedDownload++;
+#endif
+
+                        switch (packetType2) //toggle based on packet state
+                        {
+                            case NetPacketType.PingMessage:
+                                HandlePingResponse(msg);
+                                break;
+
+                            case NetPacketType.MASTER_SentHostInfo:
+                                HandleServerInfoReceived(msg);
+                                break;
+                        }
+                        break;
+
+                    case NetIncomingMessageType.WarningMessage:
+                    case NetIncomingMessageType.DebugMessage:
+                    case NetIncomingMessageType.ErrorMessage:
+                        Console.WriteLine(msg.ReadString());
+                        break;
+
+                    default:
+                        Console.WriteLine("received unhandled packet: " + msg.MessageType);
+                        break;
+                }
+                _client.Recycle(msg);
+            }
+        }
+
+        /// <summary>
+        /// Updates this network handler, should be threaded
+        /// </summary>
+        public void UpdateGameNetworking()
         {
             // read messages
             NetIncomingMessage msg;
@@ -1136,7 +1281,7 @@ namespace DoodleEmpires.Engine.Net
                         break;
 
                     case NetIncomingMessageType.ConnectionLatencyUpdated:
-                        ServerInfo inInfo = _availableServers.Find(X => X.InternalEndPoint == msg.SenderEndpoint);
+                        ServerInfo inInfo = _availableServers.Find(X => X.InternalEndPoint == msg.SenderEndPoint);
                         if (inInfo.InternalEndPoint != null)
                             inInfo.Ping = msg.ReadSingle();
                         break;
@@ -1144,7 +1289,7 @@ namespace DoodleEmpires.Engine.Net
                     case NetIncomingMessageType.DiscoveryRequest:
                         NetOutgoingMessage outMsg = _client.CreateMessage();
                         outMsg.Write("Hello");
-                        _client.SendDiscoveryResponse(outMsg, msg.SenderEndpoint);
+                        _client.SendDiscoveryResponse(outMsg, msg.SenderEndPoint);
                         break;
 
                     case NetIncomingMessageType.StatusChanged:
@@ -1286,7 +1431,7 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="info">The info for the server we are connecting to</param>
         void OnJoinedServer(ServerInfo info)
         {
-            _gameState = GameState.InGame;
+            //_gameState = GameState.InGame;
         }
 
         /// <summary>
@@ -1316,6 +1461,7 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="server">The server to connect to</param>
         public void ConnectToServer(ServerInfo server)
         {
+            _connectedServer = server;
             _client.Connect(server.InternalEndPoint);
         }
 
@@ -1411,6 +1557,7 @@ namespace DoodleEmpires.Engine.Net
         {
             _players.Clear();
             _client.Shutdown(reason);
+            _connectedServer = null;
         }
 
         #endregion
@@ -1420,7 +1567,7 @@ namespace DoodleEmpires.Engine.Net
         private void HandleServerInfoReceived(NetIncomingMessage msg)
         {
             ServerInfo info = ServerInfo.ReadFromPacket(msg);
-            info.ExternalEndPoint = msg.ReadIPEndpoint();
+            info.ExternalEndPoint = msg.ReadIPEndPoint();
 
             if (!_availableServers.Contains(info))
             {
@@ -1449,14 +1596,14 @@ namespace DoodleEmpires.Engine.Net
         /// <param name="msg">The message to parse</param>
         private void HandlePingResponse(NetIncomingMessage msg)
         {
-            if (_serverTimers.ContainsKey(msg.SenderEndpoint))
+            if (_serverTimers.ContainsKey(msg.SenderEndPoint))
             {
-                ServerInfo sInfo = _availableServers.Find(s => s.InternalEndPoint == msg.SenderEndpoint);
+                ServerInfo sInfo = _availableServers.Find(s => s.InternalEndPoint == msg.SenderEndPoint);
 
-                if (sInfo.InternalEndPoint != null)
+                if (sInfo != null)
                 {
                     int ID = _availableServers.IndexOf(sInfo);
-                    sInfo.Ping = (DateTime.Now - _serverTimers[msg.SenderEndpoint]).TotalMilliseconds;
+                    sInfo.Ping = (DateTime.Now - _serverTimers[msg.SenderEndPoint]).TotalMilliseconds;
                     _availableServers[ID] = sInfo;
 
                     ((ServerInfoListItem)_serverList.Items.Find(X => sInfo.Equals(X.Tag))).Info = sInfo;

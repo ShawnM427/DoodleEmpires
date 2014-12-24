@@ -90,13 +90,19 @@ namespace MasterServer
 
         private void RunServer()
         {
-            config = new NetPeerConfiguration("masterserver");
+            config = new NetPeerConfiguration("DoodleEmpiresMaster");
             config.SetMessageTypeEnabled(NetIncomingMessageType.UnconnectedData, true);
             config.Port = GlobalNetVars.MASTER_SERVER_PORT;
-            config.EnableUPnP = true;
+            config.EnableUPnP = chk_upnp.Checked;
             NetPeer peer = new NetPeer(config);
             peer.Start();
-            peer.UPnP.ForwardPort(config.Port, "DoodleEmpires");
+
+            if (chk_upnp.Checked)
+            {
+                IPAddress external = peer.UPnP.GetExternalIP();
+                peer.UPnP.ForwardPort(config.Port, "DoodleEmpiresMaster");
+            }
+
             AppendTextBox("Starting master sever on {0}:{1}", peer.Configuration.BroadcastAddress, peer.Port);
 
             while (!_quitingServer)
@@ -120,7 +126,7 @@ namespace MasterServer
                                     NetOutgoingMessage ret = peer.CreateMessage();
                                     ret.Write((byte)NetPacketType.MASTER_ReturnPublicKey, 8);
                                     ret.Write(Encryption._publicKey);
-                                    peer.SendUnconnectedMessage(ret, msg.SenderEndpoint);
+                                    peer.SendUnconnectedMessage(ret, msg.SenderEndPoint);
                                     break;
                                 #endregion
 
@@ -134,9 +140,9 @@ namespace MasterServer
                                     //                                    };
                                     ServerInfo newInfo = ServerInfo.ReadFromPacket(msg);
 
-                                    if (_hosts.FirstOrDefault(x => x.Name == newInfo.Name).InternalEndPoint == null)
+                                    if (!_hosts.Contains(newInfo))
                                     {
-                                        newInfo.ExternalEndPoint = msg.SenderEndpoint;
+                                        newInfo.ExternalEndPoint = msg.SenderEndPoint;
                                         _hosts.Add(newInfo);
                                         AppendTextBox("Got registration for host \"{0}\"", _hosts.Last().Name);
                                         AddListItem(new ListViewItem(_hosts.Last().Name) { Tag = _hosts.Last(), Name = newInfo.Name });
@@ -149,7 +155,7 @@ namespace MasterServer
                                 case NetPacketType.MASTER_HostEnded:
                                     // It's a host that has disconnected (but not crashed)
                                     ServerInfo hostInfo = ServerInfo.ReadFromPacket(msg);
-                                    AppendTextBox("Host \"{0}\" has ended", _hosts.Last().Name);
+                                    AppendTextBox("Host \"{0}\" has ended", hostInfo.Name);
                                     _hosts.Remove(hostInfo);
                                     RemoveListItem(hostInfo.Name);
                                     //registeredHosts.Add(eps);
@@ -161,7 +167,7 @@ namespace MasterServer
                                     // It's a host that has disconnected (but not crashed)
                                     string hostName = msg.ReadString();
                                     ServerInfo info = ServerInfo.ReadFromPacket(msg);
-                                    info.ExternalEndPoint = msg.SenderEndpoint;
+                                    info.ExternalEndPoint = msg.SenderEndPoint;
                                     _hosts[_hosts.IndexOf(_hosts.Find(X => X.Name == hostName))] = info;
                                     RemoveListItem(info.Name);
                                     AddListItem(new ListViewItem(info.Name) { Tag = info, Name = info.Name });
@@ -172,7 +178,7 @@ namespace MasterServer
                                 #region Requesting Host List
                                 case NetPacketType.MASTER_RequestHostList:
                                     // It's a client wanting a list of registered hosts
-                                    AppendTextBox("Sending list of {0} hosts to client {1}", _hosts.Count, msg.SenderEndpoint);
+                                    AppendTextBox("Sending list of {0} hosts to client {1}", _hosts.Count, msg.SenderEndPoint);
                                     foreach (ServerInfo ep in _hosts)
                                     {
                                         // send registered host to client
@@ -180,7 +186,7 @@ namespace MasterServer
                                         om.Write((byte)NetPacketType.MASTER_SentHostInfo, 8);
                                         ep.WriteToPacket(om);
                                         om.Write(ep.ExternalEndPoint);
-                                        peer.SendUnconnectedMessage(om, msg.SenderEndpoint);
+                                        peer.SendUnconnectedMessage(om, msg.SenderEndPoint);
                                     }
                                     break;
                                 #endregion
@@ -188,11 +194,11 @@ namespace MasterServer
                                 #region Requesting Introduction
                                 case NetPacketType.MASTER_RequestIntroduction:
                                     // It's a client wanting to connect to a specific (external) host
-                                    IPEndPoint clientInternal = msg.ReadIPEndpoint();
-                                    IPEndPoint hostExternal = msg.ReadIPEndpoint();
+                                    IPEndPoint clientInternal = msg.ReadIPEndPoint();
+                                    IPEndPoint hostExternal = msg.ReadIPEndPoint();
                                     string token = msg.ReadString();
 
-                                    AppendTextBox(msg.SenderEndpoint + " requesting introduction to " + hostExternal + " (token " + token + ")");
+                                    AppendTextBox(msg.SenderEndPoint + " requesting introduction to " + hostExternal + " (token " + token + ")");
 
                                     // find in list
                                     foreach (ServerInfo elist in _hosts)
@@ -205,7 +211,7 @@ namespace MasterServer
                                                     elist.InternalEndPoint, // host internal
                                                     elist.ExternalEndPoint, // host external
                                                     clientInternal, // client internal
-                                                    msg.SenderEndpoint, // client external
+                                                    msg.SenderEndPoint, // client external
                                                     token // request token
                                             );
                                             break;
@@ -231,14 +237,14 @@ namespace MasterServer
                                         NetOutgoingMessage om = peer.CreateMessage();
                                         om.Write((byte)NetPacketType.MASTER_SuccesfullRegistration);
                                         om.Write(_users.LongCount() - 1);
-                                        peer.SendUnconnectedMessage(om, msg.SenderEndpoint);
+                                        peer.SendUnconnectedMessage(om, msg.SenderEndPoint);
                                     }
                                     else
                                     {
                                         NetOutgoingMessage om = peer.CreateMessage();
                                         om.Write((byte)NetPacketType.MASTER_FailedRegistration);
                                         om.Write("User with that name already exists!");
-                                        peer.SendUnconnectedMessage(om, msg.SenderEndpoint);
+                                        peer.SendUnconnectedMessage(om, msg.SenderEndPoint);
                                     }
                                     break;
 
@@ -262,20 +268,20 @@ namespace MasterServer
                                             NetOutgoingMessage om = peer.CreateMessage();
                                             om.Write((byte)NetPacketType.MASTER_SuccesfullLogin);
                                             om.Write("authtoken would go here");
-                                            peer.SendUnconnectedMessage(om, msg.SenderEndpoint);
+                                            peer.SendUnconnectedMessage(om, msg.SenderEndPoint);
                                         }
                                         else
                                         {
                                             NetOutgoingMessage om = peer.CreateMessage();
                                             om.Write((byte)NetPacketType.MASTER_FailedLogin);
-                                            peer.SendUnconnectedMessage(om, msg.SenderEndpoint);
+                                            peer.SendUnconnectedMessage(om, msg.SenderEndPoint);
                                         }
                                     }
                                     else
                                     {
                                         NetOutgoingMessage om = peer.CreateMessage();
                                         om.Write((byte)NetPacketType.MASTER_FailedLogin);
-                                        peer.SendUnconnectedMessage(om, msg.SenderEndpoint);
+                                        peer.SendUnconnectedMessage(om, msg.SenderEndPoint);
                                     }
                                     break;
 
@@ -333,8 +339,8 @@ namespace MasterServer
                 return name == _name && password == _password;
             }
         }
-        
-        private void MainWindow_Load(object sender, EventArgs e)
+
+        private void btn_begin_Click(object sender, EventArgs e)
         {
             _mainThread = new Thread(RunServer);
             _mainThread.Start();

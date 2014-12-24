@@ -44,6 +44,11 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Content\EmbeddedResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmbeddedResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Engine\Campaign\Campaign.cs" />
     <Compile Include="Engine\Campaign\CutScene.cs" />
     <Compile Include="Engine\Economy\Resources.cs" />
@@ -82,11 +87,11 @@
     <Compile Include="Engine\Net\IPacket.cs" />
     <Compile Include="Engine\Net\IPacketSender.cs" />
     <Compile Include="Engine\Net\NetGame.cs" />
-    <Compile Include="Engine\Net\NetManager.cs" />
     <Compile Include="Engine\Net\NetPlayer.cs" />
-    <Compile Include="Engine\Net\PacketBase.cs" />
+    <Compile Include="Engine\Net\PacketHandlers\Packet_Sample.cs" />
     <Compile Include="Engine\Net\PacketHandlers\Packet_PlayerJoined.cs" />
     <Compile Include="Engine\Net\PacketReader.cs" />
+    <Compile Include="Engine\Net\PacketReceivedEvent.cs" />
     <Compile Include="Engine\Net\PacketWriter.cs" />
     <Compile Include="Engine\Net\PlayerInfo.cs" />
     <Compile Include="Engine\Net\Server.cs" />
@@ -101,9 +106,16 @@
     <Compile Include="Engine\Render\Particle\ParticleEmitter.cs" />
     <Compile Include="Engine\Render\Particle\ParticleEngine.cs" />
     <Compile Include="Engine\Render\RenderChunk.cs" />
-    <Compile Include="Engine\Terrain\PixelBrush.cs" />
+    <Compile Include="Engine\Terrain\Brushes\DynamicRectBrush.cs" />
+    <Compile Include="Engine\Terrain\Brushes\TexturePixelBrush.cs" />
+    <Compile Include="Engine\Terrain\ILight.cs" />
+    <Compile Include="Engine\Terrain\IPixelBrush.cs" />
+    <Compile Include="Engine\Terrain\Lights\PointLight.cs" />
+    <Compile Include="Engine\Terrain\Lights\SpotLight.cs" />
     <Compile Include="Engine\Terrain\PixelRegion.cs" />
     <Compile Include="Engine\Terrain\PixelTerrain.cs" />
+    <Compile Include="Engine\Terrain\TerrainBuilder.cs" />
+    <Compile Include="Engine\Terrain\TerrainBuilders\PerlinTerrainBuilder.cs" />
     <Compile Include="Engine\Terrain\Tile.cs" />
     <Compile Include="Engine\Terrain\TileManager.cs" />
     <Compile Include="Engine\Terrain\TileType.cs" />
@@ -111,9 +123,14 @@
     <Compile Include="Engine\Net\SPMap.cs" />
     <Compile Include="Engine\Terrain\VoxelMap.cs" />
     <Compile Include="Engine\Utilities\AdvancedGame.cs" />
+    <Compile Include="Engine\Utilities\ArrayExtensions.cs" />
     <Compile Include="Engine\Utilities\Encryption.cs" />
     <Compile Include="Engine\Utilities\EventExtensions.cs" />
+    <Compile Include="Engine\Utilities\ExtraMath.cs" />
+    <Compile Include="Engine\Utilities\FPSCounter.cs" />
     <Compile Include="Engine\Utilities\FPSManager.cs" />
+    <Compile Include="Engine\Utilities\ColorLookup.cs" />
+    <Compile Include="Engine\Utilities\Global.cs" />
     <Compile Include="Engine\Utilities\Noise.cs" />
     <Compile Include="Engine\Utilities\ObjectManager.cs" />
     <Compile Include="Engine\Utilities\RectangleF.cs" />
@@ -123,15 +140,16 @@
     <Compile Include="Tests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Desktop\Lidgren-network-gen3\Lidgren.Network\bin\Release\Lidgren.Network.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MSBuild\..\MonoGame\v3.0\Assemblies\WindowsGL\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="Lidgren.Network">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MSBuild\..\MonoGame\v3.0\Assemblies\WindowsGL\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms">
       <Private>True</Private>
@@ -145,6 +163,12 @@
   <ItemGroup>
     <Content Include="Content\Atlas.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\dayNightGradient.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\RoundBrush.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\SampleBrush.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -167,6 +191,9 @@
     <Content Include="Content\Paper.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\stars.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\testBackdrop.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -175,6 +202,7 @@
     </Content>
     <Content Include="Icon.ico" />
     <None Include="app.config" />
+    <None Include="Content\Content Builder\LightShader.mgfx" />
     <None Include="OpenTK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -184,12 +212,6 @@
     <None Include="MonoGame.Framework.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MonoUI\MonoUI.csproj">
-      <Project>{3a81cb09-70d2-4f74-bcf4-ae4497aa61df}</Project>
-      <Name>MonoUI</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\debugFont.xnb">
@@ -203,7 +225,20 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Shaders\" />
     <Folder Include="Engine\GUI\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MonoUI\MonoUI.csproj">
+      <Project>{3a81cb09-70d2-4f74-bcf4-ae4497aa61df}</Project>
+      <Name>MonoUI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\EmbeddedResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EmbeddedResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

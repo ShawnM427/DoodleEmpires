@@ -356,7 +356,7 @@ namespace DoodleEmpires.Engine.Entities.PathFinder
     /// <summary>
     /// Performs a jump point search
     /// </summary>
-    class JumpPointFinder
+    public class JumpPointFinder
     {
         /// <summary>
         /// Finds a path using the given parameters

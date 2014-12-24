@@ -14,6 +14,7 @@ using DoodleEmpires.Engine.Economy;
 using Lidgren.Network;
 using DoodleEmpires.Engine.Net;
 using DoodleEmpires.Engine.Terrain;
+using DoodleEmpires.Engine.NoiseGeneration;
 
 namespace DoodleEmpires.Engine.Net
 {

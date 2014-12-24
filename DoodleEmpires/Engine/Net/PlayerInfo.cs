@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using MonoUI;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -111,6 +113,41 @@ namespace DoodleEmpires.Engine.Net
         public void Write(NetOutgoingMessage msg)
         {
             WriteToPacket(msg);
+        }
+    }
+
+    /// <summary>
+    /// A ListViewItem for drawing player info
+    /// </summary>
+    public class PlayerInfoListItem : ListViewItem
+    {
+        /// <summary>
+        /// Gets or sets the player info associated with this item
+        /// </summary>
+        public PlayerInfo Info
+        {
+            get { return (PlayerInfo)Tag; }
+            set { Tag = value; }
+        }
+
+        /// <summary>
+        /// Creates a new player info list item
+        /// </summary>
+        /// <param name="info">The info of the player to draw</param>
+        public PlayerInfoListItem(PlayerInfo info)
+        {
+            _tag = info;
+        }
+
+        /// <summary>
+        /// Renders this list view item
+        /// </summary>
+        /// <param name="batch">The spritebatch to use for drawing</param>
+        /// <param name="font">The font to use for rendering text for this items</param>
+        /// <param name="bounds">The bounds to render in</param>
+        public override void Render(SpriteBatch batch, SpriteFont font, Rectangle bounds)
+        {
+            batch.DrawString(font, ((PlayerInfo)Tag).UserName, bounds.Location.ToVector2() + new Vector2(5, 4), _textColor);
         }
     }
 }

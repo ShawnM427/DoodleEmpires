@@ -14,7 +14,7 @@ namespace DoodleEmpires.Engine.Net
     /// <summary>
     /// Represents basic info about a server
     /// </summary>
-    public struct ServerInfo
+    public class ServerInfo : INetworkable
     {
         IPAddress _ip;
         IPEndPoint _internalEndPoint;
@@ -147,7 +147,7 @@ namespace DoodleEmpires.Engine.Net
             string serverMessage = message.ReadString();
             int playerCount = message.ReadInt32();
             int maxPlayerCount = message.ReadInt32();
-            IPEndPoint endpoint = message.ReadIPEndpoint();
+            IPEndPoint endpoint = message.ReadIPEndPoint();
 
             ServerInfo ret = new ServerInfo(name, endpoint, serverMessage);
             ret.PlayerCount = playerCount;
@@ -176,7 +176,10 @@ namespace DoodleEmpires.Engine.Net
         /// <returns>True if the objects are equal</returns>
         public static bool operator ==(ServerInfo a, ServerInfo b)
         {
-            return a.Equals(b);
+            if (((object)a) != null && ((object)b) != null)
+                return a.Equals(b);
+            else
+                return false;
         }
 
         /// <summary>
@@ -187,7 +190,10 @@ namespace DoodleEmpires.Engine.Net
         /// <returns>True if the objects are not equal</returns>
         public static bool operator !=(ServerInfo a, ServerInfo b)
         {
-            return !a.Equals(b);
+            if (((object)a) != null && ((object)b) != null)
+                return !a.Equals(b);
+            else
+                return false;
         }
 
         /// <summary>
@@ -197,6 +203,16 @@ namespace DoodleEmpires.Engine.Net
         public override int GetHashCode()
         {
             return _name.GetHashCode();
+        }
+
+        public INetworkable Read(NetIncomingMessage msg)
+        {
+            return ReadFromPacket(msg);
+        }
+
+        public void Write(NetOutgoingMessage msg)
+        {
+            WriteToPacket(msg);
         }
     }
 

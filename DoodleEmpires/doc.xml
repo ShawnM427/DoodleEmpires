@@ -4,6 +4,27 @@
         <name>DoodleEmpires</name>
     </assembly>
     <members>
+        <member name="T:DoodleEmpires.Content.EmbeddedResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Content.EmbeddedResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Content.EmbeddedResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Content.EmbeddedResources.LightShader">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
         <member name="T:DoodleEmpires.Engine.Campaign.Campaign">
             <summary>
             Represents the main class for a campain
@@ -1953,6 +1974,29 @@
             Gets the global tile manager
             </summary>
         </member>
+        <member name="P:DoodleEmpires.Engine.Net.IPacket.SequenceChannel">
+            <summary>
+            Gets the sequence channel to send this packet type over
+            This can be usefull when the DeliveryMethod is ReliableSequenced to
+            not drop packets containing important information
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.IPacket.DeliveryMethod">
+            <summary>
+            Gets the delivery method to use for this packet type
+            By default this is NetDeliveryMethod.Unreliable
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.IPacket.Reciepient">
+            <summary>
+            Gets or sets the target reciepient for this packet
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.IPacket.SendToAll">
+            <summary>
+            Gets or sets wheter this packet should be sent to all clients
+            </summary>
+        </member>
         <member name="T:DoodleEmpires.Engine.Net.NetGame">
             <summary>
             Represents a networked game
@@ -2040,6 +2084,11 @@
         <member name="F:DoodleEmpires.Engine.Net.NetGame._myPlayer">
             <summary>
             Represents the client-controlled player
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._connectedServer">
+            <summary>
+            Gets or sets the server that the client is currently connected to
             </summary>
         </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._view">
@@ -2147,6 +2196,11 @@
             The server list GUI controller
             </summary>
         </member>
+        <member name="F:DoodleEmpires.Engine.Net.NetGame._serverLobbyControl">
+            <summary>
+            The server lobby GUI controller
+            </summary>
+        </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._fpsLabel">
             <summary>
             A label displaying the FPS
@@ -2214,6 +2268,11 @@
             Draws the server list
             </summary>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.DrawServerLobby">
+            <summary>
+            Draws the server lobby
+            </summary>
+        </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.MousePressed(MonoUI.MouseEventArgs)">
             <summary>
             Called when a mouse button is pressed
@@ -2244,6 +2303,11 @@
             </summary>
             <param name="sender">The object to raise this event</param>
             <param name="e">The text event arguments containing the character pressed</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.OnPlayButtonPressed">
+            <summary>
+            Called when the play button in the lobby was pressed
+            </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.NetGame.OnCampaignButtonPressed">
             <summary>
@@ -2315,7 +2379,12 @@
             <param name="sender">The object to raise the event</param>
             <param name="args">The event args sent to this event</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.UpdateNetworking">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.UpdateLobbyNetworking">
+            <summary>
+            Updates this network handler, should be threaded
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.UpdateGameNetworking">
             <summary>
             Updates this network handler, should be threaded
             </summary>
@@ -2491,61 +2560,6 @@
             Gets or sets whether this game in singleplayer
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetManager.#ctor(DoodleEmpires.Engine.Net.NetPacketIdentifierSize,Lidgren.Network.NetPeer)">
-            <summary>
-            Creates a new net manager
-            </summary>
-            <param name="idSize">The size of packet ID's to read/write</param>
-            <param name="peer">The peer to listen to</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetManager.Run">
-            <summary>
-            Starts running this net manager, note that this call will run the networking on a new thread
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetManager.PerformRun">
-            <summary>
-            The backend method for running the listener
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetManager.HandlePacket(Lidgren.Network.NetIncomingMessage)">
-            <summary>
-            Handles a packet by reading its packetID and passing it to the correct Packet handler
-            </summary>
-            <param name="msg">The incomming message to parse</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetManager.OnUnknowPacketReceived(Lidgren.Network.NetIncomingMessage)">
-            <summary>
-            Called when an unknown packet was received, default is to shut down the peer
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetManager.OnNoActionAvailable(Lidgren.Network.NetIncomingMessage)">
-            <summary>
-            Called when an action is not defined for the message type
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetManager.ImportPacketType(System.Type,System.EventHandler{DoodleEmpires.Engine.Net.IPacket})">
-            <summary>
-            Adds a packet to the list of packets to handle
-            </summary>
-            <param name="type">The packet to handle</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetManager.SendMessage(DoodleEmpires.Engine.Net.IPacket)">
-            <summary>
-            Sends a packet using this net manager
-            </summary>
-            <param name="packet">The packet to send</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetManager.Dispose">
-            <summary>
-            Disposes this object
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.NetManager.Peer">
-            <summary>
-            Gets or sets the netpeer to listen to
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Net.NetPlayer">
             <summary>
             Represents a network instance of a player
@@ -2572,6 +2586,20 @@
             <summary>
             Gets this player's network connection
             </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.PacketReader.BuildPacketHandler_DOM(System.Type,System.String,System.CodeDom.MemberAttributes)">
+            <summary>
+            Builds a static CodeDOM packet reader for the given type
+            </summary>
+            <param name="typeToHandle">The type to build a reader for</param>
+            <returns>A CodeMemberMethod that can be compiled to read a packet from a NetIncomingMessage</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.PacketWriter.BuildPacketHandler_DOM(System.Type,System.String,System.CodeDom.MemberAttributes)">
+            <summary>
+            
+            </summary>
+            <param name="typeToHandle"></param>
+            <returns></returns>
         </member>
         <member name="P:DoodleEmpires.Engine.Net.PacketWriter.DeliveryMethod">
             <summary>
@@ -2632,6 +2660,30 @@
         <member name="P:DoodleEmpires.Engine.Net.PlayerInfo.Connection">
             <summary>
             Gets this player's network connection
+            </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Net.PlayerInfoListItem">
+            <summary>
+            A ListViewItem for drawing player info
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.PlayerInfoListItem.#ctor(DoodleEmpires.Engine.Net.PlayerInfo)">
+            <summary>
+            Creates a new player info list item
+            </summary>
+            <param name="info">The info of the player to draw</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Net.PlayerInfoListItem.Render(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Renders this list view item
+            </summary>
+            <param name="batch">The spritebatch to use for drawing</param>
+            <param name="font">The font to use for rendering text for this items</param>
+            <param name="bounds">The bounds to render in</param>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.PlayerInfoListItem.Info">
+            <summary>
+            Gets or sets the player info associated with this item
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.GameServer">
@@ -3956,6 +4008,30 @@
             Gets this render chunk's vertex buffer
             </summary>
         </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.TerrainBuilder">
+            <summary>
+            Represents an object that can be used to generate a pixel terrain from a seed value
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.TerrainBuilder._seed">
+            <summary>
+            The object to use as a seed for this terrain builder
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TerrainBuilder.#ctor(System.Object)">
+            <summary>
+            Creates a new terrainbuilder with the given seed
+            </summary>
+            <param name="seed">The object to use as the seed for this builder</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TerrainBuilder.GetColorAtPosition(System.Int32,System.Int32)">
+            <summary>
+            Gets the color for the given position
+            </summary>
+            <param name="x">The x coord to get the color at</param>
+            <param name="y">The y coord to get the color at</param>
+            <returns>The color at [x, y]</returns>
+        </member>
         <member name="T:DoodleEmpires.Engine.Terrain.Tile">
             <summary>
             Represents a tile type
@@ -4929,6 +5005,46 @@
             All 4 sides are set
             </summary>
         </member>
+        <member name="T:DoodleEmpires.Engine.Net.ImmediateNeighbours">
+            <summary>
+            Represents the neighbour states of a voxel
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.ImmediateNeighbours.None">
+            <summary>
+            No neighbours are set
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.ImmediateNeighbours.T">
+            <summary>
+            The top left neighbour is set
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.ImmediateNeighbours.L">
+            <summary>
+            The top middle neighbour is set
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.ImmediateNeighbours.R">
+            <summary>
+            The top right neighbour is set
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.ImmediateNeighbours.B">
+            <summary>
+            The left neighbour is set
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.ImmediateNeighbours.InnerCorner">
+            <summary>
+            The right neighbour is set
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Net.ImmediateNeighbours.All">
+            <summary>
+            All 4 sides are set
+            </summary>
+        </member>
         <member name="T:DoodleEmpires.Engine.Utilities.EventExtensions">
             <summary>
             A class for event extensions
@@ -4984,12 +5100,12 @@
             Gets a multiplier that synchs tick rate to frame speed
             </summary>
         </member>
-        <member name="T:DoodleEmpires.Engine.Utilities.SimplexNoise">
+        <member name="T:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise">
             <summary>
             A class for handling simplex noise
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.SimplexNoise.Noise(System.Double,System.Double)">
+        <member name="M:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise.Noise(System.Double,System.Double)">
             <summary>
             Performs 2-Dimensional simplex noise
             </summary>
@@ -4997,7 +5113,7 @@
             <param name="yin">The y-coord to sample</param>
             <returns>A vlaue between -1 and 1</returns>
         </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.SimplexNoise.Noise(System.Double,System.Double,System.Double)">
+        <member name="M:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise.Noise(System.Double,System.Double,System.Double)">
             <summary>
             Performs 3-Dimensional simplex noise
             </summary>
@@ -5006,7 +5122,7 @@
             <param name="zin">The z-coord to sample</param>
             <returns>A value between -1 and 1</returns>
         </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.SimplexNoise.Noise(System.Double,System.Double,System.Double,System.Double)">
+        <member name="M:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise.Noise(System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Performs 4-Dimensional simplex noise
             </summary>
@@ -5016,29 +5132,29 @@
             <param name="w">The w-coord to sample</param>
             <returns>A value between -1 and 1</returns>
         </member>
-        <member name="T:DoodleEmpires.Engine.Utilities.Noise">
+        <member name="T:DoodleEmpires.Engine.NoiseGeneration.Noise">
             <summary>
             A class for generating 1D perlin noise
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.Noise.Persistence">
+        <member name="F:DoodleEmpires.Engine.NoiseGeneration.Noise.Persistence">
             <summary>
             The persistance of the noise
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.Noise.Octaves">
+        <member name="F:DoodleEmpires.Engine.NoiseGeneration.Noise.Octaves">
             <summary>
             The number of octaves to use, increase for finer/rougher detail
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.Noise.PerlinNoise_1D(System.Single)">
+        <member name="M:DoodleEmpires.Engine.NoiseGeneration.Noise.PerlinNoise_1D(System.Single)">
             <summary>
             Performs perlin noise on a 1D plane
             </summary>
             <param name="x">The x-coord to sample</param>
             <returns>A perlin noise sample</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.Noise.Seed">
+        <member name="P:DoodleEmpires.Engine.NoiseGeneration.Noise.Seed">
             <summary>
             Gets or sets the seed to use
             </summary>
@@ -5304,11 +5420,6 @@
         <member name="M:DoodleEmpires.Program.Main(System.String[])">
             <summary>
             The main entry point for the application.
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Program.RunServer">
-            <summary>
-            Runs a game server
             </summary>
         </member>
     </members>

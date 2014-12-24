@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-namespace DoodleEmpires.Engine.Utilities
+namespace DoodleEmpires.Engine.NoiseGeneration
 {
     /// <summary>
     /// A class for handling simplex noise

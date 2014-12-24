@@ -24,24 +24,17 @@ namespace DoodleEmpires
 
             if (args.Length > 0)
                 playerName = args[0];
-            
-            using (var game = new Tests(playerName))
-                game.Run();
-        }
 
-        /// <summary>
-        /// Runs a game server
-        /// </summary>
-        public static void RunServer()
-        {
-            Thread thread = new Thread(StartServer);
-            thread.Start();
-        }
-
-        private static void StartServer()
-        {
-            GameServer server = new GameServer();
-            server.Run(new string[0]);
+            if (args.Contains("-t"))
+            {
+                using (var game = new Tests(playerName))
+                    game.Run();
+            }
+            else
+            {
+                using (var game = new NetGame(playerName))
+                    game.Run();
+            }
         }
     }
 #endif

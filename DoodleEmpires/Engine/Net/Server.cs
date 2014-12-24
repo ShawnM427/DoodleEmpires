@@ -135,7 +135,7 @@ namespace DoodleEmpires.Engine.Net
 
                             NetOutgoingMessage om = _server.CreateMessage();
                             _serverInfo.WriteToPacket(om);
-                            _server.SendDiscoveryResponse(om, msg.SenderEndpoint);
+                            _server.SendDiscoveryResponse(om, msg.SenderEndPoint);
 
                             break;
                             
@@ -159,7 +159,7 @@ namespace DoodleEmpires.Engine.Net
                                     SendServerInfoChanged();
                                 }
 
-                                Console.WriteLine("Lost connection to {0} for {1}", msg.SenderEndpoint, reason);
+                                Console.WriteLine("Lost connection to {0} for {1}", msg.SenderEndPoint, reason);
                             }
 
                             break;
@@ -205,7 +205,7 @@ namespace DoodleEmpires.Engine.Net
                                 case NetPacketType.PingMessage:
                                     NetOutgoingMessage pingMSG = _server.CreateMessage();
                                     pingMSG.Write((byte)NetPacketType.PingMessage, 8);
-                                    _server.SendUnconnectedMessage(pingMSG, msg.SenderEndpoint);
+                                    _server.SendUnconnectedMessage(pingMSG, msg.SenderEndPoint);
                                     break;
                             }
                             break;

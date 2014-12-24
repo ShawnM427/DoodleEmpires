@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.CodeDom;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -26,7 +27,7 @@ namespace DoodleEmpires.Engine.Net
         /// Gets or sets wheter this packet should be sent to all clients
         /// </summary>
         public bool SendToAll { get; set; }
-                
+
         public uint PacketID
         {
             get
@@ -53,20 +54,31 @@ namespace DoodleEmpires.Engine.Net
             DeliveryMethod = NetDeliveryMethod.ReliableOrdered;
             Reciepient = null;
             SendToAll = true;
-
-            BuildPacketHandler(typeToHandle);
         }
 
-        protected virtual void BuildPacketHandler(Type typeToHandle)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeToHandle"></param>
+        /// <returns></returns>
+        public static CodeMemberMethod BuildPacketHandler_DOM(Type typeToHandle, string name, MemberAttributes attributes)
         {
-            if (typeToHandle.GetInterface("IPacket") != null)
+            if (typeToHandle.IsSubclassOf(typeof(IPacket)))
             {
-                _myType = typeToHandle;
                 Type baseType = typeof(IPacket);
 
                 PropertyInfo[] properties = typeToHandle.GetProperties();
 
-                _writeAction = new Action<NetOutgoingMessage, IPacket>((msg, item) => { });
+                CodeMemberMethod writeMethod = new CodeMemberMethod();
+                writeMethod.Name = name;
+                writeMethod.Attributes = attributes;
+                writeMethod.Parameters.Add(new CodeParameterDeclarationExpression(typeof(NetOutgoingMessage), "msg"));
+                writeMethod.Parameters.Add(new CodeParameterDeclarationExpression(typeToHandle, "packet"));
+                writeMethod.Comments.Add(new CodeCommentStatement("<summary>", true));
+                writeMethod.Comments.Add(new CodeCommentStatement(string.Format("Writes a {0} to an outgoing packet", typeToHandle.Name), true));
+                writeMethod.Comments.Add(new CodeCommentStatement("</summary>", true));
+                writeMethod.Comments.Add(new CodeCommentStatement(string.Format("<param name = \"{0}\">{1}</param>", "msg", "The outgoing message to write to"), true));
+                writeMethod.Comments.Add(new CodeCommentStatement(string.Format("<param name = \"{0}\">{1}</param>", "packet", "The packet to write to the message"), true));
 
                 foreach (PropertyInfo property in properties)
                 {
@@ -76,25 +88,31 @@ namespace DoodleEmpires.Engine.Net
 
                         if (returnType.GetInterface("INetworkable") != null)
                         {
-                            _writeAction += (msg, item) => ((INetworkable)property.GetValue(item)).Write(msg);
+                            writeMethod.Statements.Add(new CodeCommentStatement(string.Format("Writes {0}.{1} to the message", typeToHandle.Name, property.Name)));
+                            CodeMethodInvokeExpression writeToPacket = new CodeMethodInvokeExpression(new CodePropertyReferenceExpression(new CodeArgumentReferenceExpression("packet"), property.Name), "Write", new CodeArgumentReferenceExpression("msg"));
+                            writeMethod.Statements.Add(writeToPacket);
                         }
                         else
                         {
-                            Type msgType = typeof(NetIncomingMessage);
+                            Type msgType = typeof(NetOutgoingMessage);
                             MethodInfo[] methods = msgType.GetMethods();
 
                             foreach (MethodInfo method in methods)
                             {
-                                if (method.Name.StartsWith("Write") &&  method.GetParameters().Length == 1 && method.ReturnType == returnType)
+                                if (method.Name.Equals("Write") && method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == returnType)
                                 {
-                                    _writeAction += (msg, item) => ((INetworkable)property.GetValue(item)).Write(msg); ;
+                                    writeMethod.Statements.Add(new CodeCommentStatement(string.Format("Writes {0}.{1} to the message", typeToHandle.Name, property.Name)));
+                                    writeMethod.Statements.Add(new CodeMethodInvokeExpression(new CodeMethodReferenceExpression(new CodeArgumentReferenceExpression("msg"), method.Name), new CodePropertyReferenceExpression(new CodeArgumentReferenceExpression("packet"), property.Name)));
                                     break;
                                 }
                             }
                         }
                     }
                 }
+                return writeMethod;
             }
+            else
+                return null;
         }
 
         public virtual void Write(NetOutgoingMessage msg, IPacket packet)

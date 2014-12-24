@@ -14,6 +14,7 @@ using DoodleEmpires.Engine.Economy;
 using Lidgren.Network;
 using DoodleEmpires.Engine.Terrain;
 using DoodleEmpires.Engine.Entities.PathFinder;
+using DoodleEmpires.Engine.NoiseGeneration;
 
 namespace DoodleEmpires.Engine.Net
 {
@@ -1240,7 +1241,7 @@ namespace DoodleEmpires.Engine.Net
             }
             catch (EndOfStreamException)
             {
-                Debug.WriteLine("[WARNING] File corrupt, attempted to rad past ond of stream. Attempting to bypass...");
+                Debug.WriteLine("[WARNING] File corrupt, attempted to read past end of stream. Attempting to bypass...");
                 return new SPMap(graphics, labelFont, tileManager, atlas, 800, 400);
             }
 
@@ -1435,5 +1436,41 @@ namespace DoodleEmpires.Engine.Net
         /// All 4 sides are set
         /// </summary>
         All = TM | L | R | BM
+    }
+
+    /// <summary>
+    /// Represents the neighbour states of a voxel
+    /// </summary>
+    [Flags]
+    public enum ImmediateNeighbours : byte
+    {
+        /// <summary>
+        /// No neighbours are set
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// The top left neighbour is set
+        /// </summary>
+        T = 1 << 0,
+        /// <summary>
+        /// The top middle neighbour is set
+        /// </summary>
+        L = 1 << 1,
+        /// <summary>
+        /// The top right neighbour is set
+        /// </summary>
+        R = 1 << 2,
+        /// <summary>
+        /// The left neighbour is set
+        /// </summary>
+        B = 1 << 3,
+        /// <summary>
+        /// The right neighbour is set
+        /// </summary>
+        InnerCorner = 1 << 4,
+        /// <summary>
+        /// All 4 sides are set
+        /// </summary>
+        All = T | L | R | B
     }
 }

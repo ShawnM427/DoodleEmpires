@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DoodleEmpires.Engine.Net.PacketHandlers
+﻿namespace DoodleEmpires.Engine.Net
 {
     public class Packet_PlayerJoined : IPacket
     {
@@ -19,11 +13,13 @@ namespace DoodleEmpires.Engine.Net.PacketHandlers
         public Packet_PlayerJoined()
         {
             _info = null;
+            SendToAll = true;
         }
 
         public Packet_PlayerJoined(PlayerInfo info)
         {
             _info = info;
+            SendToAll = true;
         }
     }
 }
