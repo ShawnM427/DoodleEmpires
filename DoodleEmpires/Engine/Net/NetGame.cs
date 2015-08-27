@@ -449,10 +449,10 @@ namespace DoodleEmpires.Engine.Net
                 _soundEngine.AddSound(sName, Content.Load<SoundEffect>("Sounds\\" + sName));
             }
 
-            _cameraPostEffect = Content.Load<Effect>("PostShaders");
-            _cameraPostEffect.Parameters["blurDistance"].SetValue(0.001f);
+            //_cameraPostEffect = Content.Load<Effect>("PostShaders");
+            //_cameraPostEffect.Parameters["blurDistance"].SetValue(0.001f);
 
-            _cameraPostEffect.Parameters["noiseEpsilon"].SetValue(0.5f);
+            //_cameraPostEffect.Parameters["noiseEpsilon"].SetValue(0.5f);
             //_cameraPostEffect.Parameters["yeOldeEpsilon"].SetValue(0.95f);
 
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
@@ -693,7 +693,7 @@ namespace DoodleEmpires.Engine.Net
                     }
 
 
-                    _cameraPostEffect.Parameters["seed"].SetValue(_seed);
+                    //_cameraPostEffect.Parameters["seed"].SetValue(_seed);
                     _seed += 0.01f;
 
                     _seed = _seed > 1 ? 0.001f : _seed;

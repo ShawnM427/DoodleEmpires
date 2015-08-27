@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
 using SmileyFaceWars.Engine;
 using DoodleEmpires.Engine.Utilities;
 using DoodleEmpires.Engine.Terrain;
@@ -315,7 +314,7 @@ namespace SmileyFaceWars
             Packet_SendInfo outgoing = new Packet_SendInfo();
             outgoing.ServerInfo = _myServer;
 
-            _netManager.SendMessage(outgoing, message.SenderEndpoint);
+            _netManager.SendMessage(outgoing, message.SenderEndPoint);
         }
 
         protected void PlayerConnected(NetIncomingMessage msg)

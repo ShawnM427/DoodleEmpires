@@ -718,7 +718,7 @@ namespace DoodleEmpires.Engine.Net
 
             if (BackDrop != null)
             {
-                _spriteBatch.Begin(SpriteSortMode.Texture, null, SamplerState.LinearWrap, null, null);
+                _spriteBatch.Begin(sortMode: SpriteSortMode.Texture, samplerState: SamplerState.LinearWrap);
 
                 _spriteBatch.Draw(BackDrop, new Rectangle(0, -1, _graphics.Viewport.Width, _graphics.Viewport.Height),
                     camera.ViewBounds, Color.FromNonPremultiplied(255, 255, 255, 64));
