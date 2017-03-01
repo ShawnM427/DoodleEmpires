@@ -449,11 +449,11 @@ namespace DoodleEmpires.Engine.Net
                 _soundEngine.AddSound(sName, Content.Load<SoundEffect>("Sounds\\" + sName));
             }
 
-            //_cameraPostEffect = Content.Load<Effect>("PostShaders");
-            //_cameraPostEffect.Parameters["blurDistance"].SetValue(0.001f);
+            _cameraPostEffect = Content.Load<Effect>("Shaders/LightShader");
+            _cameraPostEffect = Content.Load<Effect>("Shaders/PostShaders");
 
-            //_cameraPostEffect.Parameters["noiseEpsilon"].SetValue(0.5f);
-            //_cameraPostEffect.Parameters["yeOldeEpsilon"].SetValue(0.95f);
+            _cameraPostEffect.Parameters["blurDistance"]?.SetValue(0.001f);
+            _cameraPostEffect.Parameters["noiseEpsilon"]?.SetValue(0.995f);
 
             _blockTexs = _blockAtlas.GetTextures(GraphicsDevice);
 
@@ -557,19 +557,24 @@ namespace DoodleEmpires.Engine.Net
             _zoneView.HeaderText = "Zone:";
 
             _serverLobbyControl = new GUIPanel(GraphicsDevice, null);
-            _serverLobbyControl.Bounds = new Rectangle(0, 0, 120, 200);
+            _serverLobbyControl.Bounds = new Rectangle(0, 0, 160, 200);
 
             _lobbyPlayerList = new GUIListView(GraphicsDevice, _serverLobbyControl);
-            _lobbyPlayerList.Bounds = new Rectangle(0, 0, 120, 175);
+            _lobbyPlayerList.Bounds = new Rectangle(0, 0, 160, 175);
             _lobbyPlayerList.ShownItems = 6;
             _lobbyPlayerList.Font = _guiFont;
             _lobbyPlayerList.HeaderText = "Players:";
 
             GUIButton lobbyPlayButton = new GUIButton(GraphicsDevice, _guiFont, _serverLobbyControl);
-            lobbyPlayButton.Bounds = new Rectangle(20, 180, 80, 20);
+            lobbyPlayButton.Bounds = new Rectangle(5, 180, 70, 20);
             lobbyPlayButton.Text = "Play";
             lobbyPlayButton.OnMousePressed += OnPlayButtonPressed;
             lobbyPlayButton.Enabled = false;
+
+            GUIButton lobbyLeaveButton = new GUIButton(GraphicsDevice, _guiFont, _serverLobbyControl);
+            lobbyLeaveButton.Bounds = new Rectangle(85, 180, 70, 20);
+            lobbyLeaveButton.Text = "Leave";
+            lobbyLeaveButton.OnMousePressed += OnLeavePressed;
 
             foreach (ZoneInfo zone in GlobalZoneManager.Manager.Items)
             {
@@ -728,7 +733,7 @@ namespace DoodleEmpires.Engine.Net
                     DrawServerList();
                     break;
                 case GameState.InGame:
-                    DrawMainGame();
+                    DrawMainGame(gameTime);
                     break;
                 case GameState.Lobby:
                     DrawServerLobby();
@@ -739,7 +744,7 @@ namespace DoodleEmpires.Engine.Net
         /// <summary>
         /// Draws the main game
         /// </summary>
-        protected virtual void DrawMainGame()
+        protected virtual void DrawMainGame(GameTime gameTime)
         {
             if (_view != null && _view.PostEffect == null)
                 _view.PostEffect = _cameraPostEffect;
@@ -747,6 +752,8 @@ namespace DoodleEmpires.Engine.Net
 
             GraphicsDevice.Clear(Color.White);
             GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
+
+            _view.PostEffect?.Parameters["seed"]?.SetValue((float)_rand.NextDouble());
 
             _map.Render(_view);
 
@@ -861,6 +868,9 @@ namespace DoodleEmpires.Engine.Net
                 case GameState.MainMenu:
                     _menuControl.MousePressed(args);
                     break;
+                case GameState.Lobby:
+                    _serverLobbyControl.MousePressed(args);
+                    break;
                 case GameState.ServerList:
                     _serverListControl.MousePressed(args);
                     break;
@@ -880,6 +890,9 @@ namespace DoodleEmpires.Engine.Net
                     break;
                 case GameState.ServerList:
                     _serverListControl.MouseDown(args);
+                    break;
+                case GameState.Lobby:
+                    _serverLobbyControl.MouseDown(args);
                     break;
                 case GameState.InGame:
                     if (!_mainControl.ScreenBounds.Contains(args.Position))
@@ -1011,6 +1024,13 @@ namespace DoodleEmpires.Engine.Net
             _gameState = GameState.InGame;
         }
 
+        private void OnLeavePressed()
+        {
+            _client.Disconnect("Leaving lobby");
+            _gameState = GameState.ServerList;
+            _players.Clear();
+        }
+
         /// <summary>
         /// Called when the campaign button was pressed
         /// </summary>
@@ -1046,7 +1066,6 @@ namespace DoodleEmpires.Engine.Net
         {
             ServerInfo sInfo = (ServerInfo)e.Tag;
 
-            _gameState = GameState.Lobby;
             _serverRefreshTimer.Stop();
             ConnectToServer(sInfo);
             return;
@@ -1282,7 +1301,7 @@ namespace DoodleEmpires.Engine.Net
 
                     case NetIncomingMessageType.ConnectionLatencyUpdated:
                         ServerInfo inInfo = _availableServers.Find(X => X.InternalEndPoint == msg.SenderEndPoint);
-                        if (inInfo.InternalEndPoint != null)
+                        if (inInfo?.InternalEndPoint != null)
                             inInfo.Ping = msg.ReadSingle();
                         break;
 
@@ -1297,6 +1316,7 @@ namespace DoodleEmpires.Engine.Net
                         if (status == NetConnectionStatus.Connected)
                         {
                             Console.WriteLine("Connected to server, joining game");
+                            _gameState = GameState.Lobby;
                             RequestJoin();
                         }
                         else if (status == NetConnectionStatus.Disconnected)

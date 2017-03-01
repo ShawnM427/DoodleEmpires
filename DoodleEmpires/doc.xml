@@ -4,27 +4,6 @@
         <name>DoodleEmpires</name>
     </assembly>
     <members>
-        <member name="T:DoodleEmpires.Content.EmbeddedResources">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Content.EmbeddedResources.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Content.EmbeddedResources.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Content.EmbeddedResources.LightShader">
-            <summary>
-              Looks up a localized resource of type System.Byte[].
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Campaign.Campaign">
             <summary>
             Represents the main class for a campain
@@ -100,14 +79,6 @@
             Represents an empty tech node, such as the root node of a tech tree
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Economy.TechNode.#ctor(System.String,System.String,Microsoft.Xna.Framework.Graphics.Texture2D)">
-            <summary>
-            Creates a new tech node
-            </summary>
-            <param name="name">The name for this node</param>
-            <param name="description">The description for this node</param>
-            <param name="icon">The icon for this node</param>
-        </member>
         <member name="P:DoodleEmpires.Engine.Economy.TechNode.Name">
             <summary>
             Gets the name of this tech node
@@ -123,6 +94,14 @@
             Gets the icon of this tech node
             </summary>
         </member>
+        <member name="M:DoodleEmpires.Engine.Economy.TechNode.#ctor(System.String,System.String,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Creates a new tech node
+            </summary>
+            <param name="name">The name for this node</param>
+            <param name="description">The description for this node</param>
+            <param name="icon">The icon for this node</param>
+        </member>
         <member name="T:DoodleEmpires.Engine.Economy.TechTree">
             <summary>
             Represents a branching tech tree
@@ -133,9 +112,44 @@
             Represents buffs for an economy
             </summary>
         </member>
+        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.PopulationCapRelative">
+            <summary>
+            Gets or sets the relative population increase/decsrease caused by this buff
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.StockpileRelative">
+            <summary>
+            Gets or sets the relative stockpile size increase/decsrease caused by this buff
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.ResourceRateRelative">
+            <summary>
+            Gets or sets the relative resource per second increase/decsrease caused by this buff
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.PopulationCapMultiplier">
+            <summary>
+            Gets or sets the relative population increase/decsrease caused by this buff
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.StockpileMultiplier">
+            <summary>
+            Gets or sets the relative stockpile size increase/decsrease caused by this buff
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.ResourceRateMultiplier">
+            <summary>
+            Gets or sets the relative resource per second increase/decsrease caused by this buff
+            </summary>
+        </member>
         <member name="M:DoodleEmpires.Engine.Economy.EconomyBuff.GetBlankBuff">
             <summary>
             Creates a new blank economy buff
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.Empty">
+            <summary>
+            Gets an empty unit buff
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Economy.EconomyBuff.op_Addition(DoodleEmpires.Engine.Economy.EconomyBuff,DoodleEmpires.Engine.Economy.EconomyBuff)">
@@ -170,93 +184,9 @@
             <param name="b">The value to multiply by</param>
             <returns>The quotient of the buff</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.PopulationCapRelative">
-            <summary>
-            Gets or sets the relative population increase/decsrease caused by this buff
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.StockpileRelative">
-            <summary>
-            Gets or sets the relative stockpile size increase/decsrease caused by this buff
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.ResourceRateRelative">
-            <summary>
-            Gets or sets the relative resource per second increase/decsrease caused by this buff
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.PopulationCapMultiplier">
-            <summary>
-            Gets or sets the relative population increase/decsrease caused by this buff
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.StockpileMultiplier">
-            <summary>
-            Gets or sets the relative stockpile size increase/decsrease caused by this buff
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.ResourceRateMultiplier">
-            <summary>
-            Gets or sets the relative resource per second increase/decsrease caused by this buff
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.EconomyBuff.Empty">
-            <summary>
-            Gets an empty unit buff
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Economy.ZoneManager">
             <summary>
             Manages zone types
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Utilities.ObjectManager`1">
-            <summary>
-            Represents a class for handling named objects
-            </summary>
-            <typeparam name="T">The type of objects to handle</typeparam>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.ObjectManager`1._items">
-            <summary>
-            The internal list of items
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.ObjectManager`1._zookUp">
-            <summary>
-            The internal lookup dictionary to use
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.ObjectManager`1.Add(System.String,`0)">
-            <summary>
-            Gets the object with the given ID
-            </summary>
-            <param name="name">The name of object to add</param>
-            <param name="item">The item to add</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.ObjectManager`1.Get(System.String)">
-            <summary>
-            Gets the object with the given ID
-            </summary>
-            <param name="name">The name of the object</param>
-            <returns>The item with the given ID, or the default object for the type</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.ObjectManager`1.Get(System.Int32)">
-            <summary>
-            Gets the object with the given ID
-            </summary>
-            <param name="id">The ID of the object</param>
-            <returns>The item with the given ID, or the default object for the type</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.ObjectManager`1.GetID(System.String)">
-            <summary>
-            Gets the ID of the object with the given name
-            </summary>
-            <param name="name">The name to search for</param>
-            <returns>The ID, or -1 if an item with that name does not exist</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.ObjectManager`1.Items">
-            <summary>
-            Gets the list of items handled by this manager
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Economy.ZoneManager.Add(System.String,DoodleEmpires.Engine.Economy.ZoneInfo)">
@@ -271,15 +201,126 @@
             A static class for handling zonings
             </summary>
         </member>
+        <member name="P:DoodleEmpires.Engine.Economy.GlobalZoneManager.Manager">
+            <summary>
+            Gets the internal zone manager
+            </summary>
+        </member>
         <member name="M:DoodleEmpires.Engine.Economy.GlobalZoneManager.#cctor">
             <summary>
             Initializes the static zone manager
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Economy.GlobalZoneManager.Manager">
+        <member name="T:DoodleEmpires.Engine.Economy.Zoning">
             <summary>
-            Gets the internal zone manager
+            Represents a zone that applies unit buffs and allows new tech options
             </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.Zoning.Bounds">
+            <summary>
+            Gets or sets the bounds for this zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.Zoning.TotalEconomyBuff">
+            <summary>
+            Gets the total economy buff for this zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.Zoning.Info">
+            <summary>
+            Gets the zoning information about this zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.Zoning.PlayerID">
+            <summary>
+            Gets the ID of the player associated with this zone
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Economy.Zoning.#ctor(Microsoft.Xna.Framework.Rectangle,System.Byte,DoodleEmpires.Engine.Economy.ZoneInfo)">
+            <summary>
+            Creates a new zone
+            </summary>
+            <param name="bounds">The bounds of the zone</param>
+            <param name="playerID">The ID of the player to bind to</param>
+            <param name="info">The zone info to use</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Economy.Zoning.WriteToStream(System.IO.BinaryWriter)">
+            <summary>
+            Writes basic zone data to stream (TODO Actually save zone info)
+            </summary>
+            <param name="writer">The stream to write to</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Economy.Zoning.ReadFromStream(System.IO.BinaryReader)">
+            <summary>
+            Reads basic zone data from stream (TODO Actually load zone info)
+            </summary>
+            <param name="reader">The stream to read from</param>
+            <returns>A basic zone loaded from teh memory stream</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Economy.Zoning.WriteToPacket(Lidgren.Network.NetOutgoingMessage)">
+            <summary>
+            Writes this zone to an outgoing packet, DOES NOT WRITE PACKET HEADER
+            </summary>
+            <param name="msg">The packet to write to</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Economy.Zoning.ReadFromPacket(Lidgren.Network.NetIncomingMessage)">
+            <summary>
+            Reads a zone from an incoming packet, DOES NOT READ PACKET HEADER
+            </summary>
+            <param name="msg">The packet to parse</param>
+            <returns>A zone read from the packet</returns>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Economy.ZoneInfo">
+            <summary>
+            Represents information about a zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.Color">
+            <summary>
+            Gets the color for this zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.FreindlyBuff">
+            <summary>
+            Gets the buff for freindly units in this zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.EnemyBuff">
+            <summary>
+            Gets the buff for enemy units in this zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.RequiredTechNode">
+            <summary>
+            Gets or sets the tech node required to create this zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.TechUnlocks">
+            <summary>
+            Gets a list of tech unlocks that placing this zone grants
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.EconomyBuff">
+            <summary>
+            Gets the per-tile economy buff for this zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.Name">
+            <summary>
+            Gets the name of this zone
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.ZoneID">
+            <summary>
+            Gets or sets the ID of this zone
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Economy.ZoneInfo.#ctor(Microsoft.Xna.Framework.Color,System.String)">
+            <summary>
+            Creates a new zoning info
+            </summary>
+            <param name="color">The color of the zone</param>
+            <param name="name">The name of the zone</param>
         </member>
         <member name="T:DoodleEmpires.Engine.Entities.AI.AIHandler">
             <summary>
@@ -296,6 +337,11 @@
             The entities target position
             </summary>
         </member>
+        <member name="P:DoodleEmpires.Engine.Entities.AI.AIHandler.Target">
+            <summary>
+            Gets or sets this AI's target position
+            </summary>
+        </member>
         <member name="M:DoodleEmpires.Engine.Entities.AI.AIHandler.#ctor(DoodleEmpires.Engine.Entities.Entity)">
             <summary>
             Creates a new AI Handler
@@ -309,21 +355,11 @@
             <param name="map">The current map</param>
             <param name="elapsedMS">The time in milliseconds since the last update</param>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.AI.AIHandler.Target">
-            <summary>
-            Gets or sets this AI's target position
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Entities.AI.AIState`1">
             <summary>
             A generic class representing the current status of an AI
             </summary>
             <typeparam name="T">The AI tag data type</typeparam>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Entities.AI.AIState`1.#ctor">
-            <summary>
-            Creates a new blank AI state
-            </summary>
         </member>
         <member name="P:DoodleEmpires.Engine.Entities.AI.AIState`1.AITag">
             <summary>
@@ -335,19 +371,24 @@
             Gets or sets the current AI status
             </summary>
         </member>
+        <member name="M:DoodleEmpires.Engine.Entities.AI.AIState`1.#ctor">
+            <summary>
+            Creates a new blank AI state
+            </summary>
+        </member>
         <member name="T:DoodleEmpires.Engine.Entities.AI.AITag">
             <summary>
             A basic tag for using with AIState
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Entities.AI.AITag.#ctor">
-            <summary>
-            Creates a new blank AI tag
-            </summary>
-        </member>
         <member name="P:DoodleEmpires.Engine.Entities.AI.AITag.Target">
             <summary>
             Gets or sets the target position
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Entities.AI.AITag.#ctor">
+            <summary>
+            Creates a new blank AI tag
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Entities.AI.AIStatus">
@@ -418,14 +459,14 @@
             The base class for all world entities
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.Entities.Entity.#ctor">
-            <summary>
-            Creates a new entity
-            </summary>
-        </member>
         <member name="P:DoodleEmpires.Engine.Entities.Entity.Position">
             <summary>
             Gets or sets the position of this entity
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Entities.Entity.#ctor">
+            <summary>
+            Creates a new entity
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Entities.PathFinder.Utils.Pair`2">
@@ -848,6 +889,21 @@
             The grid rectangle for this grid
             </summary>
         </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.BaseGrid.gridRect">
+            <summary>
+            Gets the grid rectangle for this grid
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.BaseGrid.Width">
+            <summary>
+            Gets the width of this grid
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.BaseGrid.Height">
+            <summary>
+            Gets the height of this grid
+            </summary>
+        </member>
         <member name="M:DoodleEmpires.Engine.Entities.PathFinder.BaseGrid.GetNodeAt(System.Int32,System.Int32)">
             <summary>
             Gets the node at the given co-ordinates
@@ -915,21 +971,6 @@
             </summary>
             <returns>A clone of this grid</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.BaseGrid.gridRect">
-            <summary>
-            Gets the grid rectangle for this grid
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.BaseGrid.Width">
-            <summary>
-            Gets the width of this grid
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.BaseGrid.Height">
-            <summary>
-            Gets the height of this grid
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Entities.PathFinder.DynamicGrid">
             <summary>
             A dynamic pathfinding grid
@@ -938,6 +979,16 @@
         <member name="F:DoodleEmpires.Engine.Entities.PathFinder.DynamicGrid.m_nodes">
             <summary>
             A dictionary containing all non-null nodes
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.DynamicGrid.Width">
+            <summary>
+            Gets the width of this grid
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.DynamicGrid.Height">
+            <summary>
+            Gets the height of this grid
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Entities.PathFinder.DynamicGrid.#ctor(System.Collections.Generic.List{DoodleEmpires.Engine.Entities.PathFinder.GridPos})">
@@ -1016,19 +1067,19 @@
             </summary>
             <returns>A duplicate of this grid</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.DynamicGrid.Width">
+        <member name="T:DoodleEmpires.Engine.Entities.PathFinder.DynamicGridWPool">
+            <summary>
+            Represents a dynamic search grid that uses a node pool
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.DynamicGridWPool.Width">
             <summary>
             Gets the width of this grid
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.DynamicGrid.Height">
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.DynamicGridWPool.Height">
             <summary>
             Gets the height of this grid
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Entities.PathFinder.DynamicGridWPool">
-            <summary>
-            Represents a dynamic search grid that uses a node pool
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Entities.PathFinder.DynamicGridWPool.#ctor(DoodleEmpires.Engine.Entities.PathFinder.NodePool)">
@@ -1095,19 +1146,19 @@
             </summary>
             <returns>A clone of this grid</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.DynamicGridWPool.Width">
+        <member name="T:DoodleEmpires.Engine.Entities.PathFinder.PartialGridWPool">
+            <summary>
+            Represents a search grid that uses a node pool
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.PartialGridWPool.Width">
             <summary>
             Gets the width of this grid
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.DynamicGridWPool.Height">
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.PartialGridWPool.Height">
             <summary>
             Gets the height of this grid
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Entities.PathFinder.PartialGridWPool">
-            <summary>
-            Represents a search grid that uses a node pool
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Entities.PathFinder.PartialGridWPool.#ctor(DoodleEmpires.Engine.Entities.PathFinder.NodePool,System.Nullable{DoodleEmpires.Engine.Entities.PathFinder.GridRect})">
@@ -1196,19 +1247,19 @@
             </summary>
             <returns>A clone of this grid</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.PartialGridWPool.Width">
+        <member name="T:DoodleEmpires.Engine.Entities.PathFinder.StaticGrid">
+            <summary>
+            Represents a non-dynamic navigation grid
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.StaticGrid.Width">
             <summary>
             Gets the width of this grid
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.PartialGridWPool.Height">
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.StaticGrid.Height">
             <summary>
             Gets the height of this grid
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Entities.PathFinder.StaticGrid">
-            <summary>
-            Represents a non-dynamic navigation grid
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Entities.PathFinder.StaticGrid.#ctor(System.Int32,System.Int32,System.Boolean[][])">
@@ -1306,16 +1357,6 @@
             Creates a clone of this grid
             </summary>
             <returns>A clone of this grid</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.StaticGrid.Width">
-            <summary>
-            Gets the width of this grid
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.StaticGrid.Height">
-            <summary>
-            Gets the height of this grid
-            </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Entities.PathFinder.HeuristicMode">
             <summary>
@@ -1415,6 +1456,60 @@
             <param name="iEndPos">The new end position to use</param>
             <param name="iSearchGrid">The new grid to use, or null to use the old grid</param>
         </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.CrossAdjacentPoint">
+            <summary>
+            Gets or sets whether an adjacent node needs to be open in order to cross a corner
+            </summary>
+            <example>
+            -------------
+            | x | x | t |
+            -------------
+            | x | s | x |
+            -------------
+            | x | x | x |
+            -------------
+            where x is closed, s is start and t is open.
+            
+            If false, this would return t as a valid walking point,
+            if true, either the top middle or the left middle would
+            need to be open
+            </example>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.CrossCorner">
+            <summary>
+            Gets or sets whether the search can cross corners
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.AllowEndNodeUnWalkable">
+            <summary>
+            Gets or sets whether the search allows for the end node to be unwalkable
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.HeuristicFunc">
+            <summary>
+            Gets the heuristic being used
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.SearchGrid">
+            <summary>
+            Gets the grid that the search is being applied to
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.StartNode">
+            <summary>
+            Gets the starting node
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.EndNode">
+            <summary>
+            Gets the end node
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.UseRecursive">
+            <summary>
+            Gets or sets whether this search uses recursion
+            </summary>
+        </member>
         <member name="F:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.m_heuristic">
             <summary>
             The heuristic to use
@@ -1474,60 +1569,6 @@
             A list of all open nodes
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.CrossAdjacentPoint">
-            <summary>
-            Gets or sets whether an adjacent node needs to be open in order to cross a corner
-            </summary>
-            <example>
-            -------------
-            | x | x | t |
-            -------------
-            | x | s | x |
-            -------------
-            | x | x | x |
-            -------------
-            where x is closed, s is start and t is open.
-            
-            If false, this would return t as a valid walking point,
-            if true, either the top middle or the left middle would
-            need to be open
-            </example>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.CrossCorner">
-            <summary>
-            Gets or sets whether the search can cross corners
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.AllowEndNodeUnWalkable">
-            <summary>
-            Gets or sets whether the search allows for the end node to be unwalkable
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.HeuristicFunc">
-            <summary>
-            Gets the heuristic being used
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.SearchGrid">
-            <summary>
-            Gets the grid that the search is being applied to
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.StartNode">
-            <summary>
-            Gets the starting node
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.EndNode">
-            <summary>
-            Gets the end node
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.JumpPointParam.UseRecursive">
-            <summary>
-            Gets or sets whether this search uses recursion
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Entities.PathFinder.JumpPointFinder">
             <summary>
             Performs a jump point search
@@ -1554,6 +1595,11 @@
         <member name="M:DoodleEmpires.Engine.Entities.PathFinder.NodePool.#ctor">
             <summary>
             Creates a new node pool
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.NodePool.Nodes">
+            <summary>
+            Gets the dictionary of nodes in this pool
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Entities.PathFinder.NodePool.GetNode(System.Int32,System.Int32)">
@@ -1601,19 +1647,9 @@
             </summary>
             <param name="iPos">The coords to remove at</param>
         </member>
-        <member name="P:DoodleEmpires.Engine.Entities.PathFinder.NodePool.Nodes">
-            <summary>
-            Gets the dictionary of nodes in this pool
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Entities.UnitBuff">
             <summary>
             Represents buffs on a unit to increase or decrease properties
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Entities.UnitBuff.GetBlankBuff">
-            <summary>
-            Creates a new blank unit buff
             </summary>
         </member>
         <member name="P:DoodleEmpires.Engine.Entities.UnitBuff.ArmorMultiplier">
@@ -1656,133 +1692,20 @@
             Gets or sets the haversting speed multiplier for this buff
             </summary>
         </member>
+        <member name="M:DoodleEmpires.Engine.Entities.UnitBuff.GetBlankBuff">
+            <summary>
+            Creates a new blank unit buff
+            </summary>
+        </member>
         <member name="P:DoodleEmpires.Engine.Entities.UnitBuff.Empty">
             <summary>
             Gets an empty unit buff
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Economy.Zoning">
-            <summary>
-            Represents a zone that applies unit buffs and allows new tech options
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Economy.Zoning.#ctor(Microsoft.Xna.Framework.Rectangle,System.Byte,DoodleEmpires.Engine.Economy.ZoneInfo)">
-            <summary>
-            Creates a new zone
-            </summary>
-            <param name="bounds">The bounds of the zone</param>
-            <param name="playerID">The ID of the player to bind to</param>
-            <param name="info">The zone info to use</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Economy.Zoning.WriteToStream(System.IO.BinaryWriter)">
-            <summary>
-            Writes basic zone data to stream (TODO Actually save zone info)
-            </summary>
-            <param name="writer">The stream to write to</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Economy.Zoning.ReadFromStream(System.IO.BinaryReader)">
-            <summary>
-            Reads basic zone data from stream (TODO Actually load zone info)
-            </summary>
-            <param name="reader">The stream to read from</param>
-            <returns>A basic zone loaded from teh memory stream</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Economy.Zoning.WriteToPacket(Lidgren.Network.NetOutgoingMessage)">
-            <summary>
-            Writes this zone to an outgoing packet, DOES NOT WRITE PACKET HEADER
-            </summary>
-            <param name="msg">The packet to write to</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Economy.Zoning.ReadFromPacket(Lidgren.Network.NetIncomingMessage)">
-            <summary>
-            Reads a zone from an incoming packet, DOES NOT READ PACKET HEADER
-            </summary>
-            <param name="msg">The packet to parse</param>
-            <returns>A zone read from the packet</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.Zoning.Bounds">
-            <summary>
-            Gets or sets the bounds for this zone
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.Zoning.TotalEconomyBuff">
-            <summary>
-            Gets the total economy buff for this zone
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.Zoning.Info">
-            <summary>
-            Gets the zoning information about this zone
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.Zoning.PlayerID">
-            <summary>
-            Gets the ID of the player associated with this zone
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Economy.ZoneInfo">
-            <summary>
-            Represents information about a zone
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Economy.ZoneInfo.#ctor(Microsoft.Xna.Framework.Color,System.String)">
-            <summary>
-            Creates a new zoning info
-            </summary>
-            <param name="color">The color of the zone</param>
-            <param name="name">The name of the zone</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.Color">
-            <summary>
-            Gets the color for this zone
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.FreindlyBuff">
-            <summary>
-            Gets the buff for freindly units in this zone
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.EnemyBuff">
-            <summary>
-            Gets the buff for enemy units in this zone
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.RequiredTechNode">
-            <summary>
-            Gets or sets the tech node required to create this zone
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.TechUnlocks">
-            <summary>
-            Gets a list of tech unlocks that placing this zone grants
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.EconomyBuff">
-            <summary>
-            Gets the per-tile economy buff for this zone
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.Name">
-            <summary>
-            Gets the name of this zone
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Economy.ZoneInfo.ZoneID">
-            <summary>
-            Gets or sets the ID of this zone
             </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Entities.UnitState">
             <summary>
             Represents the state of a single unit
             </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Entities.UnitState.#ctor(System.Byte,System.Single)">
-            <summary>
-            Creates a new unit state
-            </summary>
-            <param name="teamID">The team ID for this unit</param>
-            <param name="hp">The starting HP of this unit</param>
         </member>
         <member name="P:DoodleEmpires.Engine.Entities.UnitState.Position">
             <summary>
@@ -1813,6 +1736,13 @@
             <summary>
             Gets or sets this unit's status
             </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Entities.UnitState.#ctor(System.Byte,System.Single)">
+            <summary>
+            Creates a new unit state
+            </summary>
+            <param name="teamID">The team ID for this unit</param>
+            <param name="hp">The starting HP of this unit</param>
         </member>
         <member name="T:DoodleEmpires.Engine.Entities.UnitStatus">
             <summary>
@@ -1868,6 +1798,38 @@
             <summary>
             This unit is dead
             </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Entities.CameraControl">
+            <summary>
+            A basic controller for a 2D camera
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Entities.CameraControl._position">
+            <summary>
+            The current target position
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Entities.CameraControl._bounds">
+            <summary>
+            The bounds that the controller must stay within
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Entities.CameraControl.Position">
+            <summary>
+            Gets or sets the camera controller's position
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Entities.CameraControl.#ctor(ICamera2D)">
+            <summary>
+            Creates a new camera controller
+            </summary>
+            <param name="camera">The camera to control</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Entities.CameraControl.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Updates this camera controller
+            </summary>
+            <param name="gameTime">The current game time</param>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.FoundServerEvent">
             <summary>
@@ -2002,50 +1964,6 @@
             Represents a networked game
             </summary>
         </member>
-        <member name="T:DoodleEmpires.Engine.Utilities.AdvancedGame">
-            <summary>
-            Represents a slighty more advanced base game class
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.AdvancedGame.SpriteBatch">
-            <summary>
-            Gets or sets the spritebatch for drawing
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.#ctor">
-            <summary>
-            Creates a new advanced game
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.Initialize">
-            <summary>
-            Initializes this game
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.Update(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Updates this game
-            </summary>
-            <param name="gameTime">The current game time</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.Draw(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Draws the game
-            </summary>
-            <param name="gameTime">The current game time</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseEvent(MonoUI.MouseEventArgs)">
-            <summary>
-            Called when the state of the mouse has changed
-            </summary>
-            <param name="state"></param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseDown(MonoUI.MouseEventArgs)">
-            <summary>
-            Called when the mouse is held down
-            </summary>
-            <param name="state"></param>
-        </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame.AccountedUpload">
             <summary>
             The amount uploaded by our packets
@@ -2089,6 +2007,51 @@
         <member name="F:DoodleEmpires.Engine.Net.NetGame._connectedServer">
             <summary>
             Gets or sets the server that the client is currently connected to
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnFoundServerEvent">
+            <summary>
+            Called when a server has been discovered
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnJoinedServerEvent">
+            <summary>
+            Called when this client connects to a server
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnPlayerJoinedEvent">
+            <summary>
+            Called when a player has joined
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnPlayerLeftEvent">
+            <summary>
+            Called when a player has left
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnTerrainSetEvent">
+            <summary>
+            Called when the server sent a tile set message
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnConnectionFailedEvent">
+            <summary>
+            Called when a server connection was unsucessful
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.NetGame.WorldWidth">
+            <summary>
+            Gets the underlying world width for this net game
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.NetGame.WorldHeight">
+            <summary>
+            Gets the underlying world height for this net game
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.NetGame.AvailableServers">
+            <summary>
+            Gets the list of available servers
             </summary>
         </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._view">
@@ -2181,6 +2144,11 @@
             The game's current state
             </summary>
         </member>
+        <member name="P:DoodleEmpires.Engine.Net.NetGame.SinglePlayer">
+            <summary>
+            Gets or sets whether this game in singleplayer
+            </summary>
+        </member>
         <member name="F:DoodleEmpires.Engine.Net.NetGame._mainControl">
             <summary>
             The main games's GUI controller
@@ -2253,7 +2221,7 @@
             </summary>
             <param name="gameTime">The current time stamp</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetGame.DrawMainGame">
+        <member name="M:DoodleEmpires.Engine.Net.NetGame.DrawMainGame(Microsoft.Xna.Framework.GameTime)">
             <summary>
             Draws the main game
             </summary>
@@ -2510,67 +2478,10 @@
             </summary>
             <param name="m"></param>
         </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnFoundServerEvent">
-            <summary>
-            Called when a server has been discovered
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnJoinedServerEvent">
-            <summary>
-            Called when this client connects to a server
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnPlayerJoinedEvent">
-            <summary>
-            Called when a player has joined
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnPlayerLeftEvent">
-            <summary>
-            Called when a player has left
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnTerrainSetEvent">
-            <summary>
-            Called when the server sent a tile set message
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.NetGame.OnConnectionFailedEvent">
-            <summary>
-            Called when a server connection was unsucessful
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.NetGame.WorldWidth">
-            <summary>
-            Gets the underlying world width for this net game
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.NetGame.WorldHeight">
-            <summary>
-            Gets the underlying world height for this net game
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.NetGame.AvailableServers">
-            <summary>
-            Gets the list of available servers
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.NetGame.SinglePlayer">
-            <summary>
-            Gets or sets whether this game in singleplayer
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Net.NetPlayer">
             <summary>
             Represents a network instance of a player
             </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.NetPlayer.#ctor(DoodleEmpires.Engine.Net.PlayerInfo,Lidgren.Network.NetConnection)">
-            <summary>
-            Creates a new network player instance
-            </summary>
-            <param name="info">The player's infomration</param>
-            <param name="connection">The player's network connection</param>
         </member>
         <member name="P:DoodleEmpires.Engine.Net.NetPlayer.Info">
             <summary>
@@ -2587,19 +2498,19 @@
             Gets this player's network connection
             </summary>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.NetPlayer.#ctor(DoodleEmpires.Engine.Net.PlayerInfo,Lidgren.Network.NetConnection)">
+            <summary>
+            Creates a new network player instance
+            </summary>
+            <param name="info">The player's infomration</param>
+            <param name="connection">The player's network connection</param>
+        </member>
         <member name="M:DoodleEmpires.Engine.Net.PacketReader.BuildPacketHandler_DOM(System.Type,System.String,System.CodeDom.MemberAttributes)">
             <summary>
             Builds a static CodeDOM packet reader for the given type
             </summary>
             <param name="typeToHandle">The type to build a reader for</param>
             <returns>A CodeMemberMethod that can be compiled to read a packet from a NetIncomingMessage</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.PacketWriter.BuildPacketHandler_DOM(System.Type,System.String,System.CodeDom.MemberAttributes)">
-            <summary>
-            
-            </summary>
-            <param name="typeToHandle"></param>
-            <returns></returns>
         </member>
         <member name="P:DoodleEmpires.Engine.Net.PacketWriter.DeliveryMethod">
             <summary>
@@ -2616,9 +2527,31 @@
             Gets or sets wheter this packet should be sent to all clients
             </summary>
         </member>
+        <member name="M:DoodleEmpires.Engine.Net.PacketWriter.BuildPacketHandler_DOM(System.Type,System.String,System.CodeDom.MemberAttributes)">
+            <summary>
+            
+            </summary>
+            <param name="typeToHandle"></param>
+            <returns></returns>
+        </member>
         <member name="T:DoodleEmpires.Engine.Net.PlayerInfo">
             <summary>
             Represents a player's information
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.PlayerInfo.PlayerIndex">
+            <summary>
+            Gets or sets this player's playerID
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.PlayerInfo.UserName">
+            <summary>
+            Gets this player's name
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.PlayerInfo.Connection">
+            <summary>
+            Gets this player's network connection
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.PlayerInfo.#ctor(System.String)">
@@ -2647,24 +2580,14 @@
             <param name="p">The packet to read from</param>
             <returns>A player info read from the packet</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Net.PlayerInfo.PlayerIndex">
-            <summary>
-            Gets or sets this player's playerID
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.PlayerInfo.UserName">
-            <summary>
-            Gets this player's name
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.PlayerInfo.Connection">
-            <summary>
-            Gets this player's network connection
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Net.PlayerInfoListItem">
             <summary>
             A ListViewItem for drawing player info
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.PlayerInfoListItem.Info">
+            <summary>
+            Gets or sets the player info associated with this item
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.PlayerInfoListItem.#ctor(DoodleEmpires.Engine.Net.PlayerInfo)">
@@ -2681,14 +2604,24 @@
             <param name="font">The font to use for rendering text for this items</param>
             <param name="bounds">The bounds to render in</param>
         </member>
-        <member name="P:DoodleEmpires.Engine.Net.PlayerInfoListItem.Info">
-            <summary>
-            Gets or sets the player info associated with this item
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Net.GameServer">
             <summary>
             The main game server
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.GameServer.Players">
+            <summary>
+            Gets a list of all non-null player currently connected
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.GameServer.Message">
+            <summary>
+            Gets or sets this server's message
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.GameServer.Exiting">
+            <summary>
+            Gets or sets whether this server should exit at the end of it's current loop
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.GameServer.Run(System.String[])">
@@ -2714,24 +2647,49 @@
             Disposes of this object and free's it's resources
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Net.GameServer.Players">
-            <summary>
-            Gets a list of all non-null player currently connected
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.GameServer.Message">
-            <summary>
-            Gets or sets this server's message
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.GameServer.Exiting">
-            <summary>
-            Gets or sets whether this server should exit at the end of it's current loop
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Net.ServerInfo">
             <summary>
             Represents basic info about a server
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.IP">
+            <summary>
+            Gets the IP of this server, represented as a string
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.InternalEndPoint">
+            <summary>
+            The network endpoint for this server
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.ExternalEndPoint">
+            <summary>
+            The external endpoint for this server
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Name">
+            <summary>
+            The name of this server
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Message">
+            <summary>
+            Gets or sets the server message to be displayed
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Ping">
+            <summary>
+            Gets or sets the ping to the server in seconds
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.PlayerCount">
+            <summary>
+            Gets or sets the player count for this info
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.MaxPlayerCount">
+            <summary>
+            Gets or sets the maximum player count for this info
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.ServerInfo.#ctor(System.String,System.Net.IPEndPoint,System.String)">
@@ -2791,49 +2749,14 @@
             </summary>
             <returns>The hash code for this instance</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.IP">
-            <summary>
-            Gets the IP of this server, represented as a string
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.InternalEndPoint">
-            <summary>
-            The network endpoint for this server
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.ExternalEndPoint">
-            <summary>
-            The external endpoint for this server
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Name">
-            <summary>
-            The name of this server
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Message">
-            <summary>
-            Gets or sets the server message to be displayed
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.Ping">
-            <summary>
-            Gets or sets the ping to the server in seconds
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.PlayerCount">
-            <summary>
-            Gets or sets the player count for this info
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfo.MaxPlayerCount">
-            <summary>
-            Gets or sets the maximum player count for this info
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Net.ServerInfoListItem">
             <summary>
             A ListViewItem for drawing server info
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerInfoListItem.Info">
+            <summary>
+            Gets or sets the server info associated with this item
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.ServerInfoListItem.#ctor(DoodleEmpires.Engine.Net.ServerInfo)">
@@ -2849,11 +2772,6 @@
             <param name="batch">The spritebatch to use for drawing</param>
             <param name="font">The font to use for rendering text for this items</param>
             <param name="bounds">The bounds to render in</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerInfoListItem.Info">
-            <summary>
-            Gets or sets the server info associated with this item
-            </summary>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.NetPacketType">
             <summary>
@@ -2990,51 +2908,6 @@
             The server's version of the voxel terrain
             </summary>
         </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.VoxelMap">
-            <summary>
-            The base class for the voxel maps
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.VoxelMap.SetTile(System.Int32,System.Int32,System.Byte)">
-            <summary>
-            Sets the tile ID at the given [x, y] position
-            </summary>
-            <param name="x">The x coord of the tile</param>
-            <param name="y">The y coord of the tile</param>
-            <param name="newID">The ID of the tile to set</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.VoxelMap.SetTileSafe(System.Int32,System.Int32,System.Byte)">
-            <summary>
-            Safely sets the tile ID at the given [x, y] position
-            </summary>
-            <param name="x">The x coord of the tile</param>
-            <param name="y">The y coord of the tile</param>
-            <param name="newID">The ID of the tile to set</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.VoxelMap.SetMeta(System.Int32,System.Int32,System.Byte)">
-            <summary>
-            Sets the meta at the given [x, y] position
-            </summary>
-            <param name="x">The x coord of the tile</param>
-            <param name="y">The y coord of the tile</param>
-            <param name="newMeta">The meta of the tile to set</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.VoxelMap.GetMeta(System.Int32,System.Int32)">
-            <summary>
-            Gets the meta at the given [x, y] position
-            </summary>
-            <param name="x">The x coord of the tile</param>
-            <param name="y">The y coord of the tile</param>
-            <returns>The meta of the tile</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Terrain.VoxelMap.Item(System.Int32,System.Int32)">
-            <summary>
-            Gets or sets the tile ID at the given [x, y] position
-            </summary>
-            <param name="x">The x coord of the tile</param>
-            <param name="y">The y coord of the tile</param>
-            <returns>Gets the tile ID at the given [x, y] position</returns>
-        </member>
         <member name="F:DoodleEmpires.Engine.Net.ServerMap.TILE_WIDTH">
             <summary>
             Gets the width of a single voxel tile
@@ -3088,6 +2961,59 @@
         <member name="F:DoodleEmpires.Engine.Net.ServerMap._updateThread">
             <summary>
             Thread used for updating tiles
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerMap.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets or sets the voxel material at the given x and y
+            </summary>
+            <param name="x">The x coordinate to set (chunk coords)</param>
+            <param name="y">The y coordinate to set (chunk coords)</param>
+            <returns>The voxel at (x, y)</returns>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerMap.WorldWidth">
+            <summary>
+            Gets the width of the world in world coords
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerMap.WorldHeight">
+            <summary>
+            Gets the height of the world in world coords
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerMap.Zones">
+            <summary>
+            Gets a list of zones in this voxel map
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerMap.TileManager">
+            <summary>
+            Gets or sets the tile manager to use
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.ServerMap.Seed">
+            <summary>
+            Gets this level's seed
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.ServerMap.OnTerrainSet">
+            <summary>
+            Invoked when a tile ID changes
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.ServerMap.OnMetaChanged">
+            <summary>
+            Invoked when a tile meta changes
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.ServerMap.OnZoneAdded">
+            <summary>
+            Invoked when a zone is added
+            </summary>
+        </member>
+        <member name="E:DoodleEmpires.Engine.Net.ServerMap.OnZoneRemoved">
+            <summary>
+            Invoked when a zone is removed
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.ServerMap.#ctor(DoodleEmpires.Engine.Terrain.TileManager,System.Int32,System.Int32,System.Nullable{System.Int32},System.Single)">
@@ -3303,71 +3229,10 @@
             Disposes of this object and free's it's resources
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerMap.Item(System.Int32,System.Int32)">
-            <summary>
-            Gets or sets the voxel material at the given x and y
-            </summary>
-            <param name="x">The x coordinate to set (chunk coords)</param>
-            <param name="y">The y coordinate to set (chunk coords)</param>
-            <returns>The voxel at (x, y)</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerMap.WorldWidth">
-            <summary>
-            Gets the width of the world in world coords
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerMap.WorldHeight">
-            <summary>
-            Gets the height of the world in world coords
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerMap.Zones">
-            <summary>
-            Gets a list of zones in this voxel map
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerMap.TileManager">
-            <summary>
-            Gets or sets the tile manager to use
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.ServerMap.Seed">
-            <summary>
-            Gets this level's seed
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.ServerMap.OnTerrainSet">
-            <summary>
-            Invoked when a tile ID changes
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.ServerMap.OnMetaChanged">
-            <summary>
-            Invoked when a tile meta changes
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.ServerMap.OnZoneAdded">
-            <summary>
-            Invoked when a zone is added
-            </summary>
-        </member>
-        <member name="E:DoodleEmpires.Engine.Net.ServerMap.OnZoneRemoved">
-            <summary>
-            Invoked when a zone is removed
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Net.DeltaMapChange">
             <summary>
             Represents a change that has been made since the world was generated
             </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Net.DeltaMapChange.#ctor(System.Int32,System.Int32,System.Byte)">
-            <summary>
-            Creates a new instance of a map change
-            </summary>
-            <param name="x">The x-coord of the tile</param>
-            <param name="y">The y-coord of the tile</param>
-            <param name="newID">The new ID of the tile</param>
         </member>
         <member name="P:DoodleEmpires.Engine.Net.DeltaMapChange.X">
             <summary>
@@ -3384,1076 +3249,13 @@
             The new ID for the change
             </summary>
         </member>
-        <member name="T:ICamera2D">
+        <member name="M:DoodleEmpires.Engine.Net.DeltaMapChange.#ctor(System.Int32,System.Int32,System.Byte)">
             <summary>
-            Represents an implementation of a 2D camera
+            Creates a new instance of a map change
             </summary>
-        </member>
-        <member name="M:ICamera2D.BeginDraw">
-            <summary>
-            Begins rendering with this camera
-            </summary>
-        </member>
-        <member name="M:ICamera2D.EndDraw">
-            <summary>
-            Ends the rendering pass and presents this camera's view
-            </summary>
-        </member>
-        <member name="M:ICamera2D.IsInView(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.Texture2D)">
-            <summary>
-            Determines whether the target is in view given the specified position.
-            This can be used to increase performance by not drawing objects
-            directly in the viewport
-            </summary>
-            <param name="position">The position.</param>
-            <param name="texture">The texture.</param>
-            <returns>
-                <c>true</c> if the target is in view at the specified position; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="M:ICamera2D.PointToWorld(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Gets the world co-ordinates for the given screen co-ordinates
-            </summary>
-            <param name="screenCoords">The screen co-ordinates to convert</param>
-            <returns>The point in the world relating to the point on the screen</returns>
-        </member>
-        <member name="P:ICamera2D.Position">
-            <summary>
-            Gets or sets the position of the camera
-            </summary>
-            <value>The position.</value>
-        </member>
-        <member name="P:ICamera2D.MoveSpeed">
-            <summary>
-            Gets or sets the move speed of the camera.
-            The camera will tween to its destination.
-            </summary>
-            <value>The move speed.</value>
-        </member>
-        <member name="P:ICamera2D.Rotation">
-            <summary>
-            Gets or sets the rotation of the camera.
-            </summary>
-            <value>The rotation.</value>
-        </member>
-        <member name="P:ICamera2D.Origin">
-            <summary>
-            Gets the origin of the viewport (accounts for Scale)
-            </summary>        
-            <value>The origin.</value>
-        </member>
-        <member name="P:ICamera2D.Scale">
-            <summary>
-            Gets or sets the scale of the Camera
-            </summary>
-            <value>The scale.</value>
-        </member>
-        <member name="P:ICamera2D.ScreenCenter">
-            <summary>
-            Gets the screen center (does not account for Scale)
-            </summary>
-            <value>The screen center.</value>
-        </member>
-        <member name="P:ICamera2D.Transform">
-            <summary>
-            Gets the transform that can be applied to 
-            the SpriteBatch Class.
-            </summary>
-            <see cref="T:Microsoft.Xna.Framework.Graphics.SpriteBatch"/>
-            <value>The transform.</value>
-        </member>
-        <member name="P:ICamera2D.Projection">
-            <summary>
-            Gets the projection matrix for this camera
-            </summary>
-        </member>
-        <member name="P:ICamera2D.Focus">
-            <summary>
-            Gets or sets the focus of the Camera.
-            </summary>
-            <seealso cref="T:DoodleEmpires.Engine.Entities.IFocusable"/>
-            <value>The focus.</value>
-        </member>
-        <member name="P:ICamera2D.ViewBounds">
-            <summary>
-            Gets the world bounds that this camera displays
-            </summary>
-        </member>
-        <member name="P:ICamera2D.ScreenBounds">
-            <summary>
-            Gets or sets the bounds that this camera is limited to
-            </summary>
-        </member>
-        <member name="P:ICamera2D.PostEffect">
-            <summary>
-            Gets or sets the post-processing effect for this camera
-            </summary>
-        </member>
-        <member name="T:Camera2D">
-            <summary>
-            Represents a 2-Dimensional camera
-            </summary>
-        </member>
-        <member name="F:Camera2D._renderTarget">
-            <summary>
-            The internal texture to render to
-            </summary>
-        </member>
-        <member name="F:Camera2D._postEffect">
-            <summary>
-            The post processing effect to apply
-            </summary>
-        </member>
-        <member name="F:Camera2D._spriteBatch">
-            <summary>
-            Teh spritebatch used to render the final image
-            </summary>
-        </member>
-        <member name="F:Camera2D._viewportHeight">
-            <summary>
-            The height of the graphics viewport
-            </summary>
-        </member>
-        <member name="F:Camera2D._viewportWidth">
-            <summary>
-            The width of the graphics viewport
-            </summary>
-        </member>
-        <member name="F:Camera2D._viewBounds">
-            <summary>
-            The bounds that this camera has in the world
-            </summary>
-        </member>
-        <member name="F:Camera2D._graphics">
-            <summary>
-            The graphics device that this camera is bound to
-            </summary>
-        </member>
-        <member name="M:Camera2D.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice)">
-            <summary>
-            Creates a new 2D camera
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-        </member>
-        <member name="M:Camera2D.Initialize">
-            <summary>
-            Called when the GameComponent needs to be initialized. 
-            </summary>
-        </member>
-        <member name="M:Camera2D.Update(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Updates this camera
-            </summary>
-            <param name="gameTime">The current game time</param>
-        </member>
-        <member name="M:Camera2D.BeginDraw">
-            <summary>
-            Sets the graphics states and begins rendering with this camera
-            </summary>
-        </member>
-        <member name="M:Camera2D.EndDraw">
-            <summary>
-            Finishes rendering with this camera and presents to the screen
-            </summary>
-        </member>
-        <member name="M:Camera2D.IsInView(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.Texture2D)">
-            <summary>
-            Determines whether the target is in view given the specified position.
-            This can be used to increase performance by not drawing objects
-            directly in the viewport
-            </summary>
-            <param name="position">The position.</param>
-            <param name="texture">The texture.</param>
-            <returns>
-                <c>true</c> if [is in view] [the specified position]; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="M:Camera2D.PointToWorld(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Gets the world co-ordinates for the given screen co-ordinates
-            </summary>
-            <param name="screenPoint">The screen co-ordinates to convert</param>
-            <returns>The point in the world relating to the point on the screen</returns>
-        </member>
-        <member name="M:Camera2D.PointToWorld(System.Single,System.Single)">
-            <summary>
-            Gets the world co-ordinates for the given screen co-ordinates
-            </summary>
-            <param name="x">The x coordinate to translate</param>
-            <param name="y">The y coordinate to translete</param>
-            <returns>The point in the world relating to the point on the screen</returns>
-        </member>
-        <member name="M:Camera2D.Dispose">
-            <summary>
-            Disposes of this object and free's it's resources
-            </summary>
-        </member>
-        <member name="P:Camera2D.PostEffect">
-            <summary>
-            Gets or sets the post-processing effect for this camera
-            </summary>
-        </member>
-        <member name="P:Camera2D.Position">
-            <summary>
-            Gets or sets this camera's position
-            </summary>
-        </member>
-        <member name="P:Camera2D.Rotation">
-            <summary>
-            Gets or sets this camera's rotation
-            </summary>
-        </member>
-        <member name="P:Camera2D.Origin">
-            <summary>
-            Gets or sets this camera's orgin
-            </summary>
-        </member>
-        <member name="P:Camera2D.Scale">
-            <summary>
-            Gets or sets this camera's scale
-            </summary>
-        </member>
-        <member name="P:Camera2D.ScreenCenter">
-            <summary>
-            Gets the screen centre for this camera
-            </summary>
-        </member>
-        <member name="P:Camera2D.Transform">
-            <summary>
-            Gets or sets this camera's transformation matrix
-            </summary>
-        </member>
-        <member name="P:Camera2D.Projection">
-            <summary>
-            Gets or sets this camera's projection matrix
-            </summary>
-        </member>
-        <member name="P:Camera2D.Focus">
-            <summary>
-            Gets or sets this camera's focus object
-            </summary>
-        </member>
-        <member name="P:Camera2D.MoveSpeed">
-            <summary>
-            Gets or sets this camera's movement speed
-            </summary>
-        </member>
-        <member name="P:Camera2D.ViewBounds">
-            <summary>
-            Gets the view bounds for this camera
-            </summary>
-        </member>
-        <member name="P:Camera2D.ScreenBounds">
-            <summary>
-            Gets the snap bounds for this camera
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Entities.CameraControl">
-            <summary>
-            A basic controller for a 2D camera
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Entities.CameraControl._position">
-            <summary>
-            The current target position
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Entities.CameraControl._bounds">
-            <summary>
-            The bounds that the controller must stay within
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Entities.CameraControl.#ctor(ICamera2D)">
-            <summary>
-            Creates a new camera controller
-            </summary>
-            <param name="camera">The camera to control</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Entities.CameraControl.Update(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Updates this camera controller
-            </summary>
-            <param name="gameTime">The current game time</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Entities.CameraControl.Position">
-            <summary>
-            Gets or sets the camera controller's position
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Sound.SoundEngine">
-            <summary>
-            Represents the sound manager
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Sound.SoundEngine.#ctor">
-            <summary>
-            Creates a new instance of a sound engine
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Sound.SoundEngine.AddSound(System.String,Microsoft.Xna.Framework.Audio.SoundEffect)">
-            <summary>
-            Adds a sound effect
-            </summary>
-            <param name="name">The name of the instance</param>
-            <param name="effect">The sound effect to add</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Sound.SoundEngine.PlaySound(System.String,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Plays a sound with the given name
-            </summary>
-            <param name="name">The name of the sound</param>
-            <param name="position">The position to play the sound at</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Sound.SoundEngine.SetSoundForCamera(Microsoft.Xna.Framework.Audio.SoundEffectInstance,Microsoft.Xna.Framework.Vector2,System.Single)">
-            <summary>
-            Sets the sound effect instance to apply to the camera
-            </summary>
-            <param name="sound">The sound effect instance to modify</param>
-            <param name="position">The position to play the sound from</param>
-            <param name="baseVolume">The base volume of the sound</param>
-            <returns>True if the sound needs to be played</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Sound.SoundEngine.ListenerPosition">
-            <summary>
-            Gets or sets the position of the listener
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Render.ColoredMesh">
-            <summary>
-            Represents a simple colored mesh
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.#ctor(Microsoft.Xna.Framework.Graphics.PrimitiveType,Microsoft.Xna.Framework.Graphics.GraphicsDevice)">
-            <summary>
-            Creates a new Colored mesh
-            </summary>
-            <param name="primitiveType">The primitive type for this mesh</param>
-            <param name="graphics">The Graphics Device to use</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.AddVert(Microsoft.Xna.Framework.Graphics.VertexPositionColor)">
-            <summary>
-            Adds a vertice to this mesh
-            </summary>
-            <param name="vert">The vertex to add</param>
-            <returns>The index of the vertex</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.AddIndex(System.Int32)">
-            <summary>
-            Adds a vertex to this mesh
-            </summary>
-            <param name="index">The inndex of the vertice to add</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.Finish">
-            <summary>
-            Calculates the number of primitives, must be called when geometry is changed
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.Render">
-            <summary>
-            Renders this mesh
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.ColoredMesh.Item(System.Int32)">
-            <summary>
-            Gets or sets a vertex in this mesh
-            </summary>
-            <param name="index">The index to look up</param>
-            <returns>The vertex at the given index</returns>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Render.Particle.Particle">
-            <summary>
-            Represents an instance of a particle
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Position">
-            <summary>
-            Gets or sets this particles' position
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Velocity">
-            <summary>
-            Gets or sets this particles' velocity
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Rotation">
-            <summary>
-            Gets or sets this particles' rotation
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.AngularVelocity">
-            <summary>
-            Gets or sets this particles' angular velocity
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Color">
-            <summary>
-            The color of this particle
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Scale">
-            <summary>
-            The scale of this particle
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.TTL">
-            <summary>
-            How long this particle has to live, in seconds
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.#ctor(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,Microsoft.Xna.Framework.Color,System.Single,System.Single)">
-            <summary>
-            Creates a new particle
-            </summary>
-            <param name="position">The position of the particle</param>
-            <param name="velocity">The velocity of the particle</param>
-            <param name="scale">The scale of the particle</param>
-            <param name="ttl">The time to live for this particle in seconds</param>
-            <param name="color">The color of this particle</param>
-            <param name="rotation">The initial rotation of this particle</param>
-            <param name="angularVelocity">The angula velocity of this particle</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.Update(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Updates this particle
-            </summary>
-            <param name="gameTime">The current game time</param>
-            <param name="gravity">The current gravity</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.op_Equality(DoodleEmpires.Engine.Render.Particle.Particle,DoodleEmpires.Engine.Render.Particle.Particle)">
-            <summary>
-            Checks equality between two particles
-            </summary>
-            <param name="a">The particle</param>
-            <param name="b">The particle to check against</param>
-            <returns>True if the particles are equal</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.op_Inequality(DoodleEmpires.Engine.Render.Particle.Particle,DoodleEmpires.Engine.Render.Particle.Particle)">
-            <summary>
-            Checks inequality between two particles
-            </summary>
-            <param name="a">The particle</param>
-            <param name="b">The particle to check against</param>
-            <returns>True if the particles are not equal</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.Equals(System.Object)">
-            <summary>
-            Checks if this particle is equal to an object
-            </summary>
-            <param name="obj">The object to check against</param>
-            <returns>True if the object is equal to this particle</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.GetHashCode">
-            <summary>
-            Gets a unique hashcode for this particle
-            </summary>
-            <returns>A unique hashcode</returns>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Render.Particle.ParticleEmitter">
-            <summary>
-            Represents an emitter of particles
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.#ctor(DoodleEmpires.Engine.Render.Particle.ParticleEngine,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Creates a new particle emitter
-            </summary>
-            <param name="engine">The particle engine to bind to</param>
-            <param name="position">The POsition of this emitter</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.Update(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Updates this particle emitter
-            </summary>
-            <param name="gameTime">The current game time</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.GeneralDirection">
-            <summary>
-            The general direction to fire particles
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.Force">
-            <summary>
-            The force to eject particles with
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.ParticlesPerSecond">
-            <summary>
-            The particles to emit per second
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.Position">
-            <summary>
-            The position of this emitter
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.RotationalVelocity">
-            <summary>
-            The initial rotational velocity of particles
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.TTL">
-            <summary>
-            The default time to live for particles
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.Color">
-            <summary>
-            The default color for particles
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Render.Particle.ParticleEngine">
-            <summary>
-            Represents a particle engine
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice)">
-            <summary>
-            Creates a new particle engine
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.AddEmitter(DoodleEmpires.Engine.Render.Particle.ParticleEmitter)">
-            <summary>
-            Adds an emitter to this particle engine
-            </summary>
-            <param name="emitter">The particle emitter</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.AddParticle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,Microsoft.Xna.Framework.Color,System.Single,System.Single)">
-            <summary>
-            Adds a particle to this particle engine
-            </summary>
-            <param name="position">The position of the particle</param>
-            <param name="velocity">The initial velocity of the particle</param>
-            <param name="scale">The scale of the particle</param>
-            <param name="ttl">The time to live</param>
-            <param name="color">The color of the particle</param>
-            <param name="rotation">The initial rotation of the speed</param>
-            <param name="angularVelocity">The angular velocity of this particle</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Render(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Renders this particle system
-            </summary>
-            <param name="gameTime">The current game time</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Update(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Updates this particle system
-            </summary>
-            <param name="gameTime">The current game time</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Dispose">
-            <summary>
-            Disposes of this object and free's it's resources
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Gravity">
-            <summary>
-            Gets or sets the gravity on this particle engine
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEngine.ParticleTexture">
-            <summary>
-            Gets or sets the particle texture
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Render.RenderChunk`1">
-            <summary>
-            Represents a chunk of cached graphics data
-            </summary>
-            <typeparam name="T">The vertex type for this chunk</typeparam>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.PrimitiveType)">
-            <summary>
-            Creates a new graphcis device
-            </summary>
-            <param name="graphics">The graphics device to bind to</param>
-            <param name="primitiveType">The type of primitive to draw</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.SetVertexBuffer(`0[])">
-            <summary>
-            Sets the vertex buffer to a given list of vertices
-            </summary>
-            <param name="vertices">The vertices to use</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.SetIndexBuffer(System.Int16[])">
-            <summary>
-            Sets the index buffer to a given list of indices
-            </summary>
-            <param name="indices">The indices to use</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.CalcPrimitives">
-            <summary>
-            Caclulate the number of primitives to draw based off the primitive type
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.Render">
-            <summary>
-            Renders this item using the underlying graphics device
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.Dispose">
-            <summary>
-            Disposes of this object and free's it's resources
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.RenderChunk`1.IndexBuffer">
-            <summary>
-            Gets this render chunk's index buffer
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Render.RenderChunk`1.VertexBuffer">
-            <summary>
-            Gets this render chunk's vertex buffer
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.TerrainBuilder">
-            <summary>
-            Represents an object that can be used to generate a pixel terrain from a seed value
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Terrain.TerrainBuilder._seed">
-            <summary>
-            The object to use as a seed for this terrain builder
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TerrainBuilder.#ctor(System.Object)">
-            <summary>
-            Creates a new terrainbuilder with the given seed
-            </summary>
-            <param name="seed">The object to use as the seed for this builder</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TerrainBuilder.GetColorAtPosition(System.Int32,System.Int32)">
-            <summary>
-            Gets the color for the given position
-            </summary>
-            <param name="x">The x coord to get the color at</param>
-            <param name="y">The y coord to get the color at</param>
-            <returns>The color at [x, y]</returns>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.Tile">
-            <summary>
-            Represents a tile type
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Terrain.Tile.Type">
-            <summary>
-            The tile ID for this tile type
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Terrain.Tile.TextureID">
-            <summary>
-            The basic texture ID for this tile
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Terrain.Tile.RenderType">
-            <summary>
-            The render tye for this tile
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Terrain.Tile.Solid">
-            <summary>
-            True if this tile type is solid
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Terrain.Tile.Color">
-            <summary>
-            The color multiplier for this tile type
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Tile.#ctor(System.Byte,System.Int16,DoodleEmpires.Engine.Terrain.RenderType,System.Boolean)">
-            <summary>
-            Creates a new instance of a tile type
-            </summary>
-            <param name="type">The type ID for this tile</param>
-            <param name="textureID">The base texture ID for this tile type</param>
-            <param name="renderType">The render type for this tile</param>
-            <param name="solid">True if the tile is solid</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Tile.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
-            <summary>
-            Draws this tile
-            </summary>
-            <param name="spriteBatch">The spritebatch to draw with</param>
-            <param name="atlas">The texture atlas to use</param>
-            <param name="bounds">The bounds to render in</param>
-            <param name="mooreState">The moore neighbours state</param>
-            <param name="meta">The block's meta data</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Tile.Intersects(Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Checks if this tile intersects a rectangle
-            </summary>
-            <param name="check">The rectangle to check</param>
-            <param name="bounds">The current bounds of the tile</param>
-            <returns>True if the tile intersects the checking rectangle</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Tile.AddToWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
-            <summary>
-            Handles adding this tile type to the world
-            </summary>
-            <param name="world">The world to add to</param>
-            <param name="x">The x-coord of the tile to set</param>
-            <param name="y">The y-coord of the tile to set</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Tile.RemovedFromWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
-            <summary>
-            Handles removing this tile type from the world
-            </summary>
-            <param name="world">The world to remove from</param>
-            <param name="x">The x-coord of the tile to remove</param>
-            <param name="y">The y-coord of the tile to remove</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Tile.OnTick(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
-            <summary>
-            Called when a tile of this type is updated
-            </summary>
-            <param name="map">The world that this tile exists in</param>
-            <param name="x">The x-coordinate in block coords</param>
-            <param name="y">The y-coordinate in block coords</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Terrain.Tile.NeedsUpdate">
-            <summary>
-            True if this tile type needs to be updated
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Terrain.Tile.Climable">
-            <summary>
-            True if this tile type is climable
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.RenderType">
-            <summary>
-            Represents how the tile should be rendered
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Terrain.RenderType.None">
-            <summary>
-            This tile uses no special rendering, simple tile based rendering
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Terrain.RenderType.Land">
-            <summary>
-            This tile uses standard land rendering
-            </summary>
-        </member>
-        <member name="F:DoodleEmpires.Engine.Terrain.RenderType.Prop">
-            <summary>
-            This tile uses prop style rendering
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.TileManager">
-            <summary>
-            Represents a tile manager 
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.#ctor">
-            <summary>
-            Creates a new tile manager
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterTile(System.Int16,DoodleEmpires.Engine.Terrain.RenderType,System.Boolean)">
-            <summary>
-            Adds a new unnamed tile type to this tile manager
-            </summary>
-            <param name="texID">The texture ID for the tile</param>
-            <param name="renderType">The render mode for this tile</param>
-            <param name="solid">True if this tile should be treated as solid during collision detection</param>
-            <returns>The TileID for the new tile</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterTile(System.String,System.Int16,DoodleEmpires.Engine.Terrain.RenderType,System.Boolean)">
-            <summary>
-            Adds a new tile type to this tile manager
-            </summary>
-            <param name="name">The name of the tile to add</param>
-            <param name="texID">The texture ID for the tile</param>
-            <param name="renderType">The render mode for this tile</param>
-            <param name="solid">True if this tile should be treated as solid during collision detection</param>
-            <returns>The TileID for the new tile</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterTile(System.String,System.Int16,Microsoft.Xna.Framework.Color,DoodleEmpires.Engine.Terrain.RenderType,System.Boolean)">
-            <summary>
-            Adds a new tile type to this tile manager
-            </summary>
-            <param name="name">The name of the tile to add</param>
-            <param name="texID">The texture ID for the tile</param>
-            <param name="Color">The color for this tile</param>
-            <param name="renderType">The render mode for this tile</param>
-            <param name="solid">True if this tile should be treated as solid during collision detection</param>
-            <returns>The TileID for the new tile</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterTile(System.String,DoodleEmpires.Engine.Terrain.Tile)">
-            <summary>
-            Adds a new tile type to this tile manager
-            </summary>
-            <param name="name">The name of the tile to register</param>
-            <param name="tile">The tile to add</param>
-            <returns>The TileID for the new tile</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.NameOf(System.Byte)">
-            <summary>
-            Gets the name of the tile with the given ID
-            </summary>
-            <param name="ID">The ID of the tile</param>
-            <returns>The name of tile with the given ID</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.IndexOf(System.String)">
-            <summary>
-            Gets the index of the tile with the given name
-            </summary>
-            <param name="name">The name of the tile</param>
-            <returns>The index of tile with the given name</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RenderTile(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Rectangle,DoodleEmpires.Engine.Utilities.TextureAtlas,System.Byte,System.Byte,System.Byte,Microsoft.Xna.Framework.Color)">
-            <summary>
-            Renders a tile to the screen
-            </summary>
-            <param name="spriteBatch">The spritebatch to use for rendering</param>
-            <param name="bounds">The bounds to render the tile to</param>
-            <param name="atlas">The texture atlas to look up textures from</param>
-            <param name="mooreState">The neighbour states for this block</param>
-            <param name="tileID">The ID of the tile to render</param>
-            <param name="metaData">The meta data for the tile to render</param>
-            <param name="diffuseColor">The color to transform everything by</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.CheckCollision(System.Byte,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Checks if a tile will collide with the given bounds and check rectangles
-            </summary>
-            <param name="tileID">The ID of the tile</param>
-            <param name="rect">The rectangle to check</param>
-            <param name="bounds">The bounds of the tile</param>
-            <returns>True if <i>rect</i> intersects the tile</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.IsSolid(System.Byte)">
-            <summary>
-            Checks if a given tile ID is solid
-            </summary>
-            <param name="tileID">The tile ID to check</param>
-            <returns>True if the tile type is solid</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.IsClimable(System.Byte)">
-            <summary>
-            Checks if a given tile ID is climable
-            </summary>
-            <param name="tileID">The tile ID to check</param>
-            <returns>True if the tile type is climable</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.CanConnect(System.Byte,System.Byte)">
-            <summary>
-            Checks if two tiles can connect
-            </summary>
-            <param name="sourceID">The source tile ID to check from</param>
-            <param name="destinationID">The destination tile ID to check to</param>
-            <returns>True if the tiles can connect</returns>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterConnect(System.Byte,System.Byte,System.Boolean)">
-            <summary>
-            Registers a connection between 2 tiles, will register the connection for both source and destination of each
-            is setting to true
-            </summary>
-            <param name="sourceID">The ID of the first tile</param>
-            <param name="destinationID">The ID of the second tile</param>
-            <param name="canConnect">Whether or not these tiles can connect</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterConnect(System.String,System.String,System.Boolean)">
-            <summary>
-            Registers a connection between 2 tiles, will register the connection for both source and destination of each
-            is setting to true
-            </summary>
-            <param name="tile1">The name of the first tile</param>
-            <param name="tile2">The name of the second tile</param>
-            <param name="canConnect">Whether or not these tiles can connect</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterOneWayConnect(System.Byte,System.Byte,System.Boolean)">
-            <summary>
-            Registers a connection between 1 tile and another. The second tile will not connect to the first
-            </summary>
-            <param name="sourceID">The ID of the first tile</param>
-            <param name="destinationID">The ID of the second tile</param>
-            <param name="canConnect">Whether or not these tiles can connect</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterOneWayConnect(System.String,System.String,System.Boolean)">
-            <summary>
-            Registers a connection between 1 tile and another. The second tile will not connect to the first
-            </summary>
-            <param name="tile1">The name of the first tile</param>
-            <param name="tile2">The name of the second tile</param>
-            <param name="canConnect">Whether or not these tiles can connect</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.GenName">
-            <summary>
-            Generates a random tile name
-            </summary>
-            <returns>A random tile name</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Terrain.TileManager.Tiles">
-            <summary>
-            Gets the list of tiles
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Terrain.TileManager.Item(System.Int32)">
-            <summary>
-            Gets the tile with the given ID
-            </summary>
-            <param name="ID">The ID of the tile</param>
-            <returns>The Tile with the given ID</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Terrain.TileManager.Item(System.String)">
-            <summary>
-            Gets the ID of the tile with the name
-            </summary>
-            <param name="name">The name of the tile to get</param>
-            <returns>The ID of the tile with the given name</returns>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.Leaves">
-            <summary>
-            Represents the leaves tile
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Leaves.#ctor(System.Byte)">
-            <summary>
-            Creates a new instance of the leaves class, used for rendering tiles
-            </summary>
-            <param name="type">The typeID to assign to leaves</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Leaves.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
-            <summary>
-            Draws this tile
-            </summary>
-            <param name="spriteBatch">The spritebatch to draw with</param>
-            <param name="atlas">The texture atlas to use</param>
-            <param name="bounds">The bounds to render in</param>
-            <param name="mooreState">The moore neighbours state</param>
-            <param name="meta">The block's meta data</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Leaves.AddToWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
-            <summary>
-            Handles adding this tile type to the world
-            </summary>
-            <param name="world">The world to add to</param>
-            <param name="x">The x-coord of the tile to set</param>
-            <param name="y">The y-coord of the tile to set</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Leaves.OnTick(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
-            <summary>
-            Called when a tile of this type is updated
-            </summary>
-            <param name="world">The world that this tile exists in</param>
-            <param name="x">The x-coordinate in block coords</param>
-            <param name="y">The y-coordinate in block coords</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Terrain.Leaves.NeedsUpdate">
-            <summary>
-            Gets whether this block needs updating.
-            This is true for leaves.
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.WoodSpike">
-            <summary>
-            Represents a wooden spike tile
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.WoodSpike.#ctor(System.Byte)">
-            <summary>
-            Creates a new wood spike tile type
-            </summary>
-            <param name="type">The ID of the tile</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.WoodSpike.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
-            <summary>
-            Draws this tile
-            </summary>
-            <param name="spriteBatch">The spritebatch to draw with</param>
-            <param name="atlas">The texture atlas to use</param>
-            <param name="bounds">The bounds to render in</param>
-            <param name="mooreState">The moore neighbours state</param>
-            <param name="meta">The block's meta data</param>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.Ladder">
-            <summary>
-            Represents a ladder tile type
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Ladder.#ctor(System.Byte)">
-            <summary>
-            Creates a new ladder tile type
-            </summary>
-            <param name="type">The ID of the tile</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Ladder.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
-            <summary>
-            Draws this tile
-            </summary>
-            <param name="spriteBatch">The spritebatch to draw with</param>
-            <param name="atlas">The texture atlas to use</param>
-            <param name="bounds">The bounds to render in</param>
-            <param name="mooreState">The moore neighbours state</param>
-            <param name="meta">The block's meta data</param>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Terrain.Ladder.Climable">
-            <summary>
-            True if this tile type is climable
-            </summary>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.Door">
-            <summary>
-            Represents a door tile type
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Door.#ctor(System.Byte)">
-            <summary>
-            Creates a new door tile type
-            </summary>
-            <param name="type">The ID of the tile</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Door.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
-            <summary>
-            Draws this tile
-            </summary>
-            <param name="spriteBatch">The spritebatch to draw with</param>
-            <param name="atlas">The texture atlas to use</param>
-            <param name="bounds">The bounds to render in</param>
-            <param name="mooreState">The moore neighbours state</param>
-            <param name="meta">The block's meta data</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Door.AddToWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
-            <summary>
-            Handles adding this tile type to the world
-            </summary>
-            <param name="world">The world to add to</param>
-            <param name="x">The x-coord of the tile to set</param>
-            <param name="y">The y-coord of the tile to set</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.Door.RemovedFromWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
-            <summary>
-            Handles removing this tile type from the world
-            </summary>
-            <param name="world">The world to remove from</param>
-            <param name="x">The x-coord of the tile to remove</param>
-            <param name="y">The y-coord of the tile to remove</param>
-        </member>
-        <member name="T:DoodleEmpires.Engine.Terrain.HeightmapExtensions">
-            <summary>
-            Some basic extansions for manipulating heightmap
-            </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.HeightmapExtensions.Smooth(System.Single[],System.Int32)">
-            <summary>
-            Smooths a height map
-            </summary>
-            <param name="heightmap">The heightmap to smooth</param>
-            <param name="passes">The number of passes to make, default 1</param>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Terrain.HeightmapExtensions.Smooth(System.Single[],System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Smooths a height map
-            </summary>
-            <param name="heightmap">The heightmap to smooth</param>
-            <param name="minX">The minimum x coord to smooth from</param>
-            <param name="maxX">The maximum x coord to smooth from</param>
-            <param name="passes">The number of passes to make, default 1</param>
+            <param name="x">The x-coord of the tile</param>
+            <param name="y">The y-coord of the tile</param>
+            <param name="newID">The new ID of the tile</param>
         </member>
         <member name="T:DoodleEmpires.Engine.Net.SPMap">
             <summary>
@@ -4578,6 +3380,59 @@
         <member name="F:DoodleEmpires.Engine.Net.SPMap._debugging">
             <summary>
             True if this map is in debug mode
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets or sets the voxel material at the given x and y
+            </summary>
+            <param name="x">The x coordinate to set (chunk coords)</param>
+            <param name="y">The y coordinate to set (chunk coords)</param>
+            <returns>The voxel at (x, y)</returns>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.Graphics">
+            <summary>
+            Gets the graphics device for this terrain
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.Atlas">
+            <summary>
+            Gets or sets the texture atlas to use
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.TileManager">
+            <summary>
+            Gets or sets the tile manager to use
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.WorldWidth">
+            <summary>
+            Gets the width of the world in world coords
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.WorldHeight">
+            <summary>
+            Gets the height of the world in world coords
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.Zones">
+            <summary>
+            Gets a list of zones in this voxel map
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.BackDrop">
+            <summary>
+            Gets or sets the backdrop texture
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.SinglePlayerMap">
+            <summary>
+            Gets whether this map is a singleplayer map
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Net.SPMap.Debugging">
+            <summary>
+            Gets or sets whether this map is in debugging mode
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Net.SPMap.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteFont,DoodleEmpires.Engine.Terrain.TileManager,DoodleEmpires.Engine.Utilities.TextureAtlas,System.Int32,System.Int32,System.Nullable{System.Int32},System.Boolean,System.Single)">
@@ -4912,59 +3767,6 @@
             Disposes of this object and free's it's resources
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.Item(System.Int32,System.Int32)">
-            <summary>
-            Gets or sets the voxel material at the given x and y
-            </summary>
-            <param name="x">The x coordinate to set (chunk coords)</param>
-            <param name="y">The y coordinate to set (chunk coords)</param>
-            <returns>The voxel at (x, y)</returns>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.Graphics">
-            <summary>
-            Gets the graphics device for this terrain
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.Atlas">
-            <summary>
-            Gets or sets the texture atlas to use
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.TileManager">
-            <summary>
-            Gets or sets the tile manager to use
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.WorldWidth">
-            <summary>
-            Gets the width of the world in world coords
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.WorldHeight">
-            <summary>
-            Gets the height of the world in world coords
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.Zones">
-            <summary>
-            Gets a list of zones in this voxel map
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.BackDrop">
-            <summary>
-            Gets or sets the backdrop texture
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.SinglePlayerMap">
-            <summary>
-            Gets whether this map is a singleplayer map
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Net.SPMap.Debugging">
-            <summary>
-            Gets or sets whether this map is in debugging mode
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Net.MooreNeighbours">
             <summary>
             Represents the neighbour states of a voxel
@@ -5045,6 +3847,869 @@
             All 4 sides are set
             </summary>
         </member>
+        <member name="T:DoodleEmpires.Engine.Sound.SoundEngine">
+            <summary>
+            Represents the sound manager
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Sound.SoundEngine.ListenerPosition">
+            <summary>
+            Gets or sets the position of the listener
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Sound.SoundEngine.#ctor">
+            <summary>
+            Creates a new instance of a sound engine
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Sound.SoundEngine.AddSound(System.String,Microsoft.Xna.Framework.Audio.SoundEffect)">
+            <summary>
+            Adds a sound effect
+            </summary>
+            <param name="name">The name of the instance</param>
+            <param name="effect">The sound effect to add</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Sound.SoundEngine.PlaySound(System.String,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Plays a sound with the given name
+            </summary>
+            <param name="name">The name of the sound</param>
+            <param name="position">The position to play the sound at</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Sound.SoundEngine.SetSoundForCamera(Microsoft.Xna.Framework.Audio.SoundEffectInstance,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Sets the sound effect instance to apply to the camera
+            </summary>
+            <param name="sound">The sound effect instance to modify</param>
+            <param name="position">The position to play the sound from</param>
+            <param name="baseVolume">The base volume of the sound</param>
+            <returns>True if the sound needs to be played</returns>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Render.ColoredMesh">
+            <summary>
+            Represents a simple colored mesh
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.ColoredMesh.Item(System.Int32)">
+            <summary>
+            Gets or sets a vertex in this mesh
+            </summary>
+            <param name="index">The index to look up</param>
+            <returns>The vertex at the given index</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.#ctor(Microsoft.Xna.Framework.Graphics.PrimitiveType,Microsoft.Xna.Framework.Graphics.GraphicsDevice)">
+            <summary>
+            Creates a new Colored mesh
+            </summary>
+            <param name="primitiveType">The primitive type for this mesh</param>
+            <param name="graphics">The Graphics Device to use</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.AddVert(Microsoft.Xna.Framework.Graphics.VertexPositionColor)">
+            <summary>
+            Adds a vertice to this mesh
+            </summary>
+            <param name="vert">The vertex to add</param>
+            <returns>The index of the vertex</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.AddIndex(System.Int32)">
+            <summary>
+            Adds a vertex to this mesh
+            </summary>
+            <param name="index">The inndex of the vertice to add</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.Finish">
+            <summary>
+            Calculates the number of primitives, must be called when geometry is changed
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.ColoredMesh.Render">
+            <summary>
+            Renders this mesh
+            </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Render.Particle.Particle">
+            <summary>
+            Represents an instance of a particle
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Position">
+            <summary>
+            Gets or sets this particles' position
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Velocity">
+            <summary>
+            Gets or sets this particles' velocity
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Rotation">
+            <summary>
+            Gets or sets this particles' rotation
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.AngularVelocity">
+            <summary>
+            Gets or sets this particles' angular velocity
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Color">
+            <summary>
+            The color of this particle
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.Scale">
+            <summary>
+            The scale of this particle
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Render.Particle.Particle.TTL">
+            <summary>
+            How long this particle has to live, in seconds
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.#ctor(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,Microsoft.Xna.Framework.Color,System.Single,System.Single)">
+            <summary>
+            Creates a new particle
+            </summary>
+            <param name="position">The position of the particle</param>
+            <param name="velocity">The velocity of the particle</param>
+            <param name="scale">The scale of the particle</param>
+            <param name="ttl">The time to live for this particle in seconds</param>
+            <param name="color">The color of this particle</param>
+            <param name="rotation">The initial rotation of this particle</param>
+            <param name="angularVelocity">The angula velocity of this particle</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.Update(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Updates this particle
+            </summary>
+            <param name="gameTime">The current game time</param>
+            <param name="gravity">The current gravity</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.op_Equality(DoodleEmpires.Engine.Render.Particle.Particle,DoodleEmpires.Engine.Render.Particle.Particle)">
+            <summary>
+            Checks equality between two particles
+            </summary>
+            <param name="a">The particle</param>
+            <param name="b">The particle to check against</param>
+            <returns>True if the particles are equal</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.op_Inequality(DoodleEmpires.Engine.Render.Particle.Particle,DoodleEmpires.Engine.Render.Particle.Particle)">
+            <summary>
+            Checks inequality between two particles
+            </summary>
+            <param name="a">The particle</param>
+            <param name="b">The particle to check against</param>
+            <returns>True if the particles are not equal</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.Equals(System.Object)">
+            <summary>
+            Checks if this particle is equal to an object
+            </summary>
+            <param name="obj">The object to check against</param>
+            <returns>True if the object is equal to this particle</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.Particle.GetHashCode">
+            <summary>
+            Gets a unique hashcode for this particle
+            </summary>
+            <returns>A unique hashcode</returns>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Render.Particle.ParticleEmitter">
+            <summary>
+            Represents an emitter of particles
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.GeneralDirection">
+            <summary>
+            The general direction to fire particles
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.Force">
+            <summary>
+            The force to eject particles with
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.ParticlesPerSecond">
+            <summary>
+            The particles to emit per second
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.Position">
+            <summary>
+            The position of this emitter
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.RotationalVelocity">
+            <summary>
+            The initial rotational velocity of particles
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.TTL">
+            <summary>
+            The default time to live for particles
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.Color">
+            <summary>
+            The default color for particles
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.#ctor(DoodleEmpires.Engine.Render.Particle.ParticleEngine,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Creates a new particle emitter
+            </summary>
+            <param name="engine">The particle engine to bind to</param>
+            <param name="position">The POsition of this emitter</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEmitter.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Updates this particle emitter
+            </summary>
+            <param name="gameTime">The current game time</param>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Render.Particle.ParticleEngine">
+            <summary>
+            Represents a particle engine
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Gravity">
+            <summary>
+            Gets or sets the gravity on this particle engine
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.Particle.ParticleEngine.ParticleTexture">
+            <summary>
+            Gets or sets the particle texture
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice)">
+            <summary>
+            Creates a new particle engine
+            </summary>
+            <param name="graphics">The graphics device to bind to</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.AddEmitter(DoodleEmpires.Engine.Render.Particle.ParticleEmitter)">
+            <summary>
+            Adds an emitter to this particle engine
+            </summary>
+            <param name="emitter">The particle emitter</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.AddParticle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,Microsoft.Xna.Framework.Color,System.Single,System.Single)">
+            <summary>
+            Adds a particle to this particle engine
+            </summary>
+            <param name="position">The position of the particle</param>
+            <param name="velocity">The initial velocity of the particle</param>
+            <param name="scale">The scale of the particle</param>
+            <param name="ttl">The time to live</param>
+            <param name="color">The color of the particle</param>
+            <param name="rotation">The initial rotation of the speed</param>
+            <param name="angularVelocity">The angular velocity of this particle</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Render(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Renders this particle system
+            </summary>
+            <param name="gameTime">The current game time</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Updates this particle system
+            </summary>
+            <param name="gameTime">The current game time</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.Particle.ParticleEngine.Dispose">
+            <summary>
+            Disposes of this object and free's it's resources
+            </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Render.RenderChunk`1">
+            <summary>
+            Represents a chunk of cached graphics data
+            </summary>
+            <typeparam name="T">The vertex type for this chunk</typeparam>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.RenderChunk`1.IndexBuffer">
+            <summary>
+            Gets this render chunk's index buffer
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Render.RenderChunk`1.VertexBuffer">
+            <summary>
+            Gets this render chunk's vertex buffer
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.PrimitiveType)">
+            <summary>
+            Creates a new graphcis device
+            </summary>
+            <param name="graphics">The graphics device to bind to</param>
+            <param name="primitiveType">The type of primitive to draw</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.SetVertexBuffer(`0[])">
+            <summary>
+            Sets the vertex buffer to a given list of vertices
+            </summary>
+            <param name="vertices">The vertices to use</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.SetIndexBuffer(System.Int16[])">
+            <summary>
+            Sets the index buffer to a given list of indices
+            </summary>
+            <param name="indices">The indices to use</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.CalcPrimitives">
+            <summary>
+            Caclulate the number of primitives to draw based off the primitive type
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.Render">
+            <summary>
+            Renders this item using the underlying graphics device
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Render.RenderChunk`1.Dispose">
+            <summary>
+            Disposes of this object and free's it's resources
+            </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.TerrainBuilder">
+            <summary>
+            Represents an object that can be used to generate a pixel terrain from a seed value
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.TerrainBuilder._seed">
+            <summary>
+            The object to use as a seed for this terrain builder
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TerrainBuilder.#ctor(System.Object)">
+            <summary>
+            Creates a new terrainbuilder with the given seed
+            </summary>
+            <param name="seed">The object to use as the seed for this builder</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TerrainBuilder.GetColorAtPosition(System.Int32,System.Int32)">
+            <summary>
+            Gets the color for the given position
+            </summary>
+            <param name="x">The x coord to get the color at</param>
+            <param name="y">The y coord to get the color at</param>
+            <returns>The color at [x, y]</returns>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.Tile">
+            <summary>
+            Represents a tile type
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.Tile.Type">
+            <summary>
+            The tile ID for this tile type
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.Tile.TextureID">
+            <summary>
+            The basic texture ID for this tile
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.Tile.RenderType">
+            <summary>
+            The render tye for this tile
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.Tile.Solid">
+            <summary>
+            True if this tile type is solid
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.Tile.Color">
+            <summary>
+            The color multiplier for this tile type
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Terrain.Tile.NeedsUpdate">
+            <summary>
+            True if this tile type needs to be updated
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Terrain.Tile.Climable">
+            <summary>
+            True if this tile type is climable
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Tile.#ctor(System.Byte,System.Int16,DoodleEmpires.Engine.Terrain.RenderType,System.Boolean)">
+            <summary>
+            Creates a new instance of a tile type
+            </summary>
+            <param name="type">The type ID for this tile</param>
+            <param name="textureID">The base texture ID for this tile type</param>
+            <param name="renderType">The render type for this tile</param>
+            <param name="solid">True if the tile is solid</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Tile.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
+            <summary>
+            Draws this tile
+            </summary>
+            <param name="spriteBatch">The spritebatch to draw with</param>
+            <param name="atlas">The texture atlas to use</param>
+            <param name="bounds">The bounds to render in</param>
+            <param name="mooreState">The moore neighbours state</param>
+            <param name="meta">The block's meta data</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Tile.Intersects(Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Checks if this tile intersects a rectangle
+            </summary>
+            <param name="check">The rectangle to check</param>
+            <param name="bounds">The current bounds of the tile</param>
+            <returns>True if the tile intersects the checking rectangle</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Tile.AddToWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
+            <summary>
+            Handles adding this tile type to the world
+            </summary>
+            <param name="world">The world to add to</param>
+            <param name="x">The x-coord of the tile to set</param>
+            <param name="y">The y-coord of the tile to set</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Tile.RemovedFromWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
+            <summary>
+            Handles removing this tile type from the world
+            </summary>
+            <param name="world">The world to remove from</param>
+            <param name="x">The x-coord of the tile to remove</param>
+            <param name="y">The y-coord of the tile to remove</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Tile.OnTick(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
+            <summary>
+            Called when a tile of this type is updated
+            </summary>
+            <param name="map">The world that this tile exists in</param>
+            <param name="x">The x-coordinate in block coords</param>
+            <param name="y">The y-coordinate in block coords</param>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.RenderType">
+            <summary>
+            Represents how the tile should be rendered
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.RenderType.None">
+            <summary>
+            This tile uses no special rendering, simple tile based rendering
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.RenderType.Land">
+            <summary>
+            This tile uses standard land rendering
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Terrain.RenderType.Prop">
+            <summary>
+            This tile uses prop style rendering
+            </summary>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.TileManager">
+            <summary>
+            Represents a tile manager 
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Terrain.TileManager.Tiles">
+            <summary>
+            Gets the list of tiles
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Terrain.TileManager.Item(System.Int32)">
+            <summary>
+            Gets the tile with the given ID
+            </summary>
+            <param name="ID">The ID of the tile</param>
+            <returns>The Tile with the given ID</returns>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Terrain.TileManager.Item(System.String)">
+            <summary>
+            Gets the ID of the tile with the name
+            </summary>
+            <param name="name">The name of the tile to get</param>
+            <returns>The ID of the tile with the given name</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.#ctor">
+            <summary>
+            Creates a new tile manager
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterTile(System.Int16,DoodleEmpires.Engine.Terrain.RenderType,System.Boolean)">
+            <summary>
+            Adds a new unnamed tile type to this tile manager
+            </summary>
+            <param name="texID">The texture ID for the tile</param>
+            <param name="renderType">The render mode for this tile</param>
+            <param name="solid">True if this tile should be treated as solid during collision detection</param>
+            <returns>The TileID for the new tile</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterTile(System.String,System.Int16,DoodleEmpires.Engine.Terrain.RenderType,System.Boolean)">
+            <summary>
+            Adds a new tile type to this tile manager
+            </summary>
+            <param name="name">The name of the tile to add</param>
+            <param name="texID">The texture ID for the tile</param>
+            <param name="renderType">The render mode for this tile</param>
+            <param name="solid">True if this tile should be treated as solid during collision detection</param>
+            <returns>The TileID for the new tile</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterTile(System.String,System.Int16,Microsoft.Xna.Framework.Color,DoodleEmpires.Engine.Terrain.RenderType,System.Boolean)">
+            <summary>
+            Adds a new tile type to this tile manager
+            </summary>
+            <param name="name">The name of the tile to add</param>
+            <param name="texID">The texture ID for the tile</param>
+            <param name="Color">The color for this tile</param>
+            <param name="renderType">The render mode for this tile</param>
+            <param name="solid">True if this tile should be treated as solid during collision detection</param>
+            <returns>The TileID for the new tile</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterTile(System.String,DoodleEmpires.Engine.Terrain.Tile)">
+            <summary>
+            Adds a new tile type to this tile manager
+            </summary>
+            <param name="name">The name of the tile to register</param>
+            <param name="tile">The tile to add</param>
+            <returns>The TileID for the new tile</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.NameOf(System.Byte)">
+            <summary>
+            Gets the name of the tile with the given ID
+            </summary>
+            <param name="ID">The ID of the tile</param>
+            <returns>The name of tile with the given ID</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.IndexOf(System.String)">
+            <summary>
+            Gets the index of the tile with the given name
+            </summary>
+            <param name="name">The name of the tile</param>
+            <returns>The index of tile with the given name</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RenderTile(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Rectangle,DoodleEmpires.Engine.Utilities.TextureAtlas,System.Byte,System.Byte,System.Byte,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Renders a tile to the screen
+            </summary>
+            <param name="spriteBatch">The spritebatch to use for rendering</param>
+            <param name="bounds">The bounds to render the tile to</param>
+            <param name="atlas">The texture atlas to look up textures from</param>
+            <param name="mooreState">The neighbour states for this block</param>
+            <param name="tileID">The ID of the tile to render</param>
+            <param name="metaData">The meta data for the tile to render</param>
+            <param name="diffuseColor">The color to transform everything by</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.CheckCollision(System.Byte,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Checks if a tile will collide with the given bounds and check rectangles
+            </summary>
+            <param name="tileID">The ID of the tile</param>
+            <param name="rect">The rectangle to check</param>
+            <param name="bounds">The bounds of the tile</param>
+            <returns>True if <i>rect</i> intersects the tile</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.IsSolid(System.Byte)">
+            <summary>
+            Checks if a given tile ID is solid
+            </summary>
+            <param name="tileID">The tile ID to check</param>
+            <returns>True if the tile type is solid</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.IsClimable(System.Byte)">
+            <summary>
+            Checks if a given tile ID is climable
+            </summary>
+            <param name="tileID">The tile ID to check</param>
+            <returns>True if the tile type is climable</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.CanConnect(System.Byte,System.Byte)">
+            <summary>
+            Checks if two tiles can connect
+            </summary>
+            <param name="sourceID">The source tile ID to check from</param>
+            <param name="destinationID">The destination tile ID to check to</param>
+            <returns>True if the tiles can connect</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterConnect(System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            Registers a connection between 2 tiles, will register the connection for both source and destination of each
+            is setting to true
+            </summary>
+            <param name="sourceID">The ID of the first tile</param>
+            <param name="destinationID">The ID of the second tile</param>
+            <param name="canConnect">Whether or not these tiles can connect</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterConnect(System.String,System.String,System.Boolean)">
+            <summary>
+            Registers a connection between 2 tiles, will register the connection for both source and destination of each
+            is setting to true
+            </summary>
+            <param name="tile1">The name of the first tile</param>
+            <param name="tile2">The name of the second tile</param>
+            <param name="canConnect">Whether or not these tiles can connect</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterOneWayConnect(System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            Registers a connection between 1 tile and another. The second tile will not connect to the first
+            </summary>
+            <param name="sourceID">The ID of the first tile</param>
+            <param name="destinationID">The ID of the second tile</param>
+            <param name="canConnect">Whether or not these tiles can connect</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.RegisterOneWayConnect(System.String,System.String,System.Boolean)">
+            <summary>
+            Registers a connection between 1 tile and another. The second tile will not connect to the first
+            </summary>
+            <param name="tile1">The name of the first tile</param>
+            <param name="tile2">The name of the second tile</param>
+            <param name="canConnect">Whether or not these tiles can connect</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.TileManager.GenName">
+            <summary>
+            Generates a random tile name
+            </summary>
+            <returns>A random tile name</returns>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.Leaves">
+            <summary>
+            Represents the leaves tile
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Terrain.Leaves.NeedsUpdate">
+            <summary>
+            Gets whether this block needs updating.
+            This is true for leaves.
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Leaves.#ctor(System.Byte)">
+            <summary>
+            Creates a new instance of the leaves class, used for rendering tiles
+            </summary>
+            <param name="type">The typeID to assign to leaves</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Leaves.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
+            <summary>
+            Draws this tile
+            </summary>
+            <param name="spriteBatch">The spritebatch to draw with</param>
+            <param name="atlas">The texture atlas to use</param>
+            <param name="bounds">The bounds to render in</param>
+            <param name="mooreState">The moore neighbours state</param>
+            <param name="meta">The block's meta data</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Leaves.AddToWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
+            <summary>
+            Handles adding this tile type to the world
+            </summary>
+            <param name="world">The world to add to</param>
+            <param name="x">The x-coord of the tile to set</param>
+            <param name="y">The y-coord of the tile to set</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Leaves.OnTick(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
+            <summary>
+            Called when a tile of this type is updated
+            </summary>
+            <param name="world">The world that this tile exists in</param>
+            <param name="x">The x-coordinate in block coords</param>
+            <param name="y">The y-coordinate in block coords</param>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.WoodSpike">
+            <summary>
+            Represents a wooden spike tile
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.WoodSpike.#ctor(System.Byte)">
+            <summary>
+            Creates a new wood spike tile type
+            </summary>
+            <param name="type">The ID of the tile</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.WoodSpike.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
+            <summary>
+            Draws this tile
+            </summary>
+            <param name="spriteBatch">The spritebatch to draw with</param>
+            <param name="atlas">The texture atlas to use</param>
+            <param name="bounds">The bounds to render in</param>
+            <param name="mooreState">The moore neighbours state</param>
+            <param name="meta">The block's meta data</param>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.Ladder">
+            <summary>
+            Represents a ladder tile type
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Terrain.Ladder.Climable">
+            <summary>
+            True if this tile type is climable
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Ladder.#ctor(System.Byte)">
+            <summary>
+            Creates a new ladder tile type
+            </summary>
+            <param name="type">The ID of the tile</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Ladder.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
+            <summary>
+            Draws this tile
+            </summary>
+            <param name="spriteBatch">The spritebatch to draw with</param>
+            <param name="atlas">The texture atlas to use</param>
+            <param name="bounds">The bounds to render in</param>
+            <param name="mooreState">The moore neighbours state</param>
+            <param name="meta">The block's meta data</param>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.Door">
+            <summary>
+            Represents a door tile type
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Door.#ctor(System.Byte)">
+            <summary>
+            Creates a new door tile type
+            </summary>
+            <param name="type">The ID of the tile</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Door.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,DoodleEmpires.Engine.Utilities.TextureAtlas,Microsoft.Xna.Framework.Rectangle,System.Byte,System.Byte)">
+            <summary>
+            Draws this tile
+            </summary>
+            <param name="spriteBatch">The spritebatch to draw with</param>
+            <param name="atlas">The texture atlas to use</param>
+            <param name="bounds">The bounds to render in</param>
+            <param name="mooreState">The moore neighbours state</param>
+            <param name="meta">The block's meta data</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Door.AddToWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
+            <summary>
+            Handles adding this tile type to the world
+            </summary>
+            <param name="world">The world to add to</param>
+            <param name="x">The x-coord of the tile to set</param>
+            <param name="y">The y-coord of the tile to set</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.Door.RemovedFromWorld(DoodleEmpires.Engine.Terrain.VoxelMap,System.Int32,System.Int32)">
+            <summary>
+            Handles removing this tile type from the world
+            </summary>
+            <param name="world">The world to remove from</param>
+            <param name="x">The x-coord of the tile to remove</param>
+            <param name="y">The y-coord of the tile to remove</param>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.HeightmapExtensions">
+            <summary>
+            Some basic extansions for manipulating heightmap
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.HeightmapExtensions.Smooth(System.Single[],System.Int32)">
+            <summary>
+            Smooths a height map
+            </summary>
+            <param name="heightmap">The heightmap to smooth</param>
+            <param name="passes">The number of passes to make, default 1</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.HeightmapExtensions.Smooth(System.Single[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Smooths a height map
+            </summary>
+            <param name="heightmap">The heightmap to smooth</param>
+            <param name="minX">The minimum x coord to smooth from</param>
+            <param name="maxX">The maximum x coord to smooth from</param>
+            <param name="passes">The number of passes to make, default 1</param>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Terrain.VoxelMap">
+            <summary>
+            The base class for the voxel maps
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Terrain.VoxelMap.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets or sets the tile ID at the given [x, y] position
+            </summary>
+            <param name="x">The x coord of the tile</param>
+            <param name="y">The y coord of the tile</param>
+            <returns>Gets the tile ID at the given [x, y] position</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.VoxelMap.SetTile(System.Int32,System.Int32,System.Byte)">
+            <summary>
+            Sets the tile ID at the given [x, y] position
+            </summary>
+            <param name="x">The x coord of the tile</param>
+            <param name="y">The y coord of the tile</param>
+            <param name="newID">The ID of the tile to set</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.VoxelMap.SetTileSafe(System.Int32,System.Int32,System.Byte)">
+            <summary>
+            Safely sets the tile ID at the given [x, y] position
+            </summary>
+            <param name="x">The x coord of the tile</param>
+            <param name="y">The y coord of the tile</param>
+            <param name="newID">The ID of the tile to set</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.VoxelMap.SetMeta(System.Int32,System.Int32,System.Byte)">
+            <summary>
+            Sets the meta at the given [x, y] position
+            </summary>
+            <param name="x">The x coord of the tile</param>
+            <param name="y">The y coord of the tile</param>
+            <param name="newMeta">The meta of the tile to set</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Terrain.VoxelMap.GetMeta(System.Int32,System.Int32)">
+            <summary>
+            Gets the meta at the given [x, y] position
+            </summary>
+            <param name="x">The x coord of the tile</param>
+            <param name="y">The y coord of the tile</param>
+            <returns>The meta of the tile</returns>
+        </member>
+        <member name="T:DoodleEmpires.Engine.Utilities.AdvancedGame">
+            <summary>
+            Represents a slighty more advanced base game class
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.Utilities.AdvancedGame.SpriteBatch">
+            <summary>
+            Gets or sets the spritebatch for drawing
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.#ctor">
+            <summary>
+            Creates a new advanced game
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.Initialize">
+            <summary>
+            Initializes this game
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Updates this game
+            </summary>
+            <param name="gameTime">The current game time</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Draws the game
+            </summary>
+            <param name="gameTime">The current game time</param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseEvent(MonoUI.MouseEventArgs)">
+            <summary>
+            Called when the state of the mouse has changed
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Utilities.AdvancedGame.MouseDown(MonoUI.MouseEventArgs)">
+            <summary>
+            Called when the mouse is held down
+            </summary>
+            <param name="state"></param>
+        </member>
         <member name="T:DoodleEmpires.Engine.Utilities.EventExtensions">
             <summary>
             A class for event extensions
@@ -5064,21 +4729,10 @@
             A static class for getting the framerate
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.Utilities.FPSManager.MAXIMUM_SAMPLES">
-            <summary>
-            Gets the number of stored sample frames
-            </summary>
-        </member>
         <member name="F:DoodleEmpires.Engine.Utilities.FPSManager.FrameSpeed">
             <summary>
             The standard frame speed
             </summary>
-        </member>
-        <member name="M:DoodleEmpires.Engine.Utilities.FPSManager.OnDraw(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Called when the application draws
-            </summary>
-            <param name="gameTime">The current game time</param>
         </member>
         <member name="P:DoodleEmpires.Engine.Utilities.FPSManager.TotalFrames">
             <summary>
@@ -5100,64 +4754,65 @@
             Gets a multiplier that synchs tick rate to frame speed
             </summary>
         </member>
-        <member name="T:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise">
+        <member name="F:DoodleEmpires.Engine.Utilities.FPSManager.MAXIMUM_SAMPLES">
             <summary>
-            A class for handling simplex noise
+            Gets the number of stored sample frames
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise.Noise(System.Double,System.Double)">
+        <member name="M:DoodleEmpires.Engine.Utilities.FPSManager.OnDraw(Microsoft.Xna.Framework.GameTime)">
             <summary>
-            Performs 2-Dimensional simplex noise
+            Called when the application draws
             </summary>
-            <param name="xin">The x-coord to sample</param>
-            <param name="yin">The y-coord to sample</param>
-            <returns>A vlaue between -1 and 1</returns>
+            <param name="gameTime">The current game time</param>
         </member>
-        <member name="M:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise.Noise(System.Double,System.Double,System.Double)">
+        <member name="T:DoodleEmpires.Engine.Utilities.ObjectManager`1">
             <summary>
-            Performs 3-Dimensional simplex noise
+            Represents a class for handling named objects
             </summary>
-            <param name="xin">The x-coord to sample</param>
-            <param name="yin">The y-coord to sample</param>
-            <param name="zin">The z-coord to sample</param>
-            <returns>A value between -1 and 1</returns>
+            <typeparam name="T">The type of objects to handle</typeparam>
         </member>
-        <member name="M:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise.Noise(System.Double,System.Double,System.Double,System.Double)">
+        <member name="F:DoodleEmpires.Engine.Utilities.ObjectManager`1._items">
             <summary>
-            Performs 4-Dimensional simplex noise
-            </summary>
-            <param name="x">The x-coord to sample</param>
-            <param name="y">The y-coord to sample</param>
-            <param name="z">The z-coord to sample</param>
-            <param name="w">The w-coord to sample</param>
-            <returns>A value between -1 and 1</returns>
-        </member>
-        <member name="T:DoodleEmpires.Engine.NoiseGeneration.Noise">
-            <summary>
-            A class for generating 1D perlin noise
+            The internal list of items
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.NoiseGeneration.Noise.Persistence">
+        <member name="F:DoodleEmpires.Engine.Utilities.ObjectManager`1._zookUp">
             <summary>
-            The persistance of the noise
+            The internal lookup dictionary to use
             </summary>
         </member>
-        <member name="F:DoodleEmpires.Engine.NoiseGeneration.Noise.Octaves">
+        <member name="P:DoodleEmpires.Engine.Utilities.ObjectManager`1.Items">
             <summary>
-            The number of octaves to use, increase for finer/rougher detail
+            Gets the list of items handled by this manager
             </summary>
         </member>
-        <member name="M:DoodleEmpires.Engine.NoiseGeneration.Noise.PerlinNoise_1D(System.Single)">
+        <member name="M:DoodleEmpires.Engine.Utilities.ObjectManager`1.Add(System.String,`0)">
             <summary>
-            Performs perlin noise on a 1D plane
+            Gets the object with the given ID
             </summary>
-            <param name="x">The x-coord to sample</param>
-            <returns>A perlin noise sample</returns>
+            <param name="name">The name of object to add</param>
+            <param name="item">The item to add</param>
         </member>
-        <member name="P:DoodleEmpires.Engine.NoiseGeneration.Noise.Seed">
+        <member name="M:DoodleEmpires.Engine.Utilities.ObjectManager`1.Get(System.String)">
             <summary>
-            Gets or sets the seed to use
+            Gets the object with the given ID
             </summary>
+            <param name="name">The name of the object</param>
+            <returns>The item with the given ID, or the default object for the type</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Utilities.ObjectManager`1.Get(System.Int32)">
+            <summary>
+            Gets the object with the given ID
+            </summary>
+            <param name="id">The ID of the object</param>
+            <returns>The item with the given ID, or the default object for the type</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.Utilities.ObjectManager`1.GetID(System.String)">
+            <summary>
+            Gets the ID of the object with the given name
+            </summary>
+            <param name="name">The name to search for</param>
+            <returns>The ID, or -1 if an item with that name does not exist</returns>
         </member>
         <member name="T:DoodleEmpires.Engine.Utilities.RectangleF">
             <summary>
@@ -5182,6 +4837,31 @@
         <member name="F:DoodleEmpires.Engine.Utilities.RectangleF.Height">
             <summary>
             The height of this rectangle
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Empty">
+            <summary>
+            Gets a blank rectangle with all properties set to zero
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Left">
+            <summary>
+            Gets the left bound of this rectangle
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Right">
+            <summary>
+            Gets the right bound of this rectangle
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Top">
+            <summary>
+            Gets the top bound of this rectangle
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Bottom">
+            <summary>
+            Gets the bottom bound of this rectangle
             </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Utilities.RectangleF.#ctor(System.Single,System.Single,System.Single,System.Single)">
@@ -5264,6 +4944,11 @@
             <param name="offsetX">The x-offset</param>
             <param name="offsetY">The y-offset</param>
         </member>
+        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Center">
+            <summary>
+            Gets the centre of this rectangle
+            </summary>
+        </member>
         <member name="M:DoodleEmpires.Engine.Utilities.RectangleF.Inflate(System.Single,System.Single)">
             <summary>
             Inflates this rectangle by a given amount. This value will be apllied on
@@ -5271,6 +4956,11 @@
             </summary>
             <param name="horizontalValue">The horizontal value to inflate by</param>
             <param name="verticalValue">The vertical value to inflate by</param>
+        </member>
+        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.IsEmpty">
+            <summary>
+            Gets whether this rectangle has a width and height of 0
+            </summary>
         </member>
         <member name="M:DoodleEmpires.Engine.Utilities.RectangleF.Equals(DoodleEmpires.Engine.Utilities.RectangleF)">
             <summary>
@@ -5313,41 +5003,6 @@
             <param name="result">The bool to set true or false</param>
             <returns>True if the two triangles intersect</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Empty">
-            <summary>
-            Gets a blank rectangle with all properties set to zero
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Left">
-            <summary>
-            Gets the left bound of this rectangle
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Right">
-            <summary>
-            Gets the right bound of this rectangle
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Top">
-            <summary>
-            Gets the top bound of this rectangle
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Bottom">
-            <summary>
-            Gets the bottom bound of this rectangle
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.Center">
-            <summary>
-            Gets the centre of this rectangle
-            </summary>
-        </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.RectangleF.IsEmpty">
-            <summary>
-            Gets whether this rectangle has a width and height of 0
-            </summary>
-        </member>
         <member name="T:DoodleEmpires.Engine.Utilities.TextureAtlas">
             <summary>
             Represents a texture handler that can supply source bounds from a texture atlas
@@ -5373,6 +5028,11 @@
             The number of textures along the y axis
             </summary>
         </member>
+        <member name="P:DoodleEmpires.Engine.Utilities.TextureAtlas.Texture">
+            <summary>
+            Gets the texture that this atlas is bound to
+            </summary>
+        </member>
         <member name="M:DoodleEmpires.Engine.Utilities.TextureAtlas.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,System.Int32,System.Int32)">
             <summary>
             Creates a new texture atlas
@@ -5393,6 +5053,13 @@
             <param name="ID">The texture ID to search for</param>
             <returns>The source rectangle for the given ID</returns>
         </member>
+        <member name="P:DoodleEmpires.Engine.Utilities.TextureAtlas.Item(System.Int32)">
+            <summary>
+            Gets a source rectangle for the given texture ID
+            </summary>
+            <param name="ID">The texture ID to search for</param>
+            <returns>The source rectangle for the given ID</returns>
+        </member>
         <member name="M:DoodleEmpires.Engine.Utilities.TextureAtlas.GetTextures(Microsoft.Xna.Framework.Graphics.GraphicsDevice)">
             <summary>
             Breaks this texture atlas into a series of sub-textures
@@ -5400,17 +5067,64 @@
             <param name="graphics">The graphics device to bind the textures to</param>
             <returns>An array of textures</returns>
         </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.TextureAtlas.Texture">
+        <member name="T:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise">
             <summary>
-            Gets the texture that this atlas is bound to
+            A class for handling simplex noise
             </summary>
         </member>
-        <member name="P:DoodleEmpires.Engine.Utilities.TextureAtlas.Item(System.Int32)">
+        <member name="M:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise.Noise(System.Double,System.Double)">
             <summary>
-            Gets a source rectangle for the given texture ID
+            Performs 2-Dimensional simplex noise
             </summary>
-            <param name="ID">The texture ID to search for</param>
-            <returns>The source rectangle for the given ID</returns>
+            <param name="xin">The x-coord to sample</param>
+            <param name="yin">The y-coord to sample</param>
+            <returns>A vlaue between -1 and 1</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise.Noise(System.Double,System.Double,System.Double)">
+            <summary>
+            Performs 3-Dimensional simplex noise
+            </summary>
+            <param name="xin">The x-coord to sample</param>
+            <param name="yin">The y-coord to sample</param>
+            <param name="zin">The z-coord to sample</param>
+            <returns>A value between -1 and 1</returns>
+        </member>
+        <member name="M:DoodleEmpires.Engine.NoiseGeneration.SimplexNoise.Noise(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Performs 4-Dimensional simplex noise
+            </summary>
+            <param name="x">The x-coord to sample</param>
+            <param name="y">The y-coord to sample</param>
+            <param name="z">The z-coord to sample</param>
+            <param name="w">The w-coord to sample</param>
+            <returns>A value between -1 and 1</returns>
+        </member>
+        <member name="T:DoodleEmpires.Engine.NoiseGeneration.Noise">
+            <summary>
+            A class for generating 1D perlin noise
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.NoiseGeneration.Noise.Persistence">
+            <summary>
+            The persistance of the noise
+            </summary>
+        </member>
+        <member name="F:DoodleEmpires.Engine.NoiseGeneration.Noise.Octaves">
+            <summary>
+            The number of octaves to use, increase for finer/rougher detail
+            </summary>
+        </member>
+        <member name="P:DoodleEmpires.Engine.NoiseGeneration.Noise.Seed">
+            <summary>
+            Gets or sets the seed to use
+            </summary>
+        </member>
+        <member name="M:DoodleEmpires.Engine.NoiseGeneration.Noise.PerlinNoise_1D(System.Single)">
+            <summary>
+            Performs perlin noise on a 1D plane
+            </summary>
+            <param name="x">The x-coord to sample</param>
+            <returns>A perlin noise sample</returns>
         </member>
         <member name="T:DoodleEmpires.Program">
             <summary>
@@ -5420,6 +5134,271 @@
         <member name="M:DoodleEmpires.Program.Main(System.String[])">
             <summary>
             The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:ICamera2D">
+            <summary>
+            Represents an implementation of a 2D camera
+            </summary>
+        </member>
+        <member name="P:ICamera2D.Position">
+            <summary>
+            Gets or sets the position of the camera
+            </summary>
+            <value>The position.</value>
+        </member>
+        <member name="P:ICamera2D.MoveSpeed">
+            <summary>
+            Gets or sets the move speed of the camera.
+            The camera will tween to its destination.
+            </summary>
+            <value>The move speed.</value>
+        </member>
+        <member name="P:ICamera2D.Rotation">
+            <summary>
+            Gets or sets the rotation of the camera.
+            </summary>
+            <value>The rotation.</value>
+        </member>
+        <member name="P:ICamera2D.Origin">
+            <summary>
+            Gets the origin of the viewport (accounts for Scale)
+            </summary>        
+            <value>The origin.</value>
+        </member>
+        <member name="P:ICamera2D.Scale">
+            <summary>
+            Gets or sets the scale of the Camera
+            </summary>
+            <value>The scale.</value>
+        </member>
+        <member name="P:ICamera2D.ScreenCenter">
+            <summary>
+            Gets the screen center (does not account for Scale)
+            </summary>
+            <value>The screen center.</value>
+        </member>
+        <member name="P:ICamera2D.Transform">
+            <summary>
+            Gets the transform that can be applied to 
+            the SpriteBatch Class.
+            </summary>
+            <see cref="T:Microsoft.Xna.Framework.Graphics.SpriteBatch"/>
+            <value>The transform.</value>
+        </member>
+        <member name="P:ICamera2D.Projection">
+            <summary>
+            Gets the projection matrix for this camera
+            </summary>
+        </member>
+        <member name="P:ICamera2D.Focus">
+            <summary>
+            Gets or sets the focus of the Camera.
+            </summary>
+            <seealso cref="T:DoodleEmpires.Engine.Entities.IFocusable"/>
+            <value>The focus.</value>
+        </member>
+        <member name="M:ICamera2D.BeginDraw">
+            <summary>
+            Begins rendering with this camera
+            </summary>
+        </member>
+        <member name="M:ICamera2D.EndDraw">
+            <summary>
+            Ends the rendering pass and presents this camera's view
+            </summary>
+        </member>
+        <member name="M:ICamera2D.IsInView(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Determines whether the target is in view given the specified position.
+            This can be used to increase performance by not drawing objects
+            directly in the viewport
+            </summary>
+            <param name="position">The position.</param>
+            <param name="texture">The texture.</param>
+            <returns>
+                <c>true</c> if the target is in view at the specified position; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ICamera2D.PointToWorld(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets the world co-ordinates for the given screen co-ordinates
+            </summary>
+            <param name="screenCoords">The screen co-ordinates to convert</param>
+            <returns>The point in the world relating to the point on the screen</returns>
+        </member>
+        <member name="P:ICamera2D.ViewBounds">
+            <summary>
+            Gets the world bounds that this camera displays
+            </summary>
+        </member>
+        <member name="P:ICamera2D.ScreenBounds">
+            <summary>
+            Gets or sets the bounds that this camera is limited to
+            </summary>
+        </member>
+        <member name="P:ICamera2D.PostEffect">
+            <summary>
+            Gets or sets the post-processing effect for this camera
+            </summary>
+        </member>
+        <member name="T:Camera2D">
+            <summary>
+            Represents a 2-Dimensional camera
+            </summary>
+        </member>
+        <member name="F:Camera2D._renderTarget">
+            <summary>
+            The internal texture to render to
+            </summary>
+        </member>
+        <member name="F:Camera2D._postEffect">
+            <summary>
+            The post processing effect to apply
+            </summary>
+        </member>
+        <member name="F:Camera2D._spriteBatch">
+            <summary>
+            Teh spritebatch used to render the final image
+            </summary>
+        </member>
+        <member name="F:Camera2D._viewportHeight">
+            <summary>
+            The height of the graphics viewport
+            </summary>
+        </member>
+        <member name="F:Camera2D._viewportWidth">
+            <summary>
+            The width of the graphics viewport
+            </summary>
+        </member>
+        <member name="F:Camera2D._viewBounds">
+            <summary>
+            The bounds that this camera has in the world
+            </summary>
+        </member>
+        <member name="F:Camera2D._graphics">
+            <summary>
+            The graphics device that this camera is bound to
+            </summary>
+        </member>
+        <member name="P:Camera2D.PostEffect">
+            <summary>
+            Gets or sets the post-processing effect for this camera
+            </summary>
+        </member>
+        <member name="M:Camera2D.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice)">
+            <summary>
+            Creates a new 2D camera
+            </summary>
+            <param name="graphics">The graphics device to bind to</param>
+        </member>
+        <member name="P:Camera2D.Position">
+            <summary>
+            Gets or sets this camera's position
+            </summary>
+        </member>
+        <member name="P:Camera2D.Rotation">
+            <summary>
+            Gets or sets this camera's rotation
+            </summary>
+        </member>
+        <member name="P:Camera2D.Origin">
+            <summary>
+            Gets or sets this camera's orgin
+            </summary>
+        </member>
+        <member name="P:Camera2D.Scale">
+            <summary>
+            Gets or sets this camera's scale
+            </summary>
+        </member>
+        <member name="P:Camera2D.ScreenCenter">
+            <summary>
+            Gets the screen centre for this camera
+            </summary>
+        </member>
+        <member name="P:Camera2D.Transform">
+            <summary>
+            Gets or sets this camera's transformation matrix
+            </summary>
+        </member>
+        <member name="P:Camera2D.Projection">
+            <summary>
+            Gets or sets this camera's projection matrix
+            </summary>
+        </member>
+        <member name="P:Camera2D.Focus">
+            <summary>
+            Gets or sets this camera's focus object
+            </summary>
+        </member>
+        <member name="P:Camera2D.MoveSpeed">
+            <summary>
+            Gets or sets this camera's movement speed
+            </summary>
+        </member>
+        <member name="P:Camera2D.ViewBounds">
+            <summary>
+            Gets the view bounds for this camera
+            </summary>
+        </member>
+        <member name="P:Camera2D.ScreenBounds">
+            <summary>
+            Gets the snap bounds for this camera
+            </summary>
+        </member>
+        <member name="M:Camera2D.Initialize">
+            <summary>
+            Called when the GameComponent needs to be initialized. 
+            </summary>
+        </member>
+        <member name="M:Camera2D.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Updates this camera
+            </summary>
+            <param name="gameTime">The current game time</param>
+        </member>
+        <member name="M:Camera2D.BeginDraw">
+            <summary>
+            Sets the graphics states and begins rendering with this camera
+            </summary>
+        </member>
+        <member name="M:Camera2D.EndDraw">
+            <summary>
+            Finishes rendering with this camera and presents to the screen
+            </summary>
+        </member>
+        <member name="M:Camera2D.IsInView(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Determines whether the target is in view given the specified position.
+            This can be used to increase performance by not drawing objects
+            directly in the viewport
+            </summary>
+            <param name="position">The position.</param>
+            <param name="texture">The texture.</param>
+            <returns>
+                <c>true</c> if [is in view] [the specified position]; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Camera2D.PointToWorld(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets the world co-ordinates for the given screen co-ordinates
+            </summary>
+            <param name="screenPoint">The screen co-ordinates to convert</param>
+            <returns>The point in the world relating to the point on the screen</returns>
+        </member>
+        <member name="M:Camera2D.PointToWorld(System.Single,System.Single)">
+            <summary>
+            Gets the world co-ordinates for the given screen co-ordinates
+            </summary>
+            <param name="x">The x coordinate to translate</param>
+            <param name="y">The y coordinate to translete</param>
+            <returns>The point in the world relating to the point on the screen</returns>
+        </member>
+        <member name="M:Camera2D.Dispose">
+            <summary>
+            Disposes of this object and free's it's resources
             </summary>
         </member>
     </members>

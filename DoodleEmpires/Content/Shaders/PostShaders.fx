@@ -125,7 +125,7 @@ float4 YeOldePS(float4 position : SV_Position, float4 color : COLOR0, float2 tex
 {
     float rand = rand_1_05(texCoord * seed);
 
-	if (rand > yeOldeEpsilon)
+	if (rand > noiseEpsilon)
 		return float4(0,0,0,1);
 	else
 	{	
@@ -160,11 +160,11 @@ float4 SinCityPS(float4 position : SV_Position, float4 color : COLOR0, float2 te
         colorin = tex2D( TextureSampler , texCoord.xy).rgb;
         //convert to linear space, probably not necessary since I totally destroy
         //the color space later anyway
-        colorin = pow(colorin, .45f);
+        colorin = pow(abs(colorin), .45f);
         
         //initialize the black&white color to the average color value,
         //not 100% correct but works decently
-        float3 bwcolor = dot(colorin.rgb, 1.f.xxx) * 0.33333f;
+        float bwcolor = dot(colorin.rgb, 1.f.xxx) * 0.33333f;
               
         //calculate the weight of the red color. smoothstep is a function that
         //creates a quadratic interpolation between 0 and 1 using the first
@@ -179,7 +179,7 @@ float4 SinCityPS(float4 position : SV_Position, float4 color : COLOR0, float2 te
         colorout = lerp(bwcolor, colorin * float3(1.1f, 0.5f, 0.5f), weight);
 
          //pow: convert back to gamma space
-        return pow(float4(colorout, 1.f), 2.2f);
+        return pow(abs(float4(colorout, 1.f)), 2.2f);
 }
 
 float4 ToonPS(float4 position : SV_Position, float4 color : COLOR0, float2 texCoord : TEXCOORD0) : COLOR
@@ -200,15 +200,10 @@ technique Simple
 }
 
 technique YeOlde
-{
+{	
 	pass Pass1
 	{
-		PixelShader = compile ps_3_0 SepiaPS();
-	}
-
-	pass Pass2
-	{
-		PixelShader = compile ps_3_0 NoisePS();
+		PixelShader = compile ps_3_0 YeOldePS();
 	}
 }
 

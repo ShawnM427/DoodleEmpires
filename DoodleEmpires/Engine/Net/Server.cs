@@ -137,6 +137,8 @@ namespace DoodleEmpires.Engine.Net
                             _serverInfo.WriteToPacket(om);
                             _server.SendDiscoveryResponse(om, msg.SenderEndPoint);
 
+                            Console.WriteLine("Sending discovery response to {0}", msg.SenderEndPoint);
+
                             break;
                             
                         case NetIncomingMessageType.StatusChanged: //a client's status has changed
@@ -257,11 +259,15 @@ namespace DoodleEmpires.Engine.Net
             msg.Write(_serverInfo.Name);
             _serverInfo.WriteToPacket(msg);
             _server.SendUnconnectedMessage(msg, GlobalNetVars.MASTER_SERVER_IP, GlobalNetVars.MASTER_SERVER_PORT);
+
+            Console.WriteLine("Notified master server of config change");
         }
 
         private void HandlePlayerWantJoin(NetIncomingMessage msg)
         {
             PlayerInfo pInfo = PlayerInfo.ReadFromPacket(msg);
+
+            Console.WriteLine("Player requesting join");
 
             sbyte ID = -1;
 
@@ -274,23 +280,20 @@ namespace DoodleEmpires.Engine.Net
 
             if (ID != -1)
             {
+                Console.WriteLine("Empty player slot found at slot {0}", ID);
+
                 byte rID = (byte)ID;
                 pInfo.PlayerIndex = rID;
 
                 _playerConnections.Add(msg.SenderConnection, rID);
 
                 NetOutgoingMessage outM = _server.CreateMessage();
-
                 outM.Write((byte)NetPacketType.AcceptedJoin);
-
                 _serverInfo.WriteToPacket(outM);
-
                 outM.Write(rID, 8);
-
                 _map.WriteToMessage(outM);
 
                 outM.Write((byte)_players.Count(X => X != null));
-
                 foreach (NetPlayer p in _players)
                 {
                     if (p != null)
@@ -301,8 +304,9 @@ namespace DoodleEmpires.Engine.Net
 
                 SendPlayerJoined(pInfo);
 
-                _players[rID] = new NetPlayer(pInfo, msg.SenderConnection);
+                Console.WriteLine("Handled joining client \"{0}\" with id {1}", pInfo.UserName, rID);
 
+                _players[rID] = new NetPlayer(pInfo, msg.SenderConnection);
                 _serverInfo.PlayerCount = Players.Length;
 
                 SendServerInfoChanged();

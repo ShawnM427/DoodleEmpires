@@ -305,7 +305,7 @@ public class Camera2D : ICamera2D, IDisposable
     public void EndDraw()
     {
         _graphics.SetRenderTarget(null);
-        _graphics.Clear(Color.Black);
+        _graphics.Clear(Color.White);
         
         if (_postEffect != null)
         {

@@ -137,6 +137,7 @@ namespace DoodleEmpires.Engine.Net
         public PlayerInfoListItem(PlayerInfo info)
         {
             _tag = info;
+            Text = info?.UserName;
         }
 
         /// <summary>

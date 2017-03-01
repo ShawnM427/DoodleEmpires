@@ -16,7 +16,6 @@ using System.Diagnostics;
 using DoodleEmpires.Engine;
 using DoodleEmpires.Engine.Terrain.Brushes;
 using DoodleEmpires.Engine.Terrain.TerrainBuilders;
-using DoodleEmpires.Content;
 using System.Reflection;
 
 namespace DoodleEmpires
@@ -119,7 +118,7 @@ namespace DoodleEmpires
         {
             _font = Content.Load<SpriteFont>("GUIFont");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            Effect e = new Effect(GraphicsDevice, EmbeddedResources.LightShader);
+            Effect e = Content.Load<Effect>("Shaders/LightShader");
 
             _pixelTex = new Texture2D(GraphicsDevice, 1, 1);
             _pixelTex.SetData(new Color[] { Color.White });
